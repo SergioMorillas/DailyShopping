@@ -4,11 +4,11 @@ plugins {
 
 android {
     namespace = "com.lista.listacompra"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.lista.listacompra"
-        minSdk = 25
+        minSdk = 33
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -23,8 +23,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 }
 
@@ -37,6 +37,8 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.3")
     implementation("com.fasterxml.jackson.core:jackson-annotations:2.15.3")
     implementation("com.squareup.picasso:picasso:2.71828")
+    implementation("com.squareup.okhttp3:okhttp:4.9.1")
+
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
