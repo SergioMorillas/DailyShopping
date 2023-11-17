@@ -1,6 +1,7 @@
 package com.lista.listacompra;
 
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -33,6 +34,7 @@ public class Listas extends AppCompatActivity {
         initializeLauncher();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initializeLauncher() {
         launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == Activity.RESULT_OK) {
