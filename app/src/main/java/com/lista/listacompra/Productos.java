@@ -34,8 +34,6 @@ public class Productos extends AppCompatActivity {
         text = (TextView) findViewById(R.id.textViewBusqueda);
         palabra = (TextView) findViewById(R.id.editTextItem);
         lin = (LinearLayout) findViewById(R.id.linearLayout);
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
         but.bringToFront();
         but.setOnClickListener(new View.OnClickListener() {
             @Override
