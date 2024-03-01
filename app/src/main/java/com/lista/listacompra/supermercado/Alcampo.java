@@ -16,14 +16,16 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Alcampo implements Supermercado {
+import javax.net.ssl.HttpsURLConnection;
 
+public class Alcampo implements Supermercado {
     @Override
     public Map<Double, String[]> busqueda(String producto) {
         HashMap<Double, String[]> productos = new HashMap<>();
         try {
-            String enlace = "https://www.compraonline.alcampo.es/api/v5/products/search?limit=10&offset=0&term=";
-            URL url = new URL(enlace + producto);
+            URL url = new URL(ALCAMPO_API_URL + producto);
+            HttpsURLConnection http=(HttpsURLConnection) url.openConnection();
+
 
             try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
                 StringBuilder stringBuilder = new StringBuilder();
@@ -51,7 +53,12 @@ public class Alcampo implements Supermercado {
         return productos;
     }
 
-
+    /**
+     * Metodo que me elimina las comillas de los diferentes campos de la petición, ya que sin esto
+     * las imagenes no se mostrarian
+     * @param entrada
+     * @return
+     */
     private String modificaString(String entrada) {
         if (entrada.startsWith("\"") && entrada.endsWith("\"")) {
             return entrada.substring(1, entrada.length() - 1);

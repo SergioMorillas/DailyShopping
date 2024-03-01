@@ -43,8 +43,7 @@ public class Listas extends AppCompatActivity {
                 miLista.setTextSize(20);
                 miLista.setClickable(true);
                 View lineaPlateada = new View(layout.getContext());
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT, 2);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2);
                 params.setMargins(0, 0, 0, 25);
                 lineaPlateada.setLayoutParams(params);
                 lineaPlateada.setBackgroundColor(Color.parseColor("#BEE9E8"));
@@ -64,8 +63,8 @@ public class Listas extends AppCompatActivity {
                                 animator.start();
                                 float percentage = deltaX / v.getWidth();
                                 percentage = Math.max(-1, Math.min(1, percentage));
-                                int green = (int) (255 * (1 - Math.abs(percentage)));
-                                int red = (int) (255 * Math.abs(percentage));
+                                int green = (int) (255 * (1 - Math.abs(percentage+25)));
+                                int red = (int) (255 * Math.abs(percentage+25));
                                 miLista.setBackgroundColor(Color.rgb(red, green, 0));
 
                                 break;
@@ -75,12 +74,14 @@ public class Listas extends AppCompatActivity {
                                 if (Math.abs(totalDeltaX) > MIN_DISTANCE) {
                                     layout.removeView(miLista);
                                     layout.removeView(lineaPlateada);
+                                } else if (Math.abs(totalDeltaX) == 0){
+                                    Intent i = new Intent(getBaseContext(), Productos.class);
+                                    launcher.launch(i);
                                 }
                                 ObjectAnimator resetAnimator = ObjectAnimator.ofFloat(miLista, "translationX", 0);
                                 resetAnimator.setDuration(1000); // Duración de la animación de regreso
                                 resetAnimator.start();
                                 miLista.setBackgroundColor(Color.TRANSPARENT);
-
                                 break;
                         }
                         return true;

@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 public class CreaLista extends AppCompatActivity {
-    Spinner comboBox;
+    private static Spinner comboBox;
     EditText nombreLista, fecha;
     Button aceptar, cancelar;
 
@@ -67,5 +67,9 @@ public class CreaLista extends AppCompatActivity {
                 finish();
             }
         });
+    }
+    public static String getSupermercado(){
+        String supermercado = (String) comboBox.getSelectedItem();
+        return supermercado;
     }
 }
