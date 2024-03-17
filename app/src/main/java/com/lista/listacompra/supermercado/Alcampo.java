@@ -1,48 +1,29 @@
 package com.lista.listacompra.supermercado;
 
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
-public class Alcampo implements Supermercado {
+import javax.net.ssl.HttpsURLConnection;
 
+public class Alcampo extends Supermercado {
     @Override
-    public Map<Double, String[]> busqueda(String producto) {
-        HashMap<Double, String[]> productos = new HashMap<>();
+    public ArrayList<Producto> busqueda(String producto) {
+        ArrayList<Producto> productos = new ArrayList<>();
         try {
-            String enlace = "https://www.compraonline.alcampo.es/api/v5/products/search?limit=10&offset=0&term=";
-            URL url = new URL(enlace + producto);
+            URL url = new URL(ALCAMPO_API_URL + producto);
 
             try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
                 StringBuilder stringBuilder = new StringBuilder();
                 String line;
                 while ((line = br.readLine()) != null)
                     stringBuilder.append(line);
-
-                ObjectMapper objectMapper = new ObjectMapper();
-                JsonNode jsonNode = objectMapper.readTree(stringBuilder.toString());
-                JsonNode productNode = jsonNode
-                        .path("entities")
-                        .path("product");
-
-                for (JsonNode node : productNode) {
-                    String nombre = modificaString(node.get("name").toString());
-                    String precio = modificaString(node.get("price").get("current").get("amount").toString());
-                    String urlImagen = modificaString(node.get("image").get("src").toString());
-                    productos.put(Double.parseDouble(precio), new String[]{nombre, urlImagen});
-                }
+                productos = devuelveProductos(stringBuilder.toString());
                 return productos;
             }
         } catch (Exception e) {
@@ -51,8 +32,57 @@ public class Alcampo implements Supermercado {
         return productos;
     }
 
+    private static ArrayList<Producto> devuelveProductos(String json) {
+        ArrayList<Producto> productos = new ArrayList<>();
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(json.toString());
+            JsonNode productNode = jsonNode
+                    .path("entities")
+                    .path("product");
 
-    private String modificaString(String entrada) {
+            for (JsonNode node : productNode) //Iteramos por todos los nodos y rellenamos el arraylist
+                productos.add(creaProducto(node));
+
+        } catch (Exception ex) {
+
+        }
+        return productos;
+    }
+
+    private static Producto creaProducto(JsonNode nodo) {
+        String id = nodo.path("productId").asText();
+        Double precio = nodo
+                .path("price")
+                .path("current")
+                .path("amount").asDouble();
+        Double precioKilo = nodo
+                .path("price")
+                .path("unit")
+                .path("current")
+                .path("amount").asDouble();
+        String nombre = nodo
+                .path("name").asText();
+        Double peso = nodo
+                .path("size")
+                .path("value").asDouble();
+        String imagen = nodo
+                .path("image")
+                .path("src").asText();
+
+        Producto p = new Producto(id, imagen, nombre, precio, precioKilo, peso);
+        return p;
+    }
+
+
+    /**
+     * Metodo que me elimina las comillas de los diferentes campos de la petición, ya que sin esto
+     * las imagenes no se mostrarian
+     *
+     * @param entrada
+     * @return
+     */
+    private static String modificaString(String entrada) {
         if (entrada.startsWith("\"") && entrada.endsWith("\"")) {
             return entrada.substring(1, entrada.length() - 1);
         } else {
