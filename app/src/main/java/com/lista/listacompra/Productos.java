@@ -10,8 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.lista.listacompra.supermercado.Alcampo;
-import com.lista.listacompra.supermercado.Mercadona;
+import com.lista.listacompra.supermercado.*;
 import com.lista.listacompra.supermercado.Producto;
 import com.lista.listacompra.supermercado.Supermercado;
 import com.squareup.picasso.Picasso;

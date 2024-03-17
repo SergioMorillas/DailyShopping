@@ -18,7 +18,7 @@ import java.util.Iterator;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class Mercadona extends Supermercado {
+public class Mercadona implements Supermercado {
 
     @Override
     public ArrayList<Producto> busqueda(String producto) {
@@ -31,12 +31,12 @@ public class Mercadona extends Supermercado {
             conexion.setRequestProperty("Content-Type", "application/json");
             conexion.setRequestProperty("Accept", "application/json");
 
-            try(OutputStream os = conexion.getOutputStream()) {
+            try (OutputStream os = conexion.getOutputStream()) {
                 byte[] input = json.getBytes();
                 os.write(input, 0, input.length);
             }
             String respuestaBajo;
-            try(BufferedReader br = new BufferedReader(
+            try (BufferedReader br = new BufferedReader(
                     new InputStreamReader(conexion.getInputStream(), "utf-8"))) {
                 StringBuilder response = new StringBuilder();
                 String responseLine = null;
@@ -59,6 +59,7 @@ public class Mercadona extends Supermercado {
             return null;
         }
     }
+
     private static Producto creaProducto(JsonNode nodo) {
         String id = nodo
                 .path("id").asText();

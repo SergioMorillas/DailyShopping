@@ -2,7 +2,7 @@ package com.lista.listacompra.supermercado;
 
 import java.util.ArrayList;
 
-public abstract class Supermercado {
+public interface Supermercado {
     public static final String MERCADONA_API_URL = "https://7uzjkl1dj0-dsn.algolia.net/1/indexes/" +
             "products_prod_4315_es/query?x-algolia-application-id=7UZJKL1DJ0&x-algolia-api-key=" +
             "9d8f2e39e90df472b4f2e559a116fe17";

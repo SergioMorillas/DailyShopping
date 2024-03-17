@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class Alcampo extends Supermercado {
+public class Alcampo implements Supermercado {
     @Override
     public ArrayList<Producto> busqueda(String producto) {
         ArrayList<Producto> productos = new ArrayList<>();
