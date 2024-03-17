@@ -13,24 +13,20 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class Mercadona implements Supermercado {
+public class Mercadona extends Supermercado {
 
     @Override
-    public Map<Double, String[]> busqueda(String producto) {
+    public ArrayList<Producto> busqueda(String producto) {
         try {
             OkHttpClient cliente = new OkHttpClient();
             URL url = new URL(MERCADONA_API_URL);
             HttpsURLConnection conexion = (HttpsURLConnection) url.openConnection();
-            String json = "{\"params\":\"query=" + producto
-                    + "&clickAnalytics=true&analyticsTags=%5B%22web%22%5D&getRankingInfo=true&hitsPerPage=10\"}";
+            String json = "{\"params\":\"query=" + producto + "&hitsPerPage=10\"}";
             conexion.setRequestMethod("POST");
             conexion.setRequestProperty("Content-Type", "application/json");
             conexion.setRequestProperty("Accept", "application/json");
@@ -57,15 +53,34 @@ public class Mercadona implements Supermercado {
                     .build();
 
             Response respuesta = cliente.newCall(peticion).execute();
-            return devuelveMapa(respuestaBajo);
+            return devuelveProductos(respuestaBajo);
         } catch (Exception e) {
             System.err.println("Error buscando productos en el API del mercadona: " + e.getMessage());
             return null;
         }
     }
+    private static Producto creaProducto(JsonNode nodo) {
+        String id = nodo
+                .path("id").asText();
+        Double precio = nodo
+                .path("price_instructions")
+                .path("unit_price").asDouble();
+        Double precioKilo = nodo
+                .path("price_instructions")
+                .path("reference_price").asDouble();
+        String nombre = nodo
+                .path("display_name").asText();
+        Double peso = nodo
+                .path("price_instructions")
+                .path("unit_size").asDouble();
+        String imagen = nodo
+                .path("thumbnail").asText();
+        Producto p = new Producto(id, imagen, nombre, precio, precioKilo, peso);
+        return p;
+    }
 
-    private static Map<Double, String[]> devuelveMapa(String json) {
-        Map<Double, String[]> productos = new HashMap<>();
+    private static ArrayList<Producto> devuelveProductos(String json) {
+        ArrayList<Producto> productos = new ArrayList<>();
 
         try {
             ObjectMapper mapeador = new ObjectMapper();
@@ -75,14 +90,8 @@ public class Mercadona implements Supermercado {
             Iterator<JsonNode> hitsIterator = hitsNode.elements();
 
             while (hitsIterator.hasNext()) {
-                JsonNode hitNode = hitsIterator.next();
-
-                Double precio = hitNode.path("price_instructions").path("unit_price").asDouble();
-                String nombre = hitNode.path("display_name").asText();
-                String url = hitNode.path("thumbnail").asText();
-
-                String[] productInfo = {nombre, url};
-                productos.put(precio, productInfo);
+                JsonNode nodo = hitsIterator.next();
+                productos.add(creaProducto(nodo));
             }
         } catch (Exception e) {
             System.err.println("Error en la conversion del JSON a mapa: " + e.getMessage());

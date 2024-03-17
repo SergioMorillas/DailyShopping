@@ -10,16 +10,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lista.listacompra.supermercado.Alcampo;
 import com.lista.listacompra.supermercado.Mercadona;
+import com.lista.listacompra.supermercado.Producto;
 import com.lista.listacompra.supermercado.Supermercado;
 import com.squareup.picasso.Picasso;
 
 import java.lang.*;
-import java.net.*;
-import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,16 +42,14 @@ public class Productos extends AppCompatActivity {
         but.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                HashMap<Double, String[]> productos = agregarElementoDesdeURL(palabra.getText().toString());
+                ArrayList<Producto> productos = agregarElementoDesdeURL(palabra.getText().toString());
                 if (lin != null && lin.getChildCount() > 0) lin.removeAllViews();
-                for (Map.Entry<Double, String[]> entry : productos.entrySet()) {
-                    Double precio = entry.getKey();
-                    String[] s = entry.getValue();
+                for (Producto producto : productos) {
 
                     TextView nombrePrecio = new TextView(lin.getContext());
                     ImageView imagen = new ImageView(lin.getContext());
-                    Picasso.get().load(s[1]).into(imagen);
-                    nombrePrecio.setText(s[0] + "\n\t" + precio + "€");
+                    Picasso.get().load(producto.getImagen()).into(imagen);
+                    nombrePrecio.setText(producto.getNombre() + "\n\t" + producto.getPrecio() + "€");
                     nombrePrecio.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -62,7 +58,7 @@ public class Productos extends AppCompatActivity {
                                 Thread.sleep(1500);
                             } catch (Exception ex) {
                             }
-                            nombrePrecio.setText(s[0] + "\n\t" + precio + "€");
+                            nombrePrecio.setText(producto.getNombre() + "\n\t" + producto.getPrecio() + "€");
                         }
                     });
                     lin.addView(nombrePrecio);
@@ -80,16 +76,16 @@ public class Productos extends AppCompatActivity {
         }
     }
 
-    private HashMap<Double, String[]> agregarElementoDesdeURL(String i) {
-        HashMap<Double, String[]> productos = new HashMap<>();
+    private ArrayList<Producto> agregarElementoDesdeURL(String i) {
+        ArrayList<Producto> productos = null;
         Supermercado al = null;
 
-        if (CreaLista.getSupermercado().equals("Alcampo")){
+        if (CreaLista.getSupermercado().equals("Alcampo")) {
             al = new Alcampo();
-        } else if (CreaLista.getSupermercado().equals("Mercadona")){
+        } else if (CreaLista.getSupermercado().equals("Mercadona")) {
             al = new Mercadona();
         }
-        productos = (HashMap<Double, String[]>) al.busqueda(i);
+        productos = (ArrayList<Producto>) al.busqueda(i);
         return productos;
     }
 }
