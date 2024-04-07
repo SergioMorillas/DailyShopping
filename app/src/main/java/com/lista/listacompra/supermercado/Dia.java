@@ -8,12 +8,12 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class Alcampo implements Supermercado {
+public class Dia extends Supermercado {
     @Override
     public ArrayList<Product> search(String producto) {
         ArrayList<Product> products = new ArrayList<>();
         try {
-            URL url = new URL(ALCAMPO_API_URL + producto);
+            URL url = new URL(DIA_API_URL + producto);
 
             try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
                 StringBuilder stringBuilder = new StringBuilder();
@@ -35,8 +35,7 @@ public class Alcampo implements Supermercado {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(json.toString());
             JsonNode productNode = jsonNode
-                    .path("entities")
-                    .path("product");
+                    .path("search_items");
 
             for (JsonNode node : productNode) //Iteramos por todos los nodos y rellenamos el arraylist
                 products.add(creteProduct(node));
@@ -48,26 +47,22 @@ public class Alcampo implements Supermercado {
     }
 
     private static Product creteProduct(JsonNode nodo) {
-        String id = nodo.path("productId").asText();
+        String id = nodo.path("object_id").asText();
         Double price = nodo
-                .path("price")
-                .path("current")
-                .path("amount").asDouble();
-        Double pricePerKilo = nodo
-                .path("price")
-                .path("unit")
-                .path("current")
-                .path("amount").asDouble();
+                .path("prices")
+                .path("price").asDouble();
+        // Double pricePerKilo = nodo No incluye el precio por kilo
+        //        .path("prices")
+        //        .path("price").asDouble();
         String name = nodo
-                .path("name").asText();
-        Double mass = nodo
-                .path("size")
-                .path("value").asDouble();
-        String image = nodo
-                .path("image")
-                .path("src").asText();
+                .path("displayName").asText();
+        //Double mass = nodo El peso lo incluye en el nombre
+        //        .path("size")
+        //        .path("value").asDouble();
+        String image = "https://www.dia.es" + nodo
+                .path("image").asText();
 
-        Product p = new Product(id, image, name, price, pricePerKilo, mass);
+        Product p = new Product(id, image, name, price);
         return p;
     }
 }
