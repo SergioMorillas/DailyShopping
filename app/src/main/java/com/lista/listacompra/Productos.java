@@ -14,6 +14,7 @@ import com.lista.listacompra.supermercado.Alcampo;
 import com.lista.listacompra.supermercado.Dia;
 import com.lista.listacompra.supermercado.Mercadona;
 import com.lista.listacompra.supermercado.Product;
+
 import com.lista.listacompra.supermercado.Supermercado;
 import com.squareup.picasso.Picasso;
 

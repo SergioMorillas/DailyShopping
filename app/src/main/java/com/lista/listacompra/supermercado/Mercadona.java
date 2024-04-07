@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import javax.net.ssl.HttpsURLConnection;
 
 public class Mercadona extends Supermercado {
+
     @Override
     public ArrayList<Product> search(String producto) {
         try {
@@ -30,6 +31,7 @@ public class Mercadona extends Supermercado {
             StringBuilder response = new StringBuilder();
             try (BufferedReader br = new BufferedReader(
                     new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
+
                 String responseLine = null;
                 while ((responseLine = br.readLine()) != null) {
                     response.append(responseLine.trim());
@@ -42,9 +44,8 @@ public class Mercadona extends Supermercado {
         }
     }
 
-
-
     private static Product createProduct(JsonNode nodo) {
+
         String id = nodo
                 .path("id").asText();
         double price = nodo

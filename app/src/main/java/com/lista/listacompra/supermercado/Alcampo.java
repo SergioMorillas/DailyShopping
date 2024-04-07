@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class Alcampo extends Supermercado {
+public class Alcampo implements Supermercado {
     @Override
     public ArrayList<Product> search(String producto) {
         ArrayList<Product> products = new ArrayList<>();
