@@ -6,8 +6,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,21 +19,43 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class Listas extends AppCompatActivity {
-    Button buttonAdd;
-    LinearLayout layout;
-    ActivityResultLauncher<Intent> launcher;
-    private float x1, x2;
-    static final int MIN_DISTANCE = 150;
+import com.lista.listacompra.supermercado.SupermercadosDisponibles;
 
+public class Listas extends AppCompatActivity {
+    private static final float MIN_DISTANCE = 1f;
+    LinearLayout layout;
+    float x1, x2;
+    ArrayAdapter adapter;
+    Button pruebas;
+    ActivityResultLauncher<Intent> launcher;
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.listas);
-        buttonAdd = findViewById(R.id.buttonAdd);
+        setContentView(R.layout.listas_principal);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         layout = findViewById(R.id.layout);
+        pruebas = findViewById(R.id.button);
+        pruebas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nuevaLista(v);
+            }
+        });
+    }
 
-        initializeLauncher();
+    private View agregarItemALaLista(String sNombre, String sSupermercado, String sFecha) {
+        View itemView = LayoutInflater.from(this).inflate(R.layout.listas, null);
+        TextView nombre = itemView.findViewById(R.id.listaNombre);
+        TextView supermercado = itemView.findViewById(R.id.supermercado);
+        TextView fecha = itemView.findViewById(R.id.precioProducto);
+
+        nombre.setText(sNombre);
+        supermercado.setText(sSupermercado);
+        fecha.setText(sFecha);
+
+        layout.addView(itemView);
+        return itemView;
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -103,4 +127,6 @@ public class Listas extends AppCompatActivity {
         Intent i = new Intent(this, CreaLista.class);
         launcher.launch(i);
     }
+
+
 }
