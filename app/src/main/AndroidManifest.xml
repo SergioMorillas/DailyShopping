@@ -13,7 +13,7 @@
         android:theme="@style/Theme.ListaCompra"
         tools:targetApi="31">
         <activity
-            android:name=".Listas"
+            android:name=".ListasCreador"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,18 +21,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ListaX"
-            android:exported="true">
-        </activity>
-        <activity
-            android:name=".Productos"
-            android:exported="true">
-        </activity>
-        <activity
-            android:name=".CreaLista"
-            android:exported="true">
-        </activity>
+        <activity android:name=".ListasPrincipal" />
+
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

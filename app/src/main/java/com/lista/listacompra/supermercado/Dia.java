@@ -2,16 +2,17 @@ package com.lista.listacompra.supermercado;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lista.listacompra.persistencia.Producto;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class Dia extends Supermercado {
+public class Dia implements Supermercado {
     @Override
-    public ArrayList<Product> search(String producto) {
-        ArrayList<Product> products = new ArrayList<>();
+    public ArrayList<Producto> search(String producto) {
+        ArrayList<Producto> products = new ArrayList<>();
         try {
             URL url = new URL(DIA_API_URL + producto);
 
@@ -29,8 +30,8 @@ public class Dia extends Supermercado {
         return products;
     }
 
-    private static ArrayList<Product> returnProduct(String json) {
-        ArrayList<Product> products = new ArrayList<>();
+    private static ArrayList<Producto> returnProduct(String json) {
+        ArrayList<Producto> products = new ArrayList<>();
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(json.toString());
@@ -46,7 +47,7 @@ public class Dia extends Supermercado {
         return products;
     }
 
-    private static Product creteProduct(JsonNode nodo) {
+    private static Producto creteProduct(JsonNode nodo) {
         String id = nodo.path("object_id").asText();
         Double price = nodo
                 .path("prices")
@@ -62,7 +63,7 @@ public class Dia extends Supermercado {
         String image = "https://www.dia.es" + nodo
                 .path("image").asText();
 
-        Product p = new Product(id, image, name, price);
+        Producto p = new Producto(id, image, name, price);
         return p;
     }
 }

@@ -2,6 +2,7 @@ package com.lista.listacompra.supermercado;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lista.listacompra.persistencia.Producto;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -10,8 +11,8 @@ import java.util.ArrayList;
 
 public class Alcampo implements Supermercado {
     @Override
-    public ArrayList<Product> search(String producto) {
-        ArrayList<Product> products = new ArrayList<>();
+    public ArrayList<Producto> search(String producto) {
+        ArrayList<Producto> products = new ArrayList<>();
         try {
             URL url = new URL(ALCAMPO_API_URL + producto);
 
@@ -29,8 +30,8 @@ public class Alcampo implements Supermercado {
         return products;
     }
 
-    private static ArrayList<Product> returnProduct(String json) {
-        ArrayList<Product> products = new ArrayList<>();
+    private static ArrayList<Producto> returnProduct(String json) {
+        ArrayList<Producto> products = new ArrayList<>();
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(json.toString());
@@ -47,7 +48,7 @@ public class Alcampo implements Supermercado {
         return products;
     }
 
-    private static Product creteProduct(JsonNode nodo) {
+    private static Producto creteProduct(JsonNode nodo) {
         String id = nodo.path("productId").asText();
         Double price = nodo
                 .path("price")
@@ -67,7 +68,7 @@ public class Alcampo implements Supermercado {
                 .path("image")
                 .path("src").asText();
 
-        Product p = new Product(id, image, name, price, pricePerKilo, mass);
+        Producto p = new Producto(id, image, name, price, pricePerKilo, mass);
         return p;
     }
 }
