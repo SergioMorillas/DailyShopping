@@ -1,13 +1,16 @@
 package com.lista.listacompra.supermercado;
 
+/**
+ * Enumeracion que contiene todos los supermercados pertenecientes a la aplicación
+ */
 public enum SupermercadosDisponibles {
     Mercadona,
     Dia,
     Alcampo;
 
     /**
-     *
-     * @return
+     * Metodo que devuelve los supermercados
+     * @return Un array de Strings conteniendo los nombres de los supermercados disponibles
      */
     public static String[] getStringValues() {
         SupermercadosDisponibles[] supermarket = SupermercadosDisponibles.values();

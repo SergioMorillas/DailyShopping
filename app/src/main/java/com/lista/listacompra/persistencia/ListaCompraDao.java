@@ -17,6 +17,8 @@ public interface ListaCompraDao {
     @Query("SELECT * FROM listas_compra WHERE id = :id")
     LiveData<ListaCompra> getListaCompraById(int id);
 
+    @Query("SELECT * FROM listas_compra WHERE nombre = :name")
+    LiveData<ListaCompra> getListaCompraByName(int name);
     @Query("SELECT * FROM listas_compra")
     LiveData<List<ListaCompra>> getAllListasCompra();
 

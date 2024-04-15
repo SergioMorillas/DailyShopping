@@ -1,28 +1,55 @@
 package com.lista.listacompra;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+
 import androidx.appcompat.widget.AppCompatButton;
 
+/**
+ * Botón personalizado que cambia de color al ser deslizado horizontalmente.
+ */
 public class BotonDeslizable extends AppCompatButton {
 
+    /**
+     * Constructor que crea un nuevo BotonDeslizable.
+     *
+     * @param context Contexto de la aplicación.
+     */
     public BotonDeslizable(Context context) {
         super(context);
         init();
     }
 
+    /**
+     * Constructor que crea un nuevo BotonDeslizable.
+     *
+     * @param context Contexto de la aplicación.
+     * @param attrs   Atributos del XML.
+     */
     public BotonDeslizable(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
+    /**
+     * Constructor que crea un nuevo BotonDeslizable.
+     *
+     * @param context      Contexto de la aplicación.
+     * @param attrs        Atributos del XML.
+     * @param defStyleAttr Estilo predeterminado.
+     */
     public BotonDeslizable(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
+    /**
+     * Inicializa el botón.
+     */
+    @SuppressLint("ClickableViewAccessibility")
     private void init() {
         setText("Desliza");
 

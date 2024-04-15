@@ -3,6 +3,7 @@ package com.lista.listacompra.persistencia;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
@@ -11,7 +12,9 @@ import com.lista.listacompra.persistencia.Producto;
 
 import java.util.ArrayList;
 
-@Entity(tableName = "listas_compra")
+@Entity(
+        tableName = "listas_compra",
+        indices = {@Index(value = {"nombre", "fecha", "supermercado"}, unique = true)})
 @TypeConverters(ConvertidorProducto.class)
 public class ListaCompra {
     @PrimaryKey(autoGenerate = true)
