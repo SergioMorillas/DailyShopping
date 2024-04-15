@@ -33,6 +33,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1") // Librerias de android
     implementation("com.google.android.material:material:1.11.0") // Librerias de android
     implementation("androidx.constraintlayout:constraintlayout:2.1.4") // Librerias de android
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
 
     implementation("com.fasterxml.jackson.core:jackson-core:2.15.3") // Librerias para manejar los JSON devueltos por los API
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.3") // Librerias para manejar los JSON devueltos por los API
