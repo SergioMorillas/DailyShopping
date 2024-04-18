@@ -22,7 +22,7 @@
             android:digits="12"/>
 
         <TextView
-            android:id="@+id/supermercado"
+            android:id="@+id/supermercadoProducto"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"

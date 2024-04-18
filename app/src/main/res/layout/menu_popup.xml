@@ -29,7 +29,7 @@
             android:text="Mis listas"
             android:drawableStart="@drawable/icono_mis_listas"
             android:layout_gravity="start"
-            android:gravity="start" />
+            android:gravity="start"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/supermercados"
@@ -42,8 +42,8 @@
             android:text="Buscar supermercados"
             android:drawableStart="@drawable/icono_buscar_supermercado"
             android:gravity="start"
-            android:paddingUp="15dp"
-            android:paddingBottom="15dp"/>
+            android:paddingBottom="15dp"
+            />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/comparador"
@@ -55,7 +55,8 @@
             android:textSize="35dp"
             android:text="Comparar precios"
             android:drawableStart="@drawable/icono_comparar_precios"
-            android:gravity="start"/>
+            android:gravity="start"
+            android:onClick="onCompararButtonClick"/>
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

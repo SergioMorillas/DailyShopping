@@ -4,9 +4,18 @@ package com.lista.listacompra.supermercado;
  * Enumeracion que contiene todos los supermercados pertenecientes a la aplicación
  */
 public enum SupermercadosDisponibles {
-    Mercadona,
-    Dia,
-    Alcampo;
+    Mercadona(Mercadona.class),
+    Dia(Dia.class),
+    Alcampo(Alcampo.class);
+
+    private final Class<? extends Supermercado> clazz;
+
+    SupermercadosDisponibles(Class<? extends Supermercado> clazz) {
+        this.clazz = clazz;
+    }
+    public Class<? extends Supermercado> getClazz() {
+        return clazz;
+    }
 
     /**
      * Metodo que devuelve los supermercados

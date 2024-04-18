@@ -42,7 +42,7 @@ public class ListasCreador extends AppCompatActivity {
      * Inicializa las variables de la actividad.
      */
     private void initializeVariables() {
-        name = findViewById(R.id.etName);
+        name = findViewById(R.id.txtBuscador);
         calendar = findViewById(R.id.cvCalendar);
         supermarket = findViewById(R.id.spnSupermarket);
         accept = findViewById(R.id.buttonCreate);

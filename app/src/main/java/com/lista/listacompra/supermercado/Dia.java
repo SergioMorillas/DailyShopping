@@ -56,7 +56,8 @@ public class Dia implements Supermercado {
         //        .path("prices")
         //        .path("price").asDouble();
         String name = nodo
-                .path("displayName").asText();
+                .path("display_name").asText();
+        System.out.println(nodo.toString());
         //Double mass = nodo El peso lo incluye en el nombre
         //        .path("size")
         //        .path("value").asDouble();

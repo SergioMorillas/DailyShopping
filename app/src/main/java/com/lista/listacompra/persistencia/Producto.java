@@ -34,6 +34,7 @@ public class Producto implements Comparable<Producto> {
     private ArrayList<ListaCompra> listas;
 
 
+
     public Producto(String id, String imagen, String nombre, double precio, double precioKilo, double peso) {
         this.id = id;
         this.image = imagen;
@@ -55,7 +56,9 @@ public class Producto implements Comparable<Producto> {
     public Producto(String id) {
         this.id = id;
     }
-    public Producto(){}
+    public Producto(){
+        this.name = "Producto no encontrado";
+    }
 
     public String getId() {
         return id;
@@ -139,15 +142,18 @@ public class Producto implements Comparable<Producto> {
     }
 
     @Override
-    public int compareTo(Producto o) { // >1 primero mayor, 0 iguales, <1 si el segundo mayor
-        if (this.getPrice() - o.getPrice() == 0) {
-            if (this.getPricePerKilo() - o.getPricePerKilo() == 0) {
-                return 0;
-            } else {
-                return (int) (this.getPricePerKilo() - o.getPricePerKilo());
-            }
-        } else {
-            return (int)(this.getPrice() - o.getPrice());
+    public int compareTo(Producto o) {
+        int comparacionPrecio = Double.compare(this.getPrice(), o.getPrice());
+        if (comparacionPrecio != 0) {
+            return comparacionPrecio;
         }
+
+        int comparacionPrecioPorKilo = Double.compare(this.getPricePerKilo(), o.getPricePerKilo());
+        if (comparacionPrecioPorKilo != 0) {
+            return comparacionPrecioPorKilo;
+        }
+
+        return this.getName().compareTo(o.getName());
     }
+
 }

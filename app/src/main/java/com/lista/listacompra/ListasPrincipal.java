@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -93,13 +92,22 @@ public class ListasPrincipal extends AppCompatActivity {
             LinearLayout fila = (LinearLayout) getLayoutInflater().inflate(R.layout.productos_lista, null);
 
             TextView nombreListaTextView = fila.findViewById(R.id.nombreLista);
-            TextView supermercadoTextView = fila.findViewById(R.id.supermercado);
+            TextView supermercadoTextView = fila.findViewById(R.id.supermercadoProducto);
             TextView fechaTextView = fila.findViewById(R.id.fecha);
 
             nombreListaTextView.setText(lista.getNombre());
             supermercadoTextView.setText(lista.getSupermercado());
             fechaTextView.setText(new Date(lista.getFecha()).toString()); // Suponiendo que getFecha() devuelve un objeto LocalDate
 
+            fila.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(ListasPrincipal.this, BuscadorProductos.class);
+                    intent.putExtra("supermercado",lista.getSupermercado());
+                    startActivity(intent);
+                    Toast.makeText(ListasPrincipal.this, "Metodo en progreso", Toast.LENGTH_SHORT).show();
+                }
+            });
             addSeparatorLine();
             layout.addView(fila);
         }
@@ -112,14 +120,6 @@ public class ListasPrincipal extends AppCompatActivity {
         Dialog menuDialog = new Dialog(this, android.R.style.Theme);
         menuDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         menuDialog.setContentView(R.layout.menu_popup);
-
-        Button prueba1 = menuDialog.findViewById(R.id.listas);
-        prueba1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(ListasPrincipal.this, "esto es un intento", Toast.LENGTH_LONG).show();
-            }
-        });
 
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
         Window window = menuDialog.getWindow();
@@ -136,7 +136,7 @@ public class ListasPrincipal extends AppCompatActivity {
         menuDialog.show();
     }
 
-    /** ºº
+    /**
      *@brief Navega a la actividad ListasCreador.
      */
     private void navigateToListasCreador() {
@@ -154,5 +154,9 @@ public class ListasPrincipal extends AppCompatActivity {
         params.setMargins(0, 0, 0, 8);
         linea.setLayoutParams(params);
         layout.addView(linea);
+    }
+    public void onCompararButtonClick(View view){
+        Intent i = new Intent(this, ComparadorProductos.class);
+        startActivity(i);
     }
 }

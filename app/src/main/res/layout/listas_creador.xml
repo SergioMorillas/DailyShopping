@@ -49,7 +49,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.145"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etName" />
+        app:layout_constraintTop_toBottomOf="@+id/txtBuscador" />
 
     <TextView
         android:id="@+id/textViewSupermercado"
@@ -63,7 +63,7 @@
         app:layout_constraintTop_toBottomOf="@+id/cvCalendar" />
 
     <EditText
-        android:id="@+id/etName"
+        android:id="@+id/txtBuscador"
         android:layout_width="344dp"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
