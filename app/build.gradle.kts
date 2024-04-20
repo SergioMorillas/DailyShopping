@@ -30,15 +30,19 @@ android {
 
 dependencies {
 
-    // noinspection GradleCompatible
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.8.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("com.fasterxml.jackson.core:jackson-core:2.15.3")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.15.3")
-    implementation("com.fasterxml.jackson.core:jackson-annotations:2.15.3")
-    implementation("com.squareup.picasso:picasso:2.71828")
-    implementation("com.squareup.okhttp3:okhttp:4.9.1")
+    implementation("androidx.appcompat:appcompat:1.6.1") // Librerias de android
+    implementation("com.google.android.material:material:1.11.0") // Librerias de android
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4") // Librerias de android
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
+
+    implementation("com.fasterxml.jackson.core:jackson-core:2.15.3") // Librerias para manejar los JSON devueltos por los API
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.15.3") // Librerias para manejar los JSON devueltos por los API
+    implementation("com.fasterxml.jackson.core:jackson-annotations:2.15.3") // Librerias para manejar los JSON devueltos por los API
+
+    implementation("com.squareup.picasso:picasso:2.71828") // Libreria para mostrar las imagenes de los productos en la interfaz
+
+    implementation("androidx.room:room-runtime:2.6.1") // Librerias para acceder a SQLite desde la aplicación
+    annotationProcessor ("androidx.room:room-compiler:2.6.1") // Librerias para acceder a SQLite desde la aplicación
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
