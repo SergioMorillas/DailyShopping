@@ -1,4 +1,4 @@
-package com.lista.listacompra.persistencia;
+package com.lista.listacompra.accesoDatos.baseDatos;
 
 import androidx.room.TypeConverter;
 
@@ -7,20 +7,19 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
-public class ConvertidorLista {
+public class ConvertidorProducto {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @TypeConverter
-    public static ArrayList<ListaCompra> fromJson(String value) {
+    public static List<ProductoBD> fromJson(String value) {
         if (value == null) {
             return null;
         }
 
         try {
-            return objectMapper.readValue(value, new TypeReference<ArrayList<ListaCompra>>() {
-            });
+            return objectMapper.readValue(value, new TypeReference<List<ProductoBD>>() {});
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -28,7 +27,7 @@ public class ConvertidorLista {
     }
 
     @TypeConverter
-    public static String toJson(ArrayList<ListaCompra> productos) {
+    public static String toJson(List<ProductoBD> productos) {
         if (productos == null) {
             return null;
         }

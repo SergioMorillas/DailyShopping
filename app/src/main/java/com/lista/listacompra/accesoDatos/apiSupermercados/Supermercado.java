@@ -1,6 +1,6 @@
-package com.lista.listacompra.supermercado;
+package com.lista.listacompra.accesoDatos.apiSupermercados;
 
-import com.lista.listacompra.persistencia.Producto;
+import com.lista.listacompra.accesoDatos.baseDatos.ProductoBD;
 
 import java.util.ArrayList;
 
@@ -10,5 +10,5 @@ public interface Supermercado {
             "9d8f2e39e90df472b4f2e559a116fe17";
     public static final String ALCAMPO_API_URL = "https://www.compraonline.alcampo.es/api/v5/products/search?limit=100&offset=0&term=";
     public static final String DIA_API_URL = "https://www.dia.es/api/v1/search-back/search/reduced?q=";
-    public abstract ArrayList<Producto> search(String producto);
+    public abstract ArrayList<ProductoBD> search(String producto);
 }

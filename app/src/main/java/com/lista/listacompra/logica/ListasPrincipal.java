@@ -1,4 +1,4 @@
-package com.lista.listacompra;
+package com.lista.listacompra.logica;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -15,10 +15,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 
-import com.lista.listacompra.persistencia.AppDatabase;
-import com.lista.listacompra.persistencia.ListaCompra;
+import com.lista.listacompra.R;
+import com.lista.listacompra.modelo.Gestor;
+import com.lista.listacompra.modelo.ListaCompra;
 
 import java.sql.Date;
 import java.util.List;
@@ -31,6 +31,7 @@ public class ListasPrincipal extends AppCompatActivity {
     private LinearLayout layout;
     private Button buttonAdd;
     private ImageButton menu;
+    private Gestor gestor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +39,10 @@ public class ListasPrincipal extends AppCompatActivity {
         setContentView(R.layout.listas_principal);
         initializeViews();
         setupListeners();
-        observeListasCompra();
+        gestor = new Gestor(getApplicationContext());
+        new Thread(()->{
+            insertarListasEnVistas(gestor.getTodaslistas());
+        }).start();
     }
 
     /**
@@ -69,18 +73,6 @@ public class ListasPrincipal extends AppCompatActivity {
         });
     }
 
-    /**
-     * @brief Observa los cambios en la lista de compras en la base de datos y actualiza la interfaz de usuario.
-     */
-    private void observeListasCompra() {
-        AppDatabase database = AppDatabase.getDatabase(getApplicationContext());
-        database.listaCompraDao().getAllListasCompra().observe(this, new Observer<List<ListaCompra>>() {
-            @Override
-            public void onChanged(List<ListaCompra> listaCompras) {
-                insertarListasEnVistas(listaCompras);
-            }
-        });
-    }
 
     /**
      * @brief Inserta las listas de compras en las vistas de la actividad.
@@ -102,7 +94,8 @@ public class ListasPrincipal extends AppCompatActivity {
             fila.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(ListasPrincipal.this, BuscadorProductos.class);
+                    Intent intent = new Intent(ListasPrincipal.this, ListaEspecifica.class);
+                    intent.putExtra("nombreLista",lista.getNombre());
                     intent.putExtra("supermercado",lista.getSupermercado());
                     startActivity(intent);
                     Toast.makeText(ListasPrincipal.this, "Metodo en progreso", Toast.LENGTH_SHORT).show();

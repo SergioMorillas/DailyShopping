@@ -20,7 +20,7 @@
         android:id="@+id/nombreAplicacion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Comparador de precios"
+        android:text="Lista: "
         android:textColor="@android:color/white"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -29,33 +29,6 @@
         app:layout_constraintStart_toStartOf="@+id/toolbar"
         app:layout_constraintTop_toTopOf="@+id/toolbar" />
 
-    <EditText
-        android:id="@+id/txtBuscador"
-        android:layout_width="0dp"
-        android:layout_height="55dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="@android:color/darker_gray"
-        android:hint="Patatas fritas"
-        android:inputType="text"
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@+id/btnBuscar"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
-    <Button
-        android:id="@+id/btnBuscar"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="@color/primario"
-        android:text="Buscar"
-        app:layout_constraintBottom_toBottomOf="@+id/txtBuscador"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/txtBuscador" />
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -65,7 +38,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtBuscador">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <LinearLayout
             android:id="@+id/layout"
@@ -73,5 +46,19 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" />
     </ScrollView>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/buttonAdd"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/boton_redondo"
+        android:text="+"
+        android:textColor="@color/white"
+        android:textSize="40dp"
+        app:layout_constraintBottom_toBottomOf="@+id/scrollView"
+        app:layout_constraintEnd_toEndOf="@+id/scrollView" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

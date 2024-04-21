@@ -1,4 +1,9 @@
-package com.lista.listacompra.supermercado;
+package com.lista.listacompra.modelo;
+
+import com.lista.listacompra.accesoDatos.apiSupermercados.Supermercado;
+import com.lista.listacompra.accesoDatos.apiSupermercados.Mercadona;
+import com.lista.listacompra.accesoDatos.apiSupermercados.Dia;
+import com.lista.listacompra.accesoDatos.apiSupermercados.Alcampo;
 
 /**
  * Enumeracion que contiene todos los supermercados pertenecientes a la aplicación

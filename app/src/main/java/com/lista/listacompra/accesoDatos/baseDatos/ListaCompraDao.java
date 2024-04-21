@@ -1,32 +1,30 @@
-package com.lista.listacompra.persistencia;
+package com.lista.listacompra.accesoDatos.baseDatos;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Update;
 
 import java.util.List;
 
 @Dao
 public interface ListaCompraDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertListaCompra(ListaCompra listaCompra);
+    void insertListaCompra(ListaCompraBD listaCompra);
 
     @Query("SELECT * FROM listas_compra WHERE id = :id")
-    LiveData<ListaCompra> getListaCompraById(int id);
+    ListaCompraBD getListaCompraById(int id);
 
     @Query("SELECT * FROM listas_compra WHERE nombre = :name")
-    LiveData<ListaCompra> getListaCompraByName(int name);
+    ListaCompraBD getListaCompraByName(String name);
     @Query("SELECT * FROM listas_compra")
-    LiveData<List<ListaCompra>> getAllListasCompra();
+    List<ListaCompraBD> getAllListasCompra();
 
     @Insert
-    void insertListaCompras(List<ListaCompra> listaCompra);
+    void insertListaCompras(List<ListaCompraBD> listaCompra);
 
     @Insert
-    void insertListaCompras(ListaCompra listaCompra);
+    void insertListaCompras(ListaCompraBD listaCompra);
 
     @Query("DELETE FROM listas_compra WHERE id = :id")
     void deleteListaCompra(int id);

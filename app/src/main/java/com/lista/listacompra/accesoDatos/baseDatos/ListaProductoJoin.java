@@ -1,17 +1,16 @@
-package com.lista.listacompra.persistencia;
+package com.lista.listacompra.accesoDatos.baseDatos;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
-import androidx.room.PrimaryKey;
 
 @Entity(tableName = "lista_producto_join",
         primaryKeys = {"listaCompraId", "productoId"},
         foreignKeys = {
-                @ForeignKey(entity = ListaCompra.class,
+                @ForeignKey(entity = ListaCompraBD.class,
                         parentColumns = "id",
                         childColumns = "listaCompraId"),
-                @ForeignKey(entity = Producto.class,
+                @ForeignKey(entity = ProductoBD.class,
                         parentColumns = "id",
                         childColumns = "productoId")
         })

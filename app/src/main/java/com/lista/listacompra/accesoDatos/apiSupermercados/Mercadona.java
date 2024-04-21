@@ -1,8 +1,8 @@
-package com.lista.listacompra.supermercado;
+package com.lista.listacompra.accesoDatos.apiSupermercados;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lista.listacompra.persistencia.Producto;
+import com.lista.listacompra.accesoDatos.baseDatos.ProductoBD;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -16,7 +16,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class Mercadona implements Supermercado {
 
     @Override
-    public ArrayList<Producto> search(String producto) {
+    public ArrayList<ProductoBD> search(String producto) {
         try {
             URL url = new URL(MERCADONA_API_URL);
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
@@ -45,7 +45,7 @@ public class Mercadona implements Supermercado {
         }
     }
 
-    private static Producto createProduct(JsonNode nodo) {
+    private static ProductoBD createProduct(JsonNode nodo) {
 
         String id = nodo
                 .path("id").asText();
@@ -62,12 +62,12 @@ public class Mercadona implements Supermercado {
                 .path("unit_size").asDouble();
         String image = nodo
                 .path("thumbnail").asText();
-        return new Producto(id, image, name, price, pricePerKilo, mass);
+        return new ProductoBD(id, image, name, price, pricePerKilo, mass);
 
     }
 
-    private static ArrayList<Producto> returnProducts(String json) {
-        ArrayList<Producto> products = new ArrayList<>();
+    private static ArrayList<ProductoBD> returnProducts(String json) {
+        ArrayList<ProductoBD> products = new ArrayList<>();
 
         try {
             ObjectMapper mapper = new ObjectMapper();

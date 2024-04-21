@@ -14,7 +14,7 @@
         android:theme="@style/Theme.ListaCompra"
         tools:targetApi="31">
         <activity
-            android:name=".ListasCreador"
+            android:name=".logica.ListasPrincipal"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -24,13 +24,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ListasPrincipal"
+            android:name=".logica.ListasCreador"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ComparadorProductos"
+            android:name=".logica.ComparadorProductos"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".BuscadorProductos"
+            android:name=".logica.BuscadorProductos"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".logica.ListaEspecifica"
             android:screenOrientation="portrait" />
 
     </application>

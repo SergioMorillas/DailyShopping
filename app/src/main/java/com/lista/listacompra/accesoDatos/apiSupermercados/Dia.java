@@ -1,20 +1,20 @@
-package com.lista.listacompra.supermercado;
+package com.lista.listacompra.accesoDatos.apiSupermercados;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lista.listacompra.persistencia.Producto;
+import com.lista.listacompra.accesoDatos.baseDatos.ProductoBD;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class Alcampo implements Supermercado {
+public class Dia implements Supermercado {
     @Override
-    public ArrayList<Producto> search(String producto) {
-        ArrayList<Producto> products = new ArrayList<>();
+    public ArrayList<ProductoBD> search(String producto) {
+        ArrayList<ProductoBD> products = new ArrayList<>();
         try {
-            URL url = new URL(ALCAMPO_API_URL + producto);
+            URL url = new URL(DIA_API_URL + producto);
 
             try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
                 StringBuilder stringBuilder = new StringBuilder();
@@ -30,14 +30,13 @@ public class Alcampo implements Supermercado {
         return products;
     }
 
-    private static ArrayList<Producto> returnProduct(String json) {
-        ArrayList<Producto> products = new ArrayList<>();
+    private static ArrayList<ProductoBD> returnProduct(String json) {
+        ArrayList<ProductoBD> products = new ArrayList<>();
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(json.toString());
             JsonNode productNode = jsonNode
-                    .path("entities")
-                    .path("product");
+                    .path("search_items");
 
             for (JsonNode node : productNode) //Iteramos por todos los nodos y rellenamos el arraylist
                 products.add(creteProduct(node));
@@ -48,27 +47,23 @@ public class Alcampo implements Supermercado {
         return products;
     }
 
-    private static Producto creteProduct(JsonNode nodo) {
-        String id = nodo.path("productId").asText();
+    private static ProductoBD creteProduct(JsonNode nodo) {
+        String id = nodo.path("object_id").asText();
         Double price = nodo
-                .path("price")
-                .path("current")
-                .path("amount").asDouble();
-        Double pricePerKilo = nodo
-                .path("price")
-                .path("unit")
-                .path("current")
-                .path("amount").asDouble();
+                .path("prices")
+                .path("price").asDouble();
+        // Double pricePerKilo = nodo No incluye el precio por kilo
+        //        .path("prices")
+        //        .path("price").asDouble();
         String name = nodo
-                .path("name").asText();
-        Double mass = nodo
-                .path("size")
-                .path("value").asDouble();
-        String image = nodo
-                .path("image")
-                .path("src").asText();
+                .path("display_name").asText();
+        //Double mass = nodo El peso lo incluye en el nombre
+        //        .path("size")
+        //        .path("value").asDouble();
+        String image = "https://www.dia.es" + nodo
+                .path("image").asText();
 
-        Producto p = new Producto(id, image, name, price, pricePerKilo, mass);
+        ProductoBD p = new ProductoBD(id, image, name, price);
         return p;
     }
 }

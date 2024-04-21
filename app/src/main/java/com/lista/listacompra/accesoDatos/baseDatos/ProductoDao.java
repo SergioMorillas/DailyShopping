@@ -1,4 +1,4 @@
-package com.lista.listacompra.persistencia;
+package com.lista.listacompra.accesoDatos.baseDatos;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -10,19 +10,19 @@ import java.util.List;
 @Dao
 public interface ProductoDao {
     @Insert
-    void insertProducto(Producto producto);
+    void insertProducto(ProductoBD producto);
 
     @Query("SELECT * FROM productos WHERE id = :id")
-    LiveData<Producto> getProductoById(String id);
+    LiveData<ProductoBD> getProductoById(String id);
 
     @Query("SELECT * FROM productos")
-    LiveData<List<Producto>> getAllProductos();
+    LiveData<List<ProductoBD>> getAllProductos();
 
     @Insert
-    void insertProductos(List<Producto> productos);
+    void insertProductos(List<ProductoBD> productos);
 
     @Insert
-    void insertProductos(Producto productos);
+    void insertProductos(ProductoBD productos);
 
     @Query("DELETE FROM productos WHERE id = :id")
     void deleteProducto(String id);

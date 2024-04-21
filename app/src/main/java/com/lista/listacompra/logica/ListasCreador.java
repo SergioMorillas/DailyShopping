@@ -1,4 +1,4 @@
-package com.lista.listacompra;
+package com.lista.listacompra.logica;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,9 +12,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.lista.listacompra.persistencia.AppDatabase;
-import com.lista.listacompra.persistencia.ListaCompra;
-import com.lista.listacompra.supermercado.SupermercadosDisponibles;
+import com.lista.listacompra.R;
+import com.lista.listacompra.accesoDatos.baseDatos.ListaCompraBD;
+import com.lista.listacompra.modelo.Gestor;
+import com.lista.listacompra.modelo.ListaCompra;
+import com.lista.listacompra.modelo.SupermercadosDisponibles;
 
 import java.util.ArrayList;
 
@@ -27,14 +29,12 @@ public class ListasCreador extends AppCompatActivity {
     private CalendarView calendar;
     private Spinner supermarket;
     private Button accept, cancel;
-    private AppDatabase database;
-
+    private Gestor gestor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.listas_creador);
         initializeVariables();
-        database = AppDatabase.getDatabase(getApplicationContext());
         setupListeners();
     }
 
@@ -86,7 +86,7 @@ public class ListasCreador extends AppCompatActivity {
             ListaCompra listaCompra = new ListaCompra(lName, selectedDate, lSupermarket, new ArrayList<>());
 
             new Thread(() -> {
-                database.listaCompraDao().insertListaCompra(listaCompra);
+                gestor.insertaLista(listaCompra);
             }).start();
             name.setText("");
             navigateToListasPrincipal();

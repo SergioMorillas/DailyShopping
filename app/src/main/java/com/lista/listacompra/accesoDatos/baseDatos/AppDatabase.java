@@ -1,4 +1,4 @@
-package com.lista.listacompra.persistencia;
+package com.lista.listacompra.accesoDatos.baseDatos;
 
 import android.content.Context;
 
@@ -7,10 +7,8 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-
-@Database(entities = {ListaCompra.class, Producto.class, ListaProductoJoin.class}, version = 1)
-@TypeConverters({ConvertidorProducto.class, ConvertidorLista.class})
+@Database(entities = {ListaCompraBD.class, ProductoBD.class, ListaProductoJoin.class}, version = 2)
+@TypeConverters({ ConvertidorProducto.class })
 public abstract class AppDatabase extends RoomDatabase {
     public abstract ListaCompraDao listaCompraDao();
 

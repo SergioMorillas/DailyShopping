@@ -1,4 +1,4 @@
-package com.lista.listacompra.persistencia;
+package com.lista.listacompra.accesoDatos.baseDatos;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
@@ -6,11 +6,11 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
-import java.util.ArrayList;
+import com.lista.listacompra.modelo.Producto;
+
 import java.util.Objects;
 @Entity(tableName = "productos")
-@TypeConverters(ConvertidorLista.class)
-public class Producto implements Comparable<Producto> {
+public class ProductoBD{
     @PrimaryKey
     @ColumnInfo(name="id")
     @NonNull
@@ -31,11 +31,10 @@ public class Producto implements Comparable<Producto> {
     @ColumnInfo(name = "mass")
     private double mass;
 
-    private ArrayList<ListaCompra> listas;
 
 
 
-    public Producto(String id, String imagen, String nombre, double precio, double precioKilo, double peso) {
+    public ProductoBD(String id, String imagen, String nombre, double precio, double precioKilo, double peso) {
         this.id = id;
         this.image = imagen;
         this.name = nombre;
@@ -43,8 +42,15 @@ public class Producto implements Comparable<Producto> {
         this.pricePerKilo = precioKilo;
         this.mass = peso;
     }
+    public ProductoBD(Producto p) {
+        this.image = p.getImage();
+        this.name = p.getName();
+        this.price = p.getPrice();
+        this.pricePerKilo = p.getPricePerKilo();
+        this.mass = p.getMass();
+    }
 
-    public Producto(String id, String imagen, String nombre, double precio) {
+    public ProductoBD(String id, String imagen, String nombre, double precio) {
         this.id = id;
         this.image = imagen;
         this.name = nombre;
@@ -53,11 +59,11 @@ public class Producto implements Comparable<Producto> {
         this.mass = -1;
     }
 
-    public Producto(String id) {
+    public ProductoBD(String id) {
         this.id = id;
     }
-    public Producto(){
-        this.name = "Producto no encontrado";
+    public ProductoBD(){
+        this.name = "ProductoBD no encontrado";
     }
 
     public String getId() {
@@ -108,19 +114,11 @@ public class Producto implements Comparable<Producto> {
         this.mass = mass;
     }
 
-    public ArrayList<ListaCompra> getListas() {
-        return listas;
-    }
-
-    public void setListas(ArrayList<ListaCompra> listas) {
-        this.listas = listas;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Producto)) return false;
-        Producto producto = (Producto) o;
+        if (!(o instanceof ProductoBD)) return false;
+        ProductoBD producto = (ProductoBD) o;
         return getPrice() == producto.getPrice() && getMass() == producto.getMass() && Objects.equals(getName(), producto.getName());
     }
 
@@ -131,7 +129,7 @@ public class Producto implements Comparable<Producto> {
 
     @Override
     public String toString() {
-        return "Producto{" +
+        return "ProductoBD{" +
                 "id='" + id + "'\n\t" +
                 ", image='" + image + "'\n\t" +
                 ", name='" + name + "'\n\t" +
@@ -139,21 +137,6 @@ public class Producto implements Comparable<Producto> {
                 ", pricePerKilo=" + pricePerKilo + "\n\t" +
                 ", mass=" + mass + "\n\t" +
                 '}';
-    }
-
-    @Override
-    public int compareTo(Producto o) {
-        int comparacionPrecio = Double.compare(this.getPrice(), o.getPrice());
-        if (comparacionPrecio != 0) {
-            return comparacionPrecio;
-        }
-
-        int comparacionPrecioPorKilo = Double.compare(this.getPricePerKilo(), o.getPricePerKilo());
-        if (comparacionPrecioPorKilo != 0) {
-            return comparacionPrecioPorKilo;
-        }
-
-        return this.getName().compareTo(o.getName());
     }
 
 }

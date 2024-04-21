@@ -1,6 +1,5 @@
-package com.lista.listacompra;
+package com.lista.listacompra.logica;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,23 +11,22 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.DrawableRes;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.lista.listacompra.persistencia.AppDatabase;
-import com.lista.listacompra.persistencia.Producto;
-import com.lista.listacompra.supermercado.Supermercado;
-import com.lista.listacompra.supermercado.SupermercadosDisponibles;
-import com.lista.listacompra.supermercado.SupermercadosFactoria;
+import com.lista.listacompra.R;
+import com.lista.listacompra.accesoDatos.baseDatos.ProductoBD;
+import com.lista.listacompra.modelo.Producto;
+import com.lista.listacompra.modelo.SupermercadosDisponibles;
+import com.lista.listacompra.modelo.SupermercadosFactoria;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class ComparadorProductos extends AppCompatActivity {
     Button buscar;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
-
+    SupermercadosFactoria superM;
     LinearLayout layout;
     EditText texto;
 
@@ -37,6 +35,7 @@ public class ComparadorProductos extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.comparador_productos);
         initializeViews();
+        superM = new SupermercadosFactoria();
         buscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,15 +53,15 @@ public class ComparadorProductos extends AppCompatActivity {
         if (!producto.isBlank()) {
             new Thread(() -> {
                 for (SupermercadosDisponibles nombre : SupermercadosDisponibles.values()) {
-                    Supermercado supermercado = SupermercadosFactoria.crearSupermercado(nombre);
-                    if (supermercado != null) {
-                        ArrayList<Producto> listaTemporal = supermercado.search(producto);
+                    superM.crearSupermercado(nombre);
+                    if (superM.getNombre() != null) {
+                        List<Producto> listaTemporal = superM.busqueda(producto);
                         Collections.sort(listaTemporal);
                         if (listaTemporal.size() != 0) {
                             Producto p = listaTemporal.get(0);
-                            mHandler.post(() -> añadirObjeto(p, supermercado)); // Añade el objeto en el hilo principal
+                            mHandler.post(() -> añadirObjeto(p, superM)); // Añade el objeto en el hilo principal
                         } else {
-                            mHandler.post(() -> añadirObjetoVacio(new Producto(), supermercado));
+                            mHandler.post(() -> añadirObjetoVacio(new Producto()));
                         }
                     }
                 }
@@ -73,7 +72,7 @@ public class ComparadorProductos extends AppCompatActivity {
         }
     }
 
-    private void añadirObjetoVacio(Producto p, Supermercado s) {
+    private void añadirObjetoVacio(Producto p) {
         LinearLayout fila = (LinearLayout) getLayoutInflater().inflate(R.layout.productos_comparador, null);
         TextView nombre = fila.findViewById(R.id.nombreProducto);
         ImageView imagen = fila.findViewById(R.id.imageProducto);
@@ -84,7 +83,7 @@ public class ComparadorProductos extends AppCompatActivity {
 
     }
 
-    private void añadirObjeto(Producto p, Supermercado s) {
+    private void añadirObjeto(Producto p, SupermercadosFactoria s) {
         LinearLayout fila = (LinearLayout) getLayoutInflater().inflate(R.layout.productos_comparador, null);
         TextView supermercado = fila.findViewById(R.id.supermercadoProducto);
         TextView nombre = fila.findViewById(R.id.nombreProducto);
@@ -92,7 +91,7 @@ public class ComparadorProductos extends AppCompatActivity {
         TextView precioKilo = fila.findViewById(R.id.precioPorKilo);
         ImageView imagen = fila.findViewById(R.id.imageProducto);
 
-        supermercado.setText(s.getClass().getSimpleName());
+        supermercado.setText(s.getNombre());
         nombre.setText(p.getName());
 
         precio.setText((String.format("%s€", p.getPrice())));
