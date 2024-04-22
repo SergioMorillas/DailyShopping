@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.lista.listacompra.R;
@@ -19,6 +20,7 @@ import com.lista.listacompra.modelo.ListaCompra;
 import com.lista.listacompra.modelo.SupermercadosDisponibles;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Actividad para crear nuevas listas de compra.
@@ -30,10 +32,12 @@ public class ListasCreador extends AppCompatActivity {
     private Spinner supermarket;
     private Button accept, cancel;
     private Gestor gestor;
+    long fechaSeleccionada;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.listas_creador);
+        gestor = new Gestor(getApplicationContext());
         initializeVariables();
         setupListeners();
     }
@@ -68,6 +72,12 @@ public class ListasCreador extends AppCompatActivity {
                 navigateToListasPrincipal();
             }
         });
+        calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                fechaSeleccionada  = new Date(year, month, dayOfMonth).getTime();
+            }
+        });
     }
 
     /**
@@ -76,7 +86,7 @@ public class ListasCreador extends AppCompatActivity {
     private void createNewList() {
         String lName = name.getText().toString();
         String lSupermarket = (String) supermarket.getSelectedItem();
-        long selectedDate = calendar.getDate();
+        long selectedDate = fechaSeleccionada;
 
         if (lName.length() >= 9) {
             Toast.makeText(ListasCreador.this, "El nombre no puede tener más de 9 caracteres", Toast.LENGTH_LONG).show();
@@ -85,9 +95,14 @@ public class ListasCreador extends AppCompatActivity {
         } else {
             ListaCompra listaCompra = new ListaCompra(lName, selectedDate, lSupermarket, new ArrayList<>());
 
-            new Thread(() -> {
+            Thread t = new Thread(() -> {
                 gestor.insertaLista(listaCompra);
-            }).start();
+            });
+            t.start();
+            try {
+                t.join();
+            }catch (InterruptedException ex){}
+
             name.setText("");
             navigateToListasPrincipal();
             Toast.makeText(getApplicationContext(), "La lista se ha creado correctamente", Toast.LENGTH_LONG).show();

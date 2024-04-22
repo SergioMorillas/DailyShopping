@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.lista.listacompra.accesoDatos.baseDatos.AppDatabase;
 import com.lista.listacompra.accesoDatos.baseDatos.ListaCompraBD;
-import com.lista.listacompra.accesoDatos.baseDatos.ProductoBD;
 import com.lista.listacompra.modelo.ListaCompra;
 
 import java.util.List;

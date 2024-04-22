@@ -24,11 +24,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class ComparadorProductos extends AppCompatActivity {
-    Button buscar;
+    private Button buscar;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
-    SupermercadosFactoria superM;
-    LinearLayout layout;
-    EditText texto;
+    private SupermercadosFactoria superM;
+    private LinearLayout layout;
+    private EditText texto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +59,7 @@ public class ComparadorProductos extends AppCompatActivity {
                         Collections.sort(listaTemporal);
                         if (listaTemporal.size() != 0) {
                             Producto p = listaTemporal.get(0);
-                            mHandler.post(() -> añadirObjeto(p, superM)); // Añade el objeto en el hilo principal
+                            mHandler.post(() -> añadirObjeto(p, nombre.name())); // Añade el objeto en el hilo principal
                         } else {
                             mHandler.post(() -> añadirObjetoVacio(new Producto()));
                         }
@@ -83,7 +83,7 @@ public class ComparadorProductos extends AppCompatActivity {
 
     }
 
-    private void añadirObjeto(Producto p, SupermercadosFactoria s) {
+    private void añadirObjeto(Producto p, String s) {
         LinearLayout fila = (LinearLayout) getLayoutInflater().inflate(R.layout.productos_comparador, null);
         TextView supermercado = fila.findViewById(R.id.supermercadoProducto);
         TextView nombre = fila.findViewById(R.id.nombreProducto);
@@ -91,7 +91,7 @@ public class ComparadorProductos extends AppCompatActivity {
         TextView precioKilo = fila.findViewById(R.id.precioPorKilo);
         ImageView imagen = fila.findViewById(R.id.imageProducto);
 
-        supermercado.setText(s.getNombre());
+        supermercado.setText(s);
         nombre.setText(p.getName());
 
         precio.setText((String.format("%s€", p.getPrice())));

@@ -4,6 +4,9 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -32,6 +35,8 @@ public class ListasPrincipal extends AppCompatActivity {
     private Button buttonAdd;
     private ImageButton menu;
     private Gestor gestor;
+    private  final Handler mHandler = new Handler(Looper.getMainLooper());
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,11 +103,11 @@ public class ListasPrincipal extends AppCompatActivity {
                     intent.putExtra("nombreLista",lista.getNombre());
                     intent.putExtra("supermercado",lista.getSupermercado());
                     startActivity(intent);
-                    Toast.makeText(ListasPrincipal.this, "Metodo en progreso", Toast.LENGTH_SHORT).show();
                 }
             });
-            addSeparatorLine();
-            layout.addView(fila);
+
+            mHandler.post(() -> layout.addView(fila));
+            mHandler.post(() -> addSeparatorLine());
         }
     }
 

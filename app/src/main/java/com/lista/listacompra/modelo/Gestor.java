@@ -6,6 +6,7 @@ import com.lista.listacompra.accesoDatos.GestorBD;
 import com.lista.listacompra.accesoDatos.baseDatos.ListaCompraBD;
 
 import java.util.ArrayList;
+import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
 public class Gestor {
@@ -15,17 +16,21 @@ public class Gestor {
         this.gestorBD = new GestorBD(context);
     }
 
-    public ListaCompra getListaPorNombre(String nombre){
+    public ListaCompra getListaPorNombre(String nombre) {
         return new ListaCompra(gestorBD.getListaCompra(nombre));
     }
-    public void insertaLista(ListaCompra l){
+
+    public void insertaLista(ListaCompra l) {
         gestorBD.insertaLista(l);
     }
-    public List<ListaCompra> getTodaslistas(){
+
+    public List<ListaCompra> getTodaslistas() {
         List<ListaCompraBD> lista = gestorBD.getTodasListas();
         List<ListaCompra> listaAux = new ArrayList<>();
-        for (ListaCompraBD listaCompra: lista) {
-            listaAux.add(new ListaCompra(listaCompra));
+        if (lista != null) {
+            for (ListaCompraBD listaCompra : lista) {
+                listaAux.add(new ListaCompra(listaCompra));
+            }
         }
         return listaAux;
     }

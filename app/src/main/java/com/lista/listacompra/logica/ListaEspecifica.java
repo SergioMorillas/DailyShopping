@@ -30,17 +30,35 @@ public class ListaEspecifica extends AppCompatActivity {
     private String supermercadoNombre;
     private TextView nombreAplicacion;
     private Gestor gestor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lista_especifica);
         nombreLista = this.getIntent().getStringExtra("nombreLista");
         supermercadoNombre = this.getIntent().getStringExtra("supermercado");
-
+        Thread t = new Thread(() -> {
+            gestor = new Gestor(getApplicationContext());
+        });
+        t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         initializeViews();
-        ListaCompra listaCompra = gestor.getListaPorNombre(nombreLista);
-        lista = listaCompra.getProductos();
-        nombreAplicacion.setText("Lista: "+ nombreLista);
+        Thread t1 = new Thread(() -> {
+            ListaCompra listaCompra = gestor.getListaPorNombre(nombreLista);
+            lista = listaCompra.getProductos();
+        });
+        t1.start();
+        try {
+            t1.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        nombreAplicacion.setText("Lista: " + nombreLista);
     }
 
     /**

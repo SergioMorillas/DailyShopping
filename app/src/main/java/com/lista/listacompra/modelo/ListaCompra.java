@@ -23,18 +23,20 @@ public class ListaCompra {
         this.fecha = lista.getFecha();
         this.supermercado = lista.getSupermercado();
         gestorBD = new GestorBD(context);
+        productos = new ArrayList<>();
 
         List<ProductoBD> listaAux = lista.getProductos();
-        for (ProductoBD pBD : listaAux) productos.add(new Producto(pBD));
+        if (listaAux!=null) for (ProductoBD pBD : listaAux) productos.add(new Producto(pBD));
 
     }
     public ListaCompra(ListaCompraBD lista) {
         this.nombre = lista.getNombre();
         this.fecha = lista.getFecha();
         this.supermercado = lista.getSupermercado();
+        productos = new ArrayList<>();
 
         List<ProductoBD> listaAux = lista.getProductos();
-        for (ProductoBD pBD : listaAux) productos.add(new Producto(pBD));
+        if (listaAux!=null) for (ProductoBD pBD : listaAux) productos.add(new Producto(pBD));
     }
     public ListaCompra(Context context) {
         gestorBD = new GestorBD(context);
