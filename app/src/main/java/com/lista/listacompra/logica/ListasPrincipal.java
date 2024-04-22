@@ -1,5 +1,6 @@
 package com.lista.listacompra.logica;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -8,6 +9,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.DragEvent;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -84,6 +86,7 @@ public class ListasPrincipal extends AppCompatActivity {
      *
      * @param listas Lista de compras a insertar.
      */
+    @SuppressLint("ClickableViewAccessibility")
     private void insertarListasEnVistas(List<ListaCompra> listas) {
         for (ListaCompra lista : listas) {
             LinearLayout fila = (LinearLayout) getLayoutInflater().inflate(R.layout.productos_lista, null);
@@ -96,15 +99,48 @@ public class ListasPrincipal extends AppCompatActivity {
             supermercadoTextView.setText(lista.getSupermercado());
             fechaTextView.setText(new Date(lista.getFecha()).toString()); // Suponiendo que getFecha() devuelve un objeto LocalDate
 
-            fila.setOnClickListener(new View.OnClickListener() {
+//            fila.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Intent intent = new Intent(ListasPrincipal.this, ListaEspecifica.class);
+//                    intent.putExtra("nombreLista",lista.getNombre());
+//                    intent.putExtra("supermercado",lista.getSupermercado());
+//                    startActivity(intent);
+//                }
+//            });
+
+
+            fila.setOnTouchListener(new View.OnTouchListener() {
+                private float startY;
+
                 @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(ListasPrincipal.this, ListaEspecifica.class);
-                    intent.putExtra("nombreLista",lista.getNombre());
-                    intent.putExtra("supermercado",lista.getSupermercado());
-                    startActivity(intent);
+                public boolean onTouch(View v,  MotionEvent event) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            startY = event.getY();
+                            break;
+
+                        case MotionEvent.ACTION_UP:
+                            float endY = event.getY();
+                            float viewHeight = v.getHeight();
+
+                            float halfViewHeight = viewHeight / 10;
+                            float deltaY = Math.abs(endY - startY);
+
+                            if (deltaY > halfViewHeight) {
+                                Toast.makeText(ListasPrincipal.this, "Has arrastrado más del 10%, aqui lo borro", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Intent intent = new Intent(ListasPrincipal.this, ListaEspecifica.class);
+                                intent.putExtra("nombreLista",lista.getNombre());
+                                intent.putExtra("supermercado",lista.getSupermercado());
+                                startActivity(intent);
+                            }
+                            break;
+                    }
+                    return true;
                 }
             });
+
 
             mHandler.post(() -> layout.addView(fila));
             mHandler.post(() -> addSeparatorLine());
