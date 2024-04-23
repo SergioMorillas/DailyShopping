@@ -26,4 +26,30 @@ public class GestorBD {
     public List<ListaCompraBD>  getTodasListas(){
         return database.listaCompraDao().getAllListasCompra();
     }
+
+    public List<ListaCompraBD> getTodasListasNombre(String nombre) {
+        return database.listaCompraDao().getAllListasCompraNombre(nombre);
+
+    }
+
+    public void borrarLista(String nombre, String supermercado, long fecha) {
+        database.listaCompraDao().deleteListaCompra(nombre, supermercado, fecha);
+    }
+
+    public void actualizarLista(ListaCompra lista) {
+        try {
+            database.runInTransaction(new Runnable() {
+                @Override
+                public void run() {
+                    database.listaCompraDao().deleteListaCompra(lista.getNombre(),
+                            lista.getSupermercado(),
+                            lista.getFecha());
+                    database.listaCompraDao().insertListaCompra(new ListaCompraBD(lista));
+                }
+            });
+        } catch (Exception ex) {
+            throw ex;
+        }
+
+    }
 }

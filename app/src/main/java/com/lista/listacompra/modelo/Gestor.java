@@ -34,4 +34,23 @@ public class Gestor {
         }
         return listaAux;
     }
+
+    public List<ListaCompra> getBusquedaListasNombre(String nombre) {
+        List<ListaCompraBD> lista = gestorBD.getTodasListasNombre(nombre);
+        List<ListaCompra> listaAux = new ArrayList<>();
+        if (lista != null) {
+            for (ListaCompraBD listaCompra : lista) {
+                listaAux.add(new ListaCompra(listaCompra));
+            }
+        }
+        return listaAux;
+    }
+
+    public void borrarLista(String nombre, String supermercado, long fecha){
+        gestorBD.borrarLista(nombre, supermercado, fecha);
+    }
+    public void actualizarListaProductos(ListaCompra lista){
+        gestorBD.actualizarLista(lista);
+    }
+
 }

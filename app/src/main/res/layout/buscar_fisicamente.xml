@@ -15,7 +15,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
         android:id="@+id/applicationName"
         android:layout_width="wrap_content"
@@ -52,40 +51,12 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/menu" />
 
-    <ScrollView
-        android:id="@+id/scrollView2"
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
-
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:orientation="vertical" />
-
-    </ScrollView>
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/buttonAdd"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/boton_redondo"
-        android:text="+"
-        android:textColor="@color/white"
-        android:textSize="40dp"
-        app:layout_constraintBottom_toBottomOf="@+id/scrollView2"
-        app:layout_constraintEnd_toEndOf="@+id/scrollView2" />
-
-
-
-
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:visibility="visible"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

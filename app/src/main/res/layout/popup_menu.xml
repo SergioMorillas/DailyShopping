@@ -29,7 +29,9 @@
             android:text="Mis listas"
             android:drawableStart="@drawable/icono_mis_listas"
             android:layout_gravity="start"
-            android:gravity="start"/>
+            android:gravity="start"
+            android:onClick="onListasButtonClick"
+            />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/supermercados"
@@ -43,6 +45,7 @@
             android:drawableStart="@drawable/icono_buscar_supermercado"
             android:gravity="start"
             android:paddingBottom="15dp"
+            android:onClick="onSupermercadoButtonClick"
             />
 
         <androidx.appcompat.widget.AppCompatButton

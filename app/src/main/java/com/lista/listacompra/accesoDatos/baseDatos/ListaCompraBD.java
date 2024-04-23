@@ -11,6 +11,7 @@ import androidx.room.TypeConverters;
 import com.lista.listacompra.modelo.ListaCompra;
 import com.lista.listacompra.modelo.Producto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(
@@ -47,6 +48,7 @@ public class ListaCompraBD {
         this.fecha = lista.getFecha();
         this.supermercado = lista.getSupermercado();
 
+        productos = new ArrayList<>();
         List<Producto> listaAux = lista.getProductos();
         for (Producto p : listaAux) productos.add(new ProductoBD(p));
 

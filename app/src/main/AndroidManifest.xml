@@ -14,7 +14,7 @@
         android:theme="@style/Theme.ListaCompra"
         tools:targetApi="31">
         <activity
-            android:name=".logica.ListasPrincipal"
+            android:name=".logica.PrincipalListas"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".logica.ListasCreador"
+            android:name=".logica.CreadorListas"
             android:screenOrientation="portrait" />
         <activity
             android:name=".logica.ComparadorProductos"

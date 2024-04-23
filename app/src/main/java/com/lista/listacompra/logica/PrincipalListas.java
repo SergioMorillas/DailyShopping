@@ -7,13 +7,13 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,19 +25,20 @@ import com.lista.listacompra.R;
 import com.lista.listacompra.modelo.Gestor;
 import com.lista.listacompra.modelo.ListaCompra;
 
-import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Actividad principal que muestra todas las listas de compras existentes.
  */
-public class ListasPrincipal extends AppCompatActivity {
+public class PrincipalListas extends AppCompatActivity {
 
     private LinearLayout layout;
     private Button buttonAdd;
-    private ImageButton menu;
+    private ImageButton menu, buscar;
     private Gestor gestor;
-    private  final Handler mHandler = new Handler(Looper.getMainLooper());
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
 
 
     @Override
@@ -47,9 +48,16 @@ public class ListasPrincipal extends AppCompatActivity {
         initializeViews();
         setupListeners();
         gestor = new Gestor(getApplicationContext());
-        new Thread(()->{
+        new Thread(() -> {
             insertarListasEnVistas(gestor.getTodaslistas());
         }).start();
+        buscar = findViewById(R.id.search);
+        buscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showViewMenu();
+            }
+        });
     }
 
     /**
@@ -82,57 +90,43 @@ public class ListasPrincipal extends AppCompatActivity {
 
 
     /**
-     * @brief Inserta las listas de compras en las vistas de la actividad.
-     *
      * @param listas Lista de compras a insertar.
+     * @brief Inserta las listas de compras en las vistas de la actividad.
      */
     @SuppressLint("ClickableViewAccessibility")
     private void insertarListasEnVistas(List<ListaCompra> listas) {
         for (ListaCompra lista : listas) {
+            View linea = new View(this);
             LinearLayout fila = (LinearLayout) getLayoutInflater().inflate(R.layout.productos_lista, null);
 
             TextView nombreListaTextView = fila.findViewById(R.id.nombreLista);
             TextView supermercadoTextView = fila.findViewById(R.id.supermercadoProducto);
             TextView fechaTextView = fila.findViewById(R.id.fecha);
 
-            nombreListaTextView.setText(lista.getNombre());
-            supermercadoTextView.setText(lista.getSupermercado());
-            fechaTextView.setText(new Date(lista.getFecha()).toString()); // Suponiendo que getFecha() devuelve un objeto LocalDate
-
-//            fila.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent = new Intent(ListasPrincipal.this, ListaEspecifica.class);
-//                    intent.putExtra("nombreLista",lista.getNombre());
-//                    intent.putExtra("supermercado",lista.getSupermercado());
-//                    startActivity(intent);
-//                }
-//            });
-
+            anadeVista(lista, nombreListaTextView, supermercadoTextView, fechaTextView);
 
             fila.setOnTouchListener(new View.OnTouchListener() {
-                private float startY;
-
+                private float empiezaY;
                 @Override
-                public boolean onTouch(View v,  MotionEvent event) {
+                public boolean onTouch(View v, MotionEvent event) {
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
-                            startY = event.getY();
+                            empiezaY = event.getY();
                             break;
 
                         case MotionEvent.ACTION_UP:
-                            float endY = event.getY();
-                            float viewHeight = v.getHeight();
+                            float finY = event.getY();
 
-                            float halfViewHeight = viewHeight / 10;
-                            float deltaY = Math.abs(endY - startY);
+                            float decimoVista =  v.getHeight() / 10;
+                            float movimientoY = Math.abs(finY - empiezaY);
 
-                            if (deltaY > halfViewHeight) {
-                                Toast.makeText(ListasPrincipal.this, "Has arrastrado más del 10%, aqui lo borro", Toast.LENGTH_SHORT).show();
+                            if (movimientoY > decimoVista) {
+                                borrarLista(lista, fila, linea);
+                                Toast.makeText(PrincipalListas.this, "Se ha borrado la lista " + lista.getNombre(), Toast.LENGTH_SHORT).show();
                             } else {
-                                Intent intent = new Intent(ListasPrincipal.this, ListaEspecifica.class);
-                                intent.putExtra("nombreLista",lista.getNombre());
-                                intent.putExtra("supermercado",lista.getSupermercado());
+                                Intent intent = new Intent(PrincipalListas.this, ListaEspecifica.class);
+                                intent.putExtra("nombreLista", lista.getNombre());
+                                intent.putExtra("supermercado", lista.getSupermercado());
                                 startActivity(intent);
                             }
                             break;
@@ -143,8 +137,29 @@ public class ListasPrincipal extends AppCompatActivity {
 
 
             mHandler.post(() -> layout.addView(fila));
-            mHandler.post(() -> addSeparatorLine());
+            mHandler.post(() -> addSeparatorLine(linea));
         }
+    }
+
+    private static void anadeVista(ListaCompra lista, TextView nombreListaTextView, TextView supermercadoTextView, TextView fechaTextView) {
+        Date fecha = new Date(lista.getFecha());
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+
+        nombreListaTextView.setText(lista.getNombre());
+        supermercadoTextView.setText(lista.getSupermercado());
+        fechaTextView.setText(df.format(fecha));
+    }
+
+    private void borrarLista(ListaCompra lista, LinearLayout fila, View linea) {
+        new Thread(()->{
+            gestor.borrarLista(lista.getNombre(),
+                    lista.getSupermercado(),
+                    lista.getFecha());
+            mHandler.post(() -> {
+                layout.removeView(fila);
+                layout.removeView(linea);
+            });
+        }).start();
     }
 
     /**
@@ -153,7 +168,7 @@ public class ListasPrincipal extends AppCompatActivity {
     private void showMenuDialog() {
         Dialog menuDialog = new Dialog(this, android.R.style.Theme);
         menuDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        menuDialog.setContentView(R.layout.menu_popup);
+        menuDialog.setContentView(R.layout.popup_menu);
 
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
         Window window = menuDialog.getWindow();
@@ -170,27 +185,53 @@ public class ListasPrincipal extends AppCompatActivity {
         menuDialog.show();
     }
 
+    private void showViewMenu() {
+        Dialog menuDialog = new Dialog(this);
+        menuDialog.requestWindowFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
+        menuDialog.setContentView(R.layout.popup_busqueda);
+        menuDialog.show();
+        EditText editTextSearch = menuDialog.findViewById(R.id.editTextSearch);
+        Button btnAceptar = menuDialog.findViewById(R.id.btnAceptar);
+        btnAceptar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String nombre = editTextSearch.getText().toString().trim();
+                new Thread(() -> {
+                    if (layout.getChildCount() > 0) mHandler.post(() -> layout.removeAllViews());
+                    insertarListasEnVistas(gestor.getBusquedaListasNombre(nombre));
+                }).start();
+                menuDialog.dismiss();
+            }
+        });
+    }
+
     /**
-     *@brief Navega a la actividad ListasCreador.
+     * @brief Navega a la actividad CreadorListas.
      */
     private void navigateToListasCreador() {
-        Intent intent = new Intent(this, ListasCreador.class);
+        Intent intent = new Intent(this, CreadorListas.class);
         startActivity(intent);
     }
 
     /**
-     *@brief Añade una línea separadora a la disposición lineal.
+     * @brief Añade una línea separadora a la disposición lineal.
      */
-    private void addSeparatorLine() {
-        View linea = new View(this);
+    private void addSeparatorLine(View linea) {
+
         linea.setBackgroundColor(Color.BLACK);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 8);
         params.setMargins(0, 0, 0, 8);
         linea.setLayoutParams(params);
         layout.addView(linea);
     }
-    public void onCompararButtonClick(View view){
+
+    public void onCompararButtonClick(View view) {
         Intent i = new Intent(this, ComparadorProductos.class);
+        startActivity(i);
+    }
+
+    public void onListasButtonClick(View view) {
+        Intent i = new Intent(this, PrincipalListas.class);
         startActivity(i);
     }
 }

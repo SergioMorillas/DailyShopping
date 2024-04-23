@@ -28,5 +28,10 @@ public interface ListaCompraDao {
 
     @Query("DELETE FROM listas_compra WHERE id = :id")
     void deleteListaCompra(int id);
+    @Query("DELETE FROM listas_compra WHERE nombre = :nombre and supermercado = :supermercado and fecha = :fecha")
+    void deleteListaCompra(String nombre, String supermercado, long fecha);
+
+    @Query("SELECT * FROM listas_compra WHERE nombre LIKE '%' || :nombre || '%'")
+    List<ListaCompraBD> getAllListasCompraNombre(String nombre);
 
 }

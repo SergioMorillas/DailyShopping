@@ -14,18 +14,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.lista.listacompra.R;
-import com.lista.listacompra.accesoDatos.baseDatos.ListaCompraBD;
 import com.lista.listacompra.modelo.Gestor;
 import com.lista.listacompra.modelo.ListaCompra;
 import com.lista.listacompra.modelo.SupermercadosDisponibles;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
  * Actividad para crear nuevas listas de compra.
  */
-public class ListasCreador extends AppCompatActivity {
+public class CreadorListas extends AppCompatActivity {
 
     private EditText name;
     private CalendarView calendar;
@@ -33,9 +33,11 @@ public class ListasCreador extends AppCompatActivity {
     private Button accept, cancel;
     private Gestor gestor;
     long fechaSeleccionada;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fechaSeleccionada = new Date().getTime();
         setContentView(R.layout.listas_creador);
         gestor = new Gestor(getApplicationContext());
         initializeVariables();
@@ -75,7 +77,11 @@ public class ListasCreador extends AppCompatActivity {
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                fechaSeleccionada  = new Date(year, month, dayOfMonth).getTime();
+                Calendar c = Calendar.getInstance();
+                c.set(Calendar.YEAR, year);
+                c.set(Calendar.MONTH, month);
+                c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                fechaSeleccionada = c.getTimeInMillis();
             }
         });
     }
@@ -88,20 +94,20 @@ public class ListasCreador extends AppCompatActivity {
         String lSupermarket = (String) supermarket.getSelectedItem();
         long selectedDate = fechaSeleccionada;
 
-        if (lName.length() >= 9) {
-            Toast.makeText(ListasCreador.this, "El nombre no puede tener más de 9 caracteres", Toast.LENGTH_LONG).show();
-        } else if (lName.isBlank()) {
-            Toast.makeText(ListasCreador.this, "El nombre no puede estar vacío", Toast.LENGTH_LONG).show();
+        if (lName.isBlank()) {
+            Toast.makeText(CreadorListas.this, "El nombre no puede estar vacío", Toast.LENGTH_LONG).show();
         } else {
             ListaCompra listaCompra = new ListaCompra(lName, selectedDate, lSupermarket, new ArrayList<>());
 
             Thread t = new Thread(() -> {
+
                 gestor.insertaLista(listaCompra);
             });
             t.start();
             try {
                 t.join();
-            }catch (InterruptedException ex){}
+            } catch (InterruptedException ex) {
+            }
 
             name.setText("");
             navigateToListasPrincipal();
@@ -110,10 +116,10 @@ public class ListasCreador extends AppCompatActivity {
     }
 
     /**
-     * Navega a la actividad ListasPrincipal.
+     * Navega a la actividad PrincipalListas.
      */
     private void navigateToListasPrincipal() {
-        Intent intent = new Intent(ListasCreador.this, ListasPrincipal.class);
+        Intent intent = new Intent(CreadorListas.this, PrincipalListas.class);
         startActivity(intent);
     }
 

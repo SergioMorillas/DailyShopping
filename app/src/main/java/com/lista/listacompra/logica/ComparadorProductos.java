@@ -14,7 +14,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.lista.listacompra.R;
-import com.lista.listacompra.accesoDatos.baseDatos.ProductoBD;
 import com.lista.listacompra.modelo.Producto;
 import com.lista.listacompra.modelo.SupermercadosDisponibles;
 import com.lista.listacompra.modelo.SupermercadosFactoria;
@@ -75,7 +74,7 @@ public class ComparadorProductos extends AppCompatActivity {
     private void añadirObjetoVacio(Producto p) {
         LinearLayout fila = (LinearLayout) getLayoutInflater().inflate(R.layout.productos_comparador, null);
         TextView nombre = fila.findViewById(R.id.nombreProducto);
-        ImageView imagen = fila.findViewById(R.id.imageProducto);
+        ImageView imagen = fila.findViewById(R.id.imagenProducto);
 
         nombre.setText(p.getName());
         imagen.setImageResource(R.drawable.imagen_no_encontrada);
@@ -89,7 +88,7 @@ public class ComparadorProductos extends AppCompatActivity {
         TextView nombre = fila.findViewById(R.id.nombreProducto);
         TextView precio = fila.findViewById(R.id.precioProducto);
         TextView precioKilo = fila.findViewById(R.id.precioPorKilo);
-        ImageView imagen = fila.findViewById(R.id.imageProducto);
+        ImageView imagen = fila.findViewById(R.id.imagenProducto);
 
         supermercado.setText(s);
         nombre.setText(p.getName());

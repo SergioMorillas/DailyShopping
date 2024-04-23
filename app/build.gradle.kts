@@ -35,13 +35,18 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4") // Librerias de android
     implementation("androidx.recyclerview:recyclerview:1.2.1")
 
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("androidx.lifecycle:lifecycle-common:2.5.1")
+
     implementation("com.fasterxml.jackson.core:jackson-core:2.15.3") // Librerias para manejar los JSON devueltos por los API
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.3") // Librerias para manejar los JSON devueltos por los API
     implementation("com.fasterxml.jackson.core:jackson-annotations:2.15.3") // Librerias para manejar los JSON devueltos por los API
 
     implementation("com.squareup.picasso:picasso:2.71828") // Libreria para mostrar las imagenes de los productos en la interfaz
 
-    implementation("androidx.room:room-runtime:2.6.1") // Librerias para acceder a SQLite desde la aplicación
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("com.android.car.ui:car-ui-lib:2.6.0")
+    implementation("com.google.android.gms:play-services-maps:18.2.0") // Librerias para acceder a SQLite desde la aplicación
     annotationProcessor ("androidx.room:room-compiler:2.6.1") // Librerias para acceder a SQLite desde la aplicación
 
     testImplementation("junit:junit:4.13.2")
