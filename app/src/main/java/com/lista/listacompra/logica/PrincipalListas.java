@@ -27,7 +27,7 @@ import com.lista.listacompra.modelo.ListaCompra;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Actividad principal que muestra todas las listas de compras existentes.
@@ -94,7 +94,7 @@ public class PrincipalListas extends AppCompatActivity {
      * @brief Inserta las listas de compras en las vistas de la actividad.
      */
     @SuppressLint("ClickableViewAccessibility")
-    private void insertarListasEnVistas(List<ListaCompra> listas) {
+    private void insertarListasEnVistas(Set<ListaCompra> listas) {
         for (ListaCompra lista : listas) {
             View linea = new View(this);
             LinearLayout fila = (LinearLayout) getLayoutInflater().inflate(R.layout.productos_lista, null);

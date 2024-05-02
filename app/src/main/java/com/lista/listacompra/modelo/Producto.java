@@ -14,6 +14,8 @@ public class Producto implements Comparable<Producto> {
     private double price;
     private double pricePerKilo;
     private double mass;
+    private int amount;
+    private boolean isMarked;
     private GestorBD gestorDB;
     public Producto(ProductoBD producto, Context context) {
         this.image = producto.getImage();
@@ -21,6 +23,8 @@ public class Producto implements Comparable<Producto> {
         this.price=producto.getPrice();
         this.pricePerKilo = producto.getPricePerKilo();
         this.mass = producto.getMass();
+        this.amount = producto.getAmount();
+        this.isMarked = producto.isMarked();
         gestorDB = new GestorBD(context);
     }    public Producto(ProductoBD producto) {
         this.image = producto.getImage();
@@ -28,6 +32,8 @@ public class Producto implements Comparable<Producto> {
         this.price=producto.getPrice();
         this.pricePerKilo = producto.getPricePerKilo();
         this.mass = producto.getMass();
+        this.amount = producto.getAmount();
+        this.isMarked = isMarked;
     }
     public Producto(Context context){
 
@@ -55,6 +61,17 @@ public class Producto implements Comparable<Producto> {
 
     public double getMass() {
         return mass;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public boolean isMarked() {
+        return isMarked;
+    }
+    public void setMarked(boolean marked){
+        this.isMarked=marked;
     }
 
     @Override

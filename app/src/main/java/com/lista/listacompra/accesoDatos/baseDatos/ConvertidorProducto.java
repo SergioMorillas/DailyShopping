@@ -7,19 +7,19 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Set;
 
 public class ConvertidorProducto {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @TypeConverter
-    public static List<ProductoBD> fromJson(String value) {
+    public static Set<ProductoBD> fromJson(String value) {
         if (value == null) {
             return null;
         }
 
         try {
-            return objectMapper.readValue(value, new TypeReference<List<ProductoBD>>() {});
+            return objectMapper.readValue(value, new TypeReference<Set<ProductoBD>>() {});
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -27,7 +27,7 @@ public class ConvertidorProducto {
     }
 
     @TypeConverter
-    public static String toJson(List<ProductoBD> productos) {
+    public static String toJson(Set<ProductoBD> productos) {
         if (productos == null) {
             return null;
         }

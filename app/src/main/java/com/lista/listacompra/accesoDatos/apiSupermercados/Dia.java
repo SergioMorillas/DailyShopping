@@ -7,12 +7,13 @@ import com.lista.listacompra.accesoDatos.baseDatos.ProductoBD;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Dia implements Supermercado {
     @Override
-    public ArrayList<ProductoBD> search(String producto) {
-        ArrayList<ProductoBD> products = new ArrayList<>();
+    public Set<ProductoBD> search(String producto) {
+        Set<ProductoBD> products = new HashSet<>();
         try {
             URL url = new URL(DIA_API_URL + producto);
 
@@ -30,15 +31,15 @@ public class Dia implements Supermercado {
         return products;
     }
 
-    private static ArrayList<ProductoBD> returnProduct(String json) {
-        ArrayList<ProductoBD> products = new ArrayList<>();
+    private static Set<ProductoBD> returnProduct(String json) {
+        Set<ProductoBD> products = new HashSet<>();
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(json.toString());
             JsonNode productNode = jsonNode
                     .path("search_items");
 
-            for (JsonNode node : productNode) //Iteramos por todos los nodos y rellenamos el arraylist
+            for (JsonNode node : productNode) //Iteramos por todos los nodos y rellenamos el Set
                 products.add(creteProduct(node));
 
         } catch (Exception ex) {

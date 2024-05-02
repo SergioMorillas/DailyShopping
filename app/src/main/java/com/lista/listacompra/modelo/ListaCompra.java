@@ -7,15 +7,18 @@ import com.lista.listacompra.accesoDatos.GestorBD;
 import com.lista.listacompra.accesoDatos.baseDatos.ListaCompraBD;
 import com.lista.listacompra.accesoDatos.baseDatos.ProductoBD;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class ListaCompra {
     private String nombre;
     private long fecha;
     private String supermercado;
-    private ArrayList<Producto> productos;
+    private Set<Producto> productos;
     private GestorBD gestorBD;
 
     public ListaCompra(ListaCompraBD lista, Context context) {
@@ -23,9 +26,9 @@ public class ListaCompra {
         this.fecha = lista.getFecha();
         this.supermercado = lista.getSupermercado();
         gestorBD = new GestorBD(context);
-        productos = new ArrayList<>();
+        productos = new HashSet<>();
 
-        List<ProductoBD> listaAux = lista.getProductos();
+        Set<ProductoBD> listaAux = lista.getProductos();
         if (listaAux!=null) for (ProductoBD pBD : listaAux) productos.add(new Producto(pBD));
 
     }
@@ -33,16 +36,16 @@ public class ListaCompra {
         this.nombre = lista.getNombre();
         this.fecha = lista.getFecha();
         this.supermercado = lista.getSupermercado();
-        productos = new ArrayList<>();
+        productos = new HashSet<>();
 
-        List<ProductoBD> listaAux = lista.getProductos();
+        Set<ProductoBD> listaAux = lista.getProductos();
         if (listaAux!=null) for (ProductoBD pBD : listaAux) productos.add(new Producto(pBD));
     }
     public ListaCompra(Context context) {
         gestorBD = new GestorBD(context);
     }
 
-    public ListaCompra(String nombre, long fecha, String supermercado, ArrayList productos) {
+    public ListaCompra(String nombre, long fecha, String supermercado, Set productos) {
         this.nombre = nombre;
         this.fecha = fecha;
         this.supermercado = supermercado;
@@ -62,12 +65,12 @@ public class ListaCompra {
         return supermercado;
     }
 
-    public ArrayList<Producto> getProductos() {
+    public Set<Producto> getProductos() {
         return productos;
     }
 
     public boolean addProducto(Producto p){
-        ArrayList<Producto> lista = this.getProductos();
+        Set<Producto> lista = this.getProductos();
         if (lista != null ) lista.add(p);
         else return false;
         return true;
@@ -98,4 +101,28 @@ public class ListaCompra {
                 '}';
     }
 
+    public double getPrecioTotal(){
+        DecimalFormat df = new DecimalFormat("#.##");
+        double suma = 0;
+        for (Producto p : productos) {
+            suma += p.getPrice();
+        }
+        return Double.parseDouble(df.format(suma));
+    }
+    public double getPrecioMarcado(){
+        DecimalFormat df = new DecimalFormat("#.##");
+        double suma = 0;
+        for (Producto p : productos) {
+            if (p.isMarked()) suma += p.getPrice();
+        }
+        return Double.parseDouble(df.format(suma));
+    }
+    public double getPrecioSinMarcar(){
+        double suma = 0;
+        DecimalFormat df = new DecimalFormat("#.##");
+        for (Producto p : productos) {
+            if (!p.isMarked()) suma += p.getPrice();
+        }
+        return Double.parseDouble(df.format(suma));
+    }
 }

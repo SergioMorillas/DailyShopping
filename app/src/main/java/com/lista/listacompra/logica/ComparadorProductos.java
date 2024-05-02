@@ -19,8 +19,10 @@ import com.lista.listacompra.modelo.SupermercadosDisponibles;
 import com.lista.listacompra.modelo.SupermercadosFactoria;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public class ComparadorProductos extends AppCompatActivity {
     private Button buscar;
@@ -54,10 +56,11 @@ public class ComparadorProductos extends AppCompatActivity {
                 for (SupermercadosDisponibles nombre : SupermercadosDisponibles.values()) {
                     superM.crearSupermercado(nombre);
                     if (superM.getNombre() != null) {
-                        List<Producto> listaTemporal = superM.busqueda(producto);
-                        Collections.sort(listaTemporal);
-                        if (listaTemporal.size() != 0) {
-                            Producto p = listaTemporal.get(0);
+                        Set<Producto> set = superM.busqueda(producto);
+                        ArrayList<Producto> aux = new ArrayList<>(set);
+                        Collections.sort(aux);
+                        if (set.size() != 0) {
+                            Producto p = aux.get(0);
                             mHandler.post(() -> añadirObjeto(p, nombre.name())); // Añade el objeto en el hilo principal
                         } else {
                             mHandler.post(() -> añadirObjetoVacio(new Producto()));

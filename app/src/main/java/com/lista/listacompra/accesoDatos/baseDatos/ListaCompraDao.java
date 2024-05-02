@@ -5,7 +5,9 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Dao
 public interface ListaCompraDao {
@@ -18,10 +20,13 @@ public interface ListaCompraDao {
     @Query("SELECT * FROM listas_compra WHERE nombre = :name")
     ListaCompraBD getListaCompraByName(String name);
     @Query("SELECT * FROM listas_compra")
-    List<ListaCompraBD> getAllListasCompra();
+    List<ListaCompraBD> getAllListasCompraList();
 
+    default Set<ListaCompraBD> getAllListasCompra() {
+        return new HashSet<>(getAllListasCompraList());
+    }
     @Insert
-    void insertListaCompras(List<ListaCompraBD> listaCompra);
+    void insertListaCompras(Set<ListaCompraBD> listaCompra);
 
     @Insert
     void insertListaCompras(ListaCompraBD listaCompra);
@@ -32,6 +37,8 @@ public interface ListaCompraDao {
     void deleteListaCompra(String nombre, String supermercado, long fecha);
 
     @Query("SELECT * FROM listas_compra WHERE nombre LIKE '%' || :nombre || '%'")
-    List<ListaCompraBD> getAllListasCompraNombre(String nombre);
-
+    List<ListaCompraBD> getAllListasCompraNombreList(String nombre);
+    default Set<ListaCompraBD> getAllListasCompraNombre(String nombre) {
+        return new HashSet<>(getAllListasCompraNombre(nombre));
+    }
 }

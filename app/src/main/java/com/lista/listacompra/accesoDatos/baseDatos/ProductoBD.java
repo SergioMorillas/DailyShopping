@@ -31,10 +31,14 @@ public class ProductoBD{
     @ColumnInfo(name = "mass")
     private double mass;
 
+    @ColumnInfo(name = "amount")
+    private int amount;
+
+    @ColumnInfo(name = "marked")
+    private boolean isMarked;
 
 
-
-    public ProductoBD(String id, String imagen, String nombre, double precio, double precioKilo, double peso) {
+    public ProductoBD(String id, String imagen, String nombre, double precio, double precioKilo, double peso, int amount, boolean isMarked) {
         this.id = id;
         this.image = imagen;
         this.name = nombre;
@@ -57,6 +61,8 @@ public class ProductoBD{
         this.price = precio;
         this.pricePerKilo = -1; // -1 Significa que no aplica para ese producto
         this.mass = -1;
+        this.isMarked=false;
+        this.amount=1;
     }
 
     public ProductoBD(String id) {
@@ -112,6 +118,22 @@ public class ProductoBD{
 
     public void setMass(double mass) {
         this.mass = mass;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public boolean isMarked() {
+        return isMarked;
+    }
+
+    public void setMarked(boolean marked) {
+        isMarked = marked;
     }
 
     @Override

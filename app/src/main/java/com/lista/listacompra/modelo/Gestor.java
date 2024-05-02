@@ -5,9 +5,9 @@ import android.content.Context;
 import com.lista.listacompra.accesoDatos.GestorBD;
 import com.lista.listacompra.accesoDatos.baseDatos.ListaCompraBD;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.IllegalFormatCodePointException;
-import java.util.List;
+import java.util.Set;
 
 public class Gestor {
     private GestorBD gestorBD;
@@ -24,9 +24,9 @@ public class Gestor {
         gestorBD.insertaLista(l);
     }
 
-    public List<ListaCompra> getTodaslistas() {
-        List<ListaCompraBD> lista = gestorBD.getTodasListas();
-        List<ListaCompra> listaAux = new ArrayList<>();
+    public Set<ListaCompra> getTodaslistas() {
+        Set<ListaCompraBD> lista = gestorBD.getTodasListas();
+        Set<ListaCompra> listaAux = new HashSet<>();
         if (lista != null) {
             for (ListaCompraBD listaCompra : lista) {
                 listaAux.add(new ListaCompra(listaCompra));
@@ -35,9 +35,9 @@ public class Gestor {
         return listaAux;
     }
 
-    public List<ListaCompra> getBusquedaListasNombre(String nombre) {
-        List<ListaCompraBD> lista = gestorBD.getTodasListasNombre(nombre);
-        List<ListaCompra> listaAux = new ArrayList<>();
+    public Set<ListaCompra> getBusquedaListasNombre(String nombre) {
+        Set<ListaCompraBD> lista = gestorBD.getTodasListasNombre(nombre);
+        Set<ListaCompra> listaAux = new HashSet<>();
         if (lista != null) {
             for (ListaCompraBD listaCompra : lista) {
                 listaAux.add(new ListaCompra(listaCompra));

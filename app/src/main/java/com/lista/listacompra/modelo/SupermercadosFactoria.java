@@ -5,8 +5,8 @@ import com.lista.listacompra.accesoDatos.baseDatos.ProductoBD;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SupermercadosFactoria {
     String nombre;
@@ -24,9 +24,9 @@ public class SupermercadosFactoria {
     public String getNombre(){
         return nombre;
     }
-    public List<Producto> busqueda(String nombre){
-        List<ProductoBD> productos=new ArrayList<>();
-        List<Producto> productosAux=new ArrayList<>();
+    public Set<Producto> busqueda(String nombre){
+        Set<ProductoBD> productos=new HashSet<>();
+        Set<Producto> productosAux=new HashSet<>();
 
         if(supermercado!=null){
             productos=supermercado.search(nombre);

@@ -7,12 +7,13 @@ import com.lista.listacompra.accesoDatos.baseDatos.ProductoBD;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Alcampo implements Supermercado {
     @Override
-    public ArrayList<ProductoBD> search(String producto) {
-        ArrayList<ProductoBD> products = new ArrayList<>();
+    public Set<ProductoBD> search(String producto) {
+        Set<ProductoBD> products = new HashSet<>();
         try {
             URL url = new URL(ALCAMPO_API_URL + producto);
 
@@ -30,8 +31,8 @@ public class Alcampo implements Supermercado {
         return products;
     }
 
-    private static ArrayList<ProductoBD> returnProduct(String json) {
-        ArrayList<ProductoBD> products = new ArrayList<>();
+    private static Set<ProductoBD> returnProduct(String json) {
+        Set<ProductoBD> products = new HashSet<>();
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(json.toString());
@@ -68,7 +69,7 @@ public class Alcampo implements Supermercado {
                 .path("image")
                 .path("src").asText();
 
-        ProductoBD p = new ProductoBD(id, image, name, price, pricePerKilo, mass);
+        ProductoBD p = new ProductoBD(id, image, name, price, pricePerKilo, mass, 1, false);
         return p;
     }
 }

@@ -9,14 +9,15 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.net.ssl.HttpsURLConnection;
 
 public class Mercadona implements Supermercado {
 
     @Override
-    public ArrayList<ProductoBD> search(String producto) {
+    public Set<ProductoBD> search(String producto) {
         try {
             URL url = new URL(MERCADONA_API_URL);
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
@@ -62,12 +63,12 @@ public class Mercadona implements Supermercado {
                 .path("unit_size").asDouble();
         String image = nodo
                 .path("thumbnail").asText();
-        return new ProductoBD(id, image, name, price, pricePerKilo, mass);
+        return new ProductoBD(id, image, name, price, pricePerKilo, mass,1, false);
 
     }
 
-    private static ArrayList<ProductoBD> returnProducts(String json) {
-        ArrayList<ProductoBD> products = new ArrayList<>();
+    private static Set<ProductoBD> returnProducts(String json) {
+        Set<ProductoBD> products = new HashSet<>();
 
         try {
             ObjectMapper mapper = new ObjectMapper();

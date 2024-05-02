@@ -18,9 +18,9 @@ import com.lista.listacompra.modelo.Gestor;
 import com.lista.listacompra.modelo.ListaCompra;
 import com.lista.listacompra.modelo.SupermercadosDisponibles;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 
 /**
  * Actividad para crear nuevas listas de compra.
@@ -97,7 +97,7 @@ public class CreadorListas extends AppCompatActivity {
         if (lName.isBlank()) {
             Toast.makeText(CreadorListas.this, "El nombre no puede estar vacío", Toast.LENGTH_LONG).show();
         } else {
-            ListaCompra listaCompra = new ListaCompra(lName, selectedDate, lSupermarket, new ArrayList<>());
+            ListaCompra listaCompra = new ListaCompra(lName, selectedDate, lSupermarket, new HashSet());
 
             Thread t = new Thread(() -> {
 

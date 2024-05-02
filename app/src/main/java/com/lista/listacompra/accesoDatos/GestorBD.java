@@ -6,7 +6,7 @@ import com.lista.listacompra.accesoDatos.baseDatos.AppDatabase;
 import com.lista.listacompra.accesoDatos.baseDatos.ListaCompraBD;
 import com.lista.listacompra.modelo.ListaCompra;
 
-import java.util.List;
+import java.util.Set;
 
 public class GestorBD {
     Context contexto;
@@ -23,11 +23,11 @@ public class GestorBD {
     public void insertaLista(ListaCompra l){
         database.listaCompraDao().insertListaCompra(new ListaCompraBD(l));
     }
-    public List<ListaCompraBD>  getTodasListas(){
+    public Set<ListaCompraBD> getTodasListas(){
         return database.listaCompraDao().getAllListasCompra();
     }
 
-    public List<ListaCompraBD> getTodasListasNombre(String nombre) {
+    public Set<ListaCompraBD> getTodasListasNombre(String nombre) {
         return database.listaCompraDao().getAllListasCompraNombre(nombre);
 
     }

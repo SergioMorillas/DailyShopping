@@ -12,7 +12,9 @@ import com.lista.listacompra.modelo.ListaCompra;
 import com.lista.listacompra.modelo.Producto;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity(
         tableName = "listas_compra",
@@ -34,10 +36,10 @@ public class ListaCompraBD {
     private String supermercado;
 
     @ColumnInfo(name = "productos")
-    private List<ProductoBD> productos;
+    private Set<ProductoBD> productos;
 
 
-    public ListaCompraBD(String nombre, long fecha, String supermercado, List<ProductoBD> productos) {
+    public ListaCompraBD(String nombre, long fecha, String supermercado, Set<ProductoBD> productos) {
         this.nombre = nombre;
         this.fecha = fecha;
         this.supermercado = supermercado;
@@ -48,8 +50,8 @@ public class ListaCompraBD {
         this.fecha = lista.getFecha();
         this.supermercado = lista.getSupermercado();
 
-        productos = new ArrayList<>();
-        List<Producto> listaAux = lista.getProductos();
+        productos = new HashSet<>();
+        Set<Producto> listaAux = lista.getProductos();
         for (Producto p : listaAux) productos.add(new ProductoBD(p));
 
     }
@@ -86,11 +88,11 @@ public class ListaCompraBD {
         this.supermercado = supermercado;
     }
 
-    public List<ProductoBD> getProductos() {
+    public Set<ProductoBD> getProductos() {
         return productos;
     }
 
-    public void setProductos(List<ProductoBD> productos) {
+    public void setProductos(Set<ProductoBD> productos) {
         this.productos = productos;
     }
 }

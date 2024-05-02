@@ -22,8 +22,11 @@ import com.lista.listacompra.modelo.SupermercadosDisponibles;
 import com.lista.listacompra.modelo.SupermercadosFactoria;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 public class BuscadorProductos extends AppCompatActivity {
     private Button buscar;
@@ -71,14 +74,16 @@ public class BuscadorProductos extends AppCompatActivity {
         if (!producto.isBlank()) {
             new Thread(() -> {
                 superM.crearSupermercado(SupermercadosDisponibles.valueOf(s));
-
-                List<Producto> listaTemporal = superM.busqueda(producto);
-                Collections.sort(listaTemporal);
-                if (listaTemporal.size() != 0) {
-                    for (int i = 0; i < 20 && i < (listaTemporal.size() - 1); i++) {
-                        Producto p = listaTemporal.get(i);
+                Set<Producto> set = superM.busqueda(producto);
+                ArrayList<Producto> aux = new ArrayList<>(set);
+                Collections.sort(aux);
+                if (aux.size() != 0) {
+                    for (int i = 0; i < (aux.size() - 1); i++) {
+                        Producto p = aux.get(i);
                         mHandler.post(() -> añadirObjeto(p, superM)); // Añade el objeto en el hilo principal
                     }
+                } else {
+                    mHandler.post(() -> Toast.makeText(BuscadorProductos.this, "No se han encontrado productos con ese nombre", Toast.LENGTH_LONG).show());
                 }
             }).start();
         } else {
@@ -95,6 +100,7 @@ public class BuscadorProductos extends AppCompatActivity {
         TextView precio = fila.findViewById(R.id.precioProducto);
         TextView precioKilo = fila.findViewById(R.id.precioPorKilo);
         ImageView imagen = fila.findViewById(R.id.imagenProducto);
+
 
         supermercado.setText(s.getNombre());
         nombre.setText(p.getName());
