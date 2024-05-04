@@ -34,9 +34,17 @@ public class ListaEspecifica extends AppCompatActivity {
     private String supermercadoNombre;
     private TextView nombreAplicacion;
     private Gestor gestor;
+    private ListaCompra productos;
 
     private final Handler mHandler = new Handler(Looper.getMainLooper());
 
+    @Override
+    protected void onDestroy() {
+        new Thread(() -> {
+            gestor.actualizarListaProductos(productos);
+        }).start();
+        super.onDestroy();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,8 +69,8 @@ public class ListaEspecifica extends AppCompatActivity {
 
         Thread t = new Thread(() -> {
             gestor = new Gestor(getApplicationContext());
-            ListaCompra listaCompra = gestor.getListaPorNombre(nombreLista);
-            mHandler.post(() -> añadirObjeto(listaCompra));
+            productos = gestor.getListaPorNombre(nombreLista);
+            mHandler.post(() -> añadirObjeto());
         });
         t.start();
         try {
@@ -74,29 +82,23 @@ public class ListaEspecifica extends AppCompatActivity {
         nombreAplicacion.setText("Lista: " + nombreLista);
     }
 
-    /**
-     * @brief Inicializa las vistas de la actividad.
-     */
-    private void initializeViews() {
-    }
-
-    private void añadirObjeto(@NonNull ListaCompra productos) {
+    private void añadirObjeto() {
         if (layout.getChildCount() > 0) layout.removeAllViews();
         for (Producto p : productos.getProductos()) {
             if (!p.isMarked()) {
-                addProduct(productos, p);
+                addProduct(p);
             }
         }
         addCentroEspecifico(productos);
         for (Producto p : productos.getProductos()) {
             if (p.isMarked()) {
-                addProduct(productos, p);
+                addProduct(p);
             }
         }
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void addProduct(@NonNull ListaCompra productos, Producto p) {
+    private void addProduct(Producto p) {
         LinearLayout fila = (LinearLayout) getLayoutInflater().inflate(R.layout.productos_lista_individual, null);
         TextView nombre = fila.findViewById(R.id.nombreProducto);
         TextView precio = fila.findViewById(R.id.precioProducto);
@@ -127,20 +129,14 @@ public class ListaEspecifica extends AppCompatActivity {
 
                         if (movimientoY > decimoVista) {
                             productos.getProductos().remove(p);
-                            new Thread(() -> {
-                                gestor.actualizarListaProductos(productos);
-                            }).start();
-                            añadirObjeto(productos);
+                            añadirObjeto();
 
                             Toast.makeText(ListaEspecifica.this, "Se ha borrado el producto " + p.getName(), Toast.LENGTH_SHORT).show();
                         } else if (movimientoY == 0) {
                             p.setMarked(!p.isMarked()); // Hacemos una puerta not sobre si esta marcado
                             productos.getProductos().remove(p);
                             productos.getProductos().add(p);
-                            new Thread(() -> {
-                                gestor.actualizarListaProductos(productos);
-                            }).start();
-                            añadirObjeto(productos);
+                            añadirObjeto();
                         }
                 }
                 return true;

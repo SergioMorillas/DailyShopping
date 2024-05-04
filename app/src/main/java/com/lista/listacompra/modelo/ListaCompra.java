@@ -8,9 +8,11 @@ import com.lista.listacompra.accesoDatos.baseDatos.ListaCompraBD;
 import com.lista.listacompra.accesoDatos.baseDatos.ProductoBD;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
@@ -101,28 +103,28 @@ public class ListaCompra {
                 '}';
     }
 
-    public double getPrecioTotal(){
+    public String getPrecioTotal(){
         DecimalFormat df = new DecimalFormat("#.##");
         double suma = 0;
         for (Producto p : productos) {
             suma += p.getPrice();
         }
-        return Double.parseDouble(df.format(suma));
+        return df.format(suma);
     }
-    public double getPrecioMarcado(){
+    public String getPrecioMarcado(){
         DecimalFormat df = new DecimalFormat("#.##");
         double suma = 0;
         for (Producto p : productos) {
             if (p.isMarked()) suma += p.getPrice();
         }
-        return Double.parseDouble(df.format(suma));
+        return df.format(suma);
     }
-    public double getPrecioSinMarcar(){
+    public String getPrecioSinMarcar(){
         double suma = 0;
         DecimalFormat df = new DecimalFormat("#.##");
         for (Producto p : productos) {
             if (!p.isMarked()) suma += p.getPrice();
         }
-        return Double.parseDouble(df.format(suma));
+        return df.format(suma);
     }
 }

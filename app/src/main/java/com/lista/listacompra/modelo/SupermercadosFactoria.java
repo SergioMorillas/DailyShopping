@@ -25,7 +25,7 @@ public class SupermercadosFactoria {
         return nombre;
     }
     public Set<Producto> busqueda(String nombre){
-        Set<ProductoBD> productos=new HashSet<>();
+        Set<ProductoBD> productos;
         Set<Producto> productosAux=new HashSet<>();
 
         if(supermercado!=null){
