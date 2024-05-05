@@ -50,7 +50,9 @@
         app:layout_constraintHorizontal_bias="0.472"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/menu" />
+        app:srcCompat="@drawable/menu"
+        android:onClick="onSideBarClick"
+        />
 
     <ScrollView
         android:id="@+id/scrollView2"

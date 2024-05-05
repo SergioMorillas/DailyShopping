@@ -35,6 +35,10 @@
         <activity
             android:name=".logica.ListaEspecifica"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".logica.JuegoPrecios"
+            android:screenOrientation="portrait" />
+
 
     </application>
 

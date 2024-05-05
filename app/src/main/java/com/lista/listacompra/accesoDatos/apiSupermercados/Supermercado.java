@@ -11,5 +11,14 @@ public interface Supermercado {
             "9d8f2e39e90df472b4f2e559a116fe17";
     public static final String ALCAMPO_API_URL = "https://www.compraonline.alcampo.es/api/v5/products/search?term=";
     public static final String DIA_API_URL = "https://www.dia.es/api/v1/search-back/search/reduced?q=";
-    public abstract Set<ProductoBD> search(String producto);
+    public abstract Set<ProductoBD> search(String product);
+    default boolean exist(String product){
+        boolean sw = false;
+        try{
+            if (this.search(product).size()>0) {
+                sw = true;
+            }
+        } catch(Exception ex){}
+        return sw;
+    }
 }

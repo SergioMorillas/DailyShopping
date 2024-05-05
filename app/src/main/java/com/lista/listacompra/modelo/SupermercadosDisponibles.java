@@ -14,7 +14,6 @@ public enum SupermercadosDisponibles {
     Alcampo(Alcampo.class);
 
     private final Class<? extends Supermercado> clazz;
-
     SupermercadosDisponibles(Class<? extends Supermercado> clazz) {
         this.clazz = clazz;
     }

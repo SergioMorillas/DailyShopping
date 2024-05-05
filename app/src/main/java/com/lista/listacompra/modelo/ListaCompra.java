@@ -107,7 +107,7 @@ public class ListaCompra {
         DecimalFormat df = new DecimalFormat("#.##");
         double suma = 0;
         for (Producto p : productos) {
-            suma += p.getPrice();
+             suma += p.getPrice()*p.getAmount();;
         }
         return df.format(suma);
     }
@@ -115,7 +115,7 @@ public class ListaCompra {
         DecimalFormat df = new DecimalFormat("#.##");
         double suma = 0;
         for (Producto p : productos) {
-            if (p.isMarked()) suma += p.getPrice();
+            if (p.isMarked()) suma += p.getPrice()*p.getAmount();
         }
         return df.format(suma);
     }
@@ -123,7 +123,7 @@ public class ListaCompra {
         double suma = 0;
         DecimalFormat df = new DecimalFormat("#.##");
         for (Producto p : productos) {
-            if (!p.isMarked()) suma += p.getPrice();
+            if (!p.isMarked()) suma += p.getPrice()*p.getAmount();
         }
         return df.format(suma);
     }

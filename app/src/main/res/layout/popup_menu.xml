@@ -41,7 +41,7 @@
             android:textColor="@color/plateado"
             android:drawablePadding="10dp"
             android:textSize="30dp"
-            android:text="Buscar supermercados"
+            android:text="Juego de precios"
             android:drawableStart="@drawable/icono_buscar_supermercado"
             android:gravity="start"
             android:paddingBottom="15dp"

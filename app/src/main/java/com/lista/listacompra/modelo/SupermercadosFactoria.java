@@ -34,7 +34,9 @@ public class SupermercadosFactoria {
                 productosAux.add(new Producto(p));
             }
         }
-
         return productosAux;
+    }
+    public boolean existe(String nombre){
+        return supermercado.exist(nombre);
     }
 }

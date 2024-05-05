@@ -25,7 +25,6 @@ import com.lista.listacompra.R;
 import com.lista.listacompra.modelo.Gestor;
 import com.lista.listacompra.modelo.ListaCompra;
 
-import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
@@ -33,7 +32,7 @@ import java.util.Set;
 /**
  * Actividad principal que muestra todas las listas de compras existentes.
  */
-public class PrincipalListas extends AppCompatActivity {
+public class PrincipalListasBusqueda extends AppCompatActivity {
 
     private LinearLayout layout;
     private Button buttonAdd;
@@ -49,8 +48,9 @@ public class PrincipalListas extends AppCompatActivity {
         initializeViews();
         setupListeners();
         gestor = new Gestor(getApplicationContext());
+        String supermercadosBuscar = this.getIntent().getStringExtra("busqueda");
         new Thread(() -> {
-            insertarListasEnVistas(gestor.getTodaslistas());
+            insertarListasEnVistas(gestor.getBusquedaListasNombre(supermercadosBuscar));
         }).start();
         buscar = findViewById(R.id.search);
         buscar.setOnClickListener(new View.OnClickListener() {
@@ -115,9 +115,9 @@ public class PrincipalListas extends AppCompatActivity {
 
                             if (movimientoY > decimoVista) {
                                 borrarLista(lista, fila, linea);
-                                Toast.makeText(PrincipalListas.this, "Se ha borrado la lista " + lista.getNombre(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(PrincipalListasBusqueda.this, "Se ha borrado la lista " + lista.getNombre(), Toast.LENGTH_SHORT).show();
                             } else {
-                                Intent intent = new Intent(PrincipalListas.this, ListaEspecifica.class);
+                                Intent intent = new Intent(PrincipalListasBusqueda.this, ListaEspecifica.class);
                                 intent.putExtra("nombreLista", lista.getNombre());
                                 intent.putExtra("supermercado", lista.getSupermercado());
                                 startActivity(intent);
@@ -191,8 +191,7 @@ public class PrincipalListas extends AppCompatActivity {
                 String nombre = editTextSearch.getText().toString().trim();
                 new Thread(() -> {
                     if (layout.getChildCount() > 0) mHandler.post(() -> layout.removeAllViews());
-                    Intent i = new Intent(PrincipalListas.this, PrincipalListasBusqueda.class);
-                    i.putExtra("busqueda", nombre);
+                    insertarListasEnVistas(gestor.getBusquedaListasNombre(nombre));
                 }).start();
                 menuDialog.dismiss();
             }
@@ -225,7 +224,7 @@ public class PrincipalListas extends AppCompatActivity {
     }
 
     public void onListasButtonClick(View view) {
-        Intent i = new Intent(this, PrincipalListas.class);
+        Intent i = new Intent(this, PrincipalListasBusqueda.class);
         startActivity(i);
     }
     public void onSideBarClick(View view){

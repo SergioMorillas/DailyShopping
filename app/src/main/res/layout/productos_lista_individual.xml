@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:paddingStart="8dp"
-    android:paddingEnd="8dp">
+    android:paddingEnd="8dp"
+    android:paddingBottom="10dp">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -42,7 +43,7 @@
             android:id="@+id/precioPorKilo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0"
             android:text="Precio Kilo"
             android:textColor="@android:color/darker_gray"
             android:textStyle="bold" />
@@ -54,24 +55,20 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <TextView
+        <EditText
             android:id="@+id/cantidad"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:text="1"
-            android:textColor="@android:color/darker_gray"
-            android:textStyle="bold"  />
-
+            android:layout_weight="1" />
         <TextView
             android:id="@+id/precioProducto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0"
             android:gravity="end"
             android:text="Precio"
             android:textColor="@android:color/darker_gray"
             android:textStyle="bold" />
     </LinearLayout>
+
 </LinearLayout>
