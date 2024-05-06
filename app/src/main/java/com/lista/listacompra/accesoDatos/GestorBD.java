@@ -6,6 +6,7 @@ import com.lista.listacompra.accesoDatos.baseDatos.AppDatabase;
 import com.lista.listacompra.accesoDatos.baseDatos.ListaCompraBD;
 import com.lista.listacompra.modelo.ListaCompra;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class GestorBD {
@@ -28,7 +29,13 @@ public class GestorBD {
     }
 
     public Set<ListaCompraBD> getTodasListasNombre(String nombre) {
-        return database.listaCompraDao().getAllListasCompraNombre(nombre);
+        Set<ListaCompraBD> aux = new HashSet<>();
+        database.listaCompraDao().getAllListasCompra();
+        for (ListaCompraBD lista:
+        database.listaCompraDao().getAllListasCompra()) {
+            if (lista.getNombre().toLowerCase().contains(nombre.toLowerCase())) aux.add(lista);
+        }
+        return aux;
 
     }
 

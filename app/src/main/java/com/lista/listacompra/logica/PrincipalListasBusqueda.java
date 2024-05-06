@@ -230,4 +230,9 @@ public class PrincipalListasBusqueda extends AppCompatActivity {
     public void onSideBarClick(View view){
         showMenuDialog();
     }
+    public void onJuegoButtonClick(View view) {
+        Intent i = new Intent(this, JuegoPrecios.class);
+        startActivity(i);
+    }
+
 }

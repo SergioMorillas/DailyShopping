@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/primario"
-            android:textColor="@color/plateado"
+            android:textColor="@color/white"
             android:drawablePadding="10dp"
             android:textSize="40dp"
             android:text="Mis listas"
@@ -31,6 +31,7 @@
             android:layout_gravity="start"
             android:gravity="start"
             android:onClick="onListasButtonClick"
+
             />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -38,14 +39,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/primario"
-            android:textColor="@color/plateado"
+            android:textColor="@color/white"
             android:drawablePadding="10dp"
             android:textSize="30dp"
             android:text="Juego de precios"
             android:drawableStart="@drawable/icono_buscar_supermercado"
             android:gravity="start"
             android:paddingBottom="15dp"
-            android:onClick="onSupermercadoButtonClick"
+            android:onClick="onJuegoButtonClick"
             />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -53,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/primario"
-            android:textColor="@color/plateado"
+            android:textColor="@color/white"
             android:drawablePadding="10dp"
             android:textSize="35dp"
             android:text="Comparar precios"

@@ -1,10 +1,14 @@
 package com.lista.listacompra.logica;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -74,7 +78,7 @@ public class BuscadorProductos extends AppCompatActivity {
         if (!producto.isBlank()) {
             new Thread(() -> {
                 superM.crearSupermercado(SupermercadosDisponibles.valueOf(s));
-                Set<Producto> set = superM.busqueda(producto);
+               Set<Producto> set = superM.busqueda(producto);
                 ArrayList<Producto> aux = new ArrayList<>(set);
                 Collections.sort(aux);
                 if (aux.size() != 0) {
@@ -142,5 +146,43 @@ public class BuscadorProductos extends AppCompatActivity {
         buscar = findViewById(R.id.btnBuscar);
         texto = findViewById(R.id.txtBuscador);
         nombreAplicacion = findViewById(R.id.nombreAplicacion);
+    }
+    /**
+     * @brief Muestra un diálogo de menú.
+     */
+    private void showMenuDialog() {
+        Dialog menuDialog = new Dialog(this, android.R.style.Theme);
+        menuDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        menuDialog.setContentView(R.layout.popup_menu);
+
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        Window window = menuDialog.getWindow();
+        if (window != null) {
+            layoutParams.copyFrom(window.getAttributes());
+            layoutParams.width = (int) (getResources().getDisplayMetrics().widthPixels * 0.8);
+            layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
+            layoutParams.gravity = Gravity.START;
+            layoutParams.horizontalMargin = 0.0f;
+            layoutParams.verticalMargin = 0.0f;
+            window.setAttributes(layoutParams);
+        }
+
+        menuDialog.show();
+    }
+    public void onSideBarClick(View view){
+        showMenuDialog();
+    }
+    public void onCompararButtonClick(View view) {
+        Intent i = new Intent(this, ComparadorProductos.class);
+        startActivity(i);
+    }
+
+    public void onListasButtonClick(View view) {
+        Intent i = new Intent(this, PrincipalListas.class);
+        startActivity(i);
+    }
+    public void onJuegoButtonClick(View view) {
+        Intent i = new Intent(this, JuegoPrecios.class);
+        startActivity(i);
     }
 }

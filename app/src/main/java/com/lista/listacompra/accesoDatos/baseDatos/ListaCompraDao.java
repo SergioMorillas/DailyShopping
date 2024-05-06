@@ -35,10 +35,4 @@ public interface ListaCompraDao {
     void deleteListaCompra(int id);
     @Query("DELETE FROM listas_compra WHERE nombre = :nombre and supermercado = :supermercado and fecha = :fecha")
     void deleteListaCompra(String nombre, String supermercado, long fecha);
-
-    @Query("SELECT * FROM listas_compra WHERE nombre LIKE '%' || :nombre || '%'")
-    List<ListaCompraBD> getAllListasCompraNombreList(String nombre);
-    default Set<ListaCompraBD> getAllListasCompraNombre(String nombre) {
-        return new HashSet<>(getAllListasCompraNombre(nombre));
-    }
 }

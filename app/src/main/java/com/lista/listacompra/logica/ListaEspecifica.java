@@ -1,14 +1,18 @@
 package com.lista.listacompra.logica;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -25,6 +29,8 @@ import com.lista.listacompra.modelo.ListaCompra;
 import com.lista.listacompra.modelo.Producto;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -59,13 +65,12 @@ public class ListaEspecifica extends AppCompatActivity {
     }
 
     /**
-     *
      * @param savedInstanceState If the activity is being re-initialized after
-     *     previously being shut down then this Bundle contains the data it most
-     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
-     * Aquí instanciamos los items de la vista para poder acceder a ellos, leemos los valores pasados como
-     * parametro a la vista, como con el supermercado y el nombre de la lista, y creamos los metodos
-     * onClick de la vista
+     *                           previously being shut down then this Bundle contains the data it most
+     *                           recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *                           Aquí instanciamos los items de la vista para poder acceder a ellos, leemos los valores pasados como
+     *                           parametro a la vista, como con el supermercado y el nombre de la lista, y creamos los metodos
+     *                           onClick de la vista
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +97,7 @@ public class ListaEspecifica extends AppCompatActivity {
         Thread t = new Thread(() -> {
             gestor = new Gestor(getApplicationContext());
             productos = gestor.getListaPorNombre(nombreLista);
-            mHandler.post(() -> añadirObjeto());
+            mHandler.post(() -> actualizarVista());
         });
         t.start();
         try {
@@ -104,7 +109,7 @@ public class ListaEspecifica extends AppCompatActivity {
         nombreAplicacion.setText("Lista: " + nombreLista);
     }
 
-    private void añadirObjeto() {
+    private void actualizarVista() {
         if (layout.getChildCount() > 0) layout.removeAllViews();
         for (Producto p : productos.getProductos()) {
             if (!p.isMarked()) {
@@ -126,48 +131,12 @@ public class ListaEspecifica extends AppCompatActivity {
         TextView precio = fila.findViewById(R.id.precioProducto);
         TextView precioKilo = fila.findViewById(R.id.precioPorKilo);
         ImageView imagen = fila.findViewById(R.id.imagenProducto);
-        EditText cantidad = fila.findViewById(R.id.cantidad);
-
         nombre.setText(p.getName());
-        precio.setText((String.format("%s€", p.getPrice())));
+        crearPrecios(fila, p, precio);
 
         if (p.getPricePerKilo() == -1) precioKilo.setText("No aplica");
         else precioKilo.setText(p.getPricePerKilo() + "€/kilo");
 
-        cantidad.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) { //Al cambiarlo
-                int cantidad = p.getAmount();
-                String sCantidad = s.toString();
-                try {
-                    cantidad = Integer.parseInt(sCantidad);
-                    if (String.valueOf(cantidad).equals(sCantidad)) {
-                        Toast.makeText(ListaEspecifica.this,
-                                        String.format("No se ha podido setear %s como cantidad, no puede ser un numero decimal", sCantidad),
-                                        Toast.LENGTH_LONG)
-                                .show();
-                    }
-                } catch (NumberFormatException formato) {
-                    Toast.makeText(ListaEspecifica.this,
-                                    String.format("No se ha podido setear %s como cantidad, no es un numero", sCantidad),
-                                    Toast.LENGTH_LONG)
-                            .show();
-                }
-                productos.getProductos().remove(p);
-                p.setAmount(cantidad);
-                productos.getProductos().add(p);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) { //Despues de cambiarlo
-
-            }
-        });
         fila.setOnTouchListener(new View.OnTouchListener() {
             private float empiezaY;
 
@@ -187,7 +156,7 @@ public class ListaEspecifica extends AppCompatActivity {
 
                         if (movimientoY > veinteavo) {
                             productos.getProductos().remove(p);
-                            añadirObjeto();
+                            actualizarVista();
 
                             Toast.makeText(ListaEspecifica.this, "Se ha borrado el " +
                                     "producto " + p.getName(), Toast.LENGTH_SHORT).show();
@@ -195,7 +164,7 @@ public class ListaEspecifica extends AppCompatActivity {
                             p.setMarked(!p.isMarked()); // Hacemos una puerta not sobre si esta marcado
                             productos.getProductos().remove(p);
                             productos.getProductos().add(p);
-                            añadirObjeto();
+                            actualizarVista();
                         }
                 }
                 return true;
@@ -203,6 +172,33 @@ public class ListaEspecifica extends AppCompatActivity {
         });
         Picasso.get().load(p.getImage()).into(imagen);
         layout.addView(fila);
+    }
+
+    private void crearPrecios(LinearLayout fila, Producto p, TextView precio) {
+        DecimalFormat df = new DecimalFormat("#.##");
+        double precioReal;
+
+        Button botonSuma = fila.findViewById(R.id.sumaCantidad);
+        Button botonResta = fila.findViewById(R.id.restaCantidad);
+
+        precioReal = p.getAmount() * p.getPrice();
+        String precioMostrar = p.getAmount() + "X" + p.getPrice() + "€=" + df.format(precioReal) +"€";
+
+        precio.setText(precioMostrar);
+
+        botonSuma.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickSumaCantidad(precio, p);
+            }
+        });
+        botonResta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickRestaCantidad(precio, p, fila);
+            }
+        });
+
     }
 
     private void addCentroEspecifico(ListaCompra productos) {
@@ -216,4 +212,88 @@ public class ListaEspecifica extends AppCompatActivity {
         total.setText(String.format("%s€", productos.getPrecioTotal()));
         layout.addView(fila);
     }
+
+
+
+    private void onClickRestaCantidad(TextView precio, Producto p, LinearLayout fila) {
+        if (p.getAmount()==1){
+            productos.getProductos().remove(p);
+            layout.removeView(fila);
+        }
+        p.setAmount(p.getAmount() - 1);
+        new Thread(() -> {
+            gestor.actualizarListaProductos(productos);
+        }).start();
+
+        DecimalFormat df = new DecimalFormat("#.##");
+        double precioReal;
+        precioReal = p.getAmount() * p.getPrice();
+        String precioMostrar = p.getAmount() + "X" + p.getPrice() + "€=" + df.format(precioReal) +"€";
+        precio.setText(precioMostrar);
+        actualizarVista();
+    }
+
+    private void onClickSumaCantidad(TextView precio, Producto p) {
+        p.setAmount(p.getAmount() + 1);
+        new Thread(() -> {
+            gestor.actualizarListaProductos(productos);
+        }).start();
+
+        DecimalFormat df = new DecimalFormat("#.##");
+        double precioReal;
+        precioReal = p.getAmount() * p.getPrice();
+        String precioMostrar = p.getAmount() + "X" + p.getPrice() + "€=" + df.format(precioReal) +"€";
+        precio.setText(precioMostrar);
+        actualizarVista();
+
+    }
+
+
+
+
+
+
+
+
+    /**
+     * @brief Muestra un diálogo de menú.
+     */
+    private void showMenuDialog() {
+        Dialog menuDialog = new Dialog(this, android.R.style.Theme);
+        menuDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        menuDialog.setContentView(R.layout.popup_menu);
+
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        Window window = menuDialog.getWindow();
+        if (window != null) {
+            layoutParams.copyFrom(window.getAttributes());
+            layoutParams.width = (int) (getResources().getDisplayMetrics().widthPixels * 0.8);
+            layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
+            layoutParams.gravity = Gravity.START;
+            layoutParams.horizontalMargin = 0.0f;
+            layoutParams.verticalMargin = 0.0f;
+            window.setAttributes(layoutParams);
+        }
+
+        menuDialog.show();
+    }
+
+    public void onSideBarClick(View view) {
+        showMenuDialog();
+    }
+    public void onCompararButtonClick(View view) {
+        Intent i = new Intent(this, ComparadorProductos.class);
+        startActivity(i);
+    }
+
+    public void onListasButtonClick(View view) {
+        Intent i = new Intent(this, PrincipalListas.class);
+        startActivity(i);
+    }
+    public void onJuegoButtonClick(View view) {
+        Intent i = new Intent(this, JuegoPrecios.class);
+        startActivity(i);
+    }
+
 }
+

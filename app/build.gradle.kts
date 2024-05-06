@@ -55,7 +55,4 @@ dependencies {
 
     // https://mvnrepository.com/artifact/com.github.javafaker/javafaker
     implementation("com.github.javafaker:javafaker:1.0.2")
-
-
-
 }
