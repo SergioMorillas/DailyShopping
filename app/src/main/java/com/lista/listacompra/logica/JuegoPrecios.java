@@ -2,6 +2,7 @@ package com.lista.listacompra.logica;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -28,11 +29,12 @@ import java.util.List;
 
 
 public class JuegoPrecios extends AppCompatActivity {
+    private static final double TOLERANCIA = 0.1;
     private Faker faker;
     double precio;
     EditText primerIntento, segundoIntento;
     ImageView imagenProducto, imagenPrimerIntento, imagenSegundoIntento;
-    TextView nombreSupermercado;
+    TextView nombreSupermercado, cuadroFinal;
     Button comprobar;
 
     @Override
@@ -46,11 +48,13 @@ public class JuegoPrecios extends AppCompatActivity {
         imagenPrimerIntento = findViewById(R.id.imagenPrimerIntento);
         imagenSegundoIntento = findViewById(R.id.imagenSegundoIntento);
         nombreSupermercado = findViewById(R.id.nombreSupermercado);
+        cuadroFinal = findViewById(R.id.cuadroFinal);
         comprobar = findViewById(R.id.comprobar);
         SupermercadosFactoria superM = supermercadoAleatorio();
         Producto p = productoAleatorio(superM);
 
-
+        precio = p.getPrice();
+        cuadroFinal.setVisibility(View.INVISIBLE);
         nombreSupermercado.setText(superM.getNombre());
         Picasso.get().load(p.getImage()).into(imagenProducto);
         comprobar.setOnClickListener(new View.OnClickListener() {
@@ -65,34 +69,50 @@ public class JuegoPrecios extends AppCompatActivity {
                         precioIntento = Double.parseDouble(stringPrecioIntento);
                         int acierto = comprobarPrecioUsuario(precioIntento);
                         if (acierto == 0) {
-                            Toast.makeText(JuegoPrecios.this, "El precio real es mas alto", Toast.LENGTH_LONG).show();
-                        } else if (acierto == 1) {
                             Toast.makeText(JuegoPrecios.this, "El precio real es mas bajo", Toast.LENGTH_LONG).show();
+                        } else if (acierto == 1) {
+                            Toast.makeText(JuegoPrecios.this, "El precio real es mas alto", Toast.LENGTH_LONG).show();
                         } else if (acierto == 2) {
                             Toast.makeText(JuegoPrecios.this, "Has acertado el precio exacto", Toast.LENGTH_LONG).show();
                         } else {
-                            Toast.makeText(JuegoPrecios.this, "Has acertado el precio con la tolerancia", Toast.LENGTH_LONG).show();
+                            Toast.makeText(JuegoPrecios.this, "¡Bien! Te has quedado muy cerca, el precio era "+p.getPrice()+"€", Toast.LENGTH_LONG).show();
                         }
+                        if(acierto==0 || acierto==1){
+                            segundoIntento.setEnabled(true);
+                        }
+                        primerIntento.setEnabled(false);
                     } catch (NumberFormatException ex) {
                         Toast.makeText(JuegoPrecios.this, "El valor introducido no es un numero", Toast.LENGTH_LONG).show();
                     }
+
                 } else {
                     try {
                         stringPrecioIntento = segundoIntento.getText().toString();
                         precioIntento = Double.parseDouble(stringPrecioIntento);
                         int acierto = comprobarPrecioUsuario(precioIntento);
+                        cuadroFinal.setVisibility(View.VISIBLE);
                         if (acierto == 0) {
-                            Toast.makeText(JuegoPrecios.this, "El precio real era: " + p.getPrice(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(JuegoPrecios.this, "Te has pasado, el precio era "+p.getPrice()+"€"  , Toast.LENGTH_LONG).show();
+                            cuadroFinal.setTextColor(Color.rgb(194,24,7)); //Rojo
+                            cuadroFinal.setText(String.format("Te has pasado, el precio era %s€", p.getPrice()));
                         } else if (acierto == 1) {
-                            Toast.makeText(JuegoPrecios.this, "El precio real era: " + p.getPrice(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(JuegoPrecios.this, "Te has quedado corto, el precio era "+p.getPrice()+"€" , Toast.LENGTH_LONG).show();
+                            cuadroFinal.setTextColor(Color.rgb(187,165,61)); //Rojo
+                            cuadroFinal.setText(String.format("Te has quedado corto, el precio era %s€", p.getPrice()));
                         } else if (acierto == 2) {
-                            Toast.makeText(JuegoPrecios.this, "Has acertado el precio exacto", Toast.LENGTH_LONG).show();
+                            Toast.makeText(JuegoPrecios.this, "Has acertado el precio exacto, el precio era "+p.getPrice()+"€", Toast.LENGTH_LONG).show();
+                            cuadroFinal.setTextColor(Color.rgb(187,165,61)); //Dorado
+                            cuadroFinal.setText("Has acertado el precio exacto");
                         } else {
-                            Toast.makeText(JuegoPrecios.this, "Has acertado el precio con la tolerancia", Toast.LENGTH_LONG).show();
+                            Toast.makeText(JuegoPrecios.this, "¡Bien! Te has quedado muy cerca, el precio era "+p.getPrice()+"€", Toast.LENGTH_LONG).show();
+                            cuadroFinal.setTextColor(Color.rgb(192,192,192)); //Plateado
+                            cuadroFinal.setText("¡Bien! Te has quedado muy cerca, el precio era "+p.getPrice()+"€");
                         }
+                        segundoIntento.setEnabled(false);
                     } catch (NumberFormatException ex) {
                         Toast.makeText(JuegoPrecios.this, "El valor introducido no es un numero", Toast.LENGTH_LONG).show();
                     }
+
                 }
             }
         });
@@ -161,13 +181,14 @@ public class JuegoPrecios extends AppCompatActivity {
      * </ul>
      */
     public int comprobarPrecioUsuario(double precioUsuario) {
-        if (!((precio - precioUsuario) > (precio * 0.1))) { //Comprueba si el precio del usuario es demasiado bajo, true en caso afirmativo
+        double limiteSuperior = precio*(1+TOLERANCIA), limiteInferior=precio*(1-TOLERANCIA);
+        if (precioUsuario<limiteInferior) {
             return 0;
-        } else if (!((precio - precioUsuario) < (precio - (precio * 1.1)))) {//Comprueba si el precio del usuario es demasiado alto, true en caso afirmativo
+        } else if (precioUsuario>limiteSuperior) {
             return 1;
-        } else if (precio == precioUsuario) {//Comprueba si el precio del usuario es el precio real
+        } else if (precio == precioUsuario) {
             return 2;
-        } else { // Esta en el rango ofrecido
+        } else {
             return 3;
         }
     }

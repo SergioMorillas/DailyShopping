@@ -137,37 +137,13 @@ public class ListaEspecifica extends AppCompatActivity {
         if (p.getPricePerKilo() == -1) precioKilo.setText("No aplica");
         else precioKilo.setText(p.getPricePerKilo() + "€/kilo");
 
-        fila.setOnTouchListener(new View.OnTouchListener() {
-            private float empiezaY;
-
-            @SuppressLint("ClickableViewAccessibility")
+        fila.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        empiezaY = event.getY();
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        float finY = event.getY();
-
-                        float veinteavo = v.getHeight() / 20;
-                        float movimientoY = Math.abs(finY - empiezaY);
-
-                        if (movimientoY > veinteavo) {
-                            productos.getProductos().remove(p);
-                            actualizarVista();
-
-                            Toast.makeText(ListaEspecifica.this, "Se ha borrado el " +
-                                    "producto " + p.getName(), Toast.LENGTH_SHORT).show();
-                        } else if (movimientoY == 0) {
-                            p.setMarked(!p.isMarked()); // Hacemos una puerta not sobre si esta marcado
-                            productos.getProductos().remove(p);
-                            productos.getProductos().add(p);
-                            actualizarVista();
-                        }
-                }
-                return true;
+            public void onClick(View v) {
+                p.setMarked(!p.isMarked()); // Hacemos una puerta not sobre si esta marcado
+                productos.getProductos().remove(p);
+                productos.getProductos().add(p);
+                actualizarVista();
             }
         });
         Picasso.get().load(p.getImage()).into(imagen);
