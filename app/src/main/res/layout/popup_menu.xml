@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primario"
+    android:orientation="vertical"
+    android:padding="0dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/listas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/primario"
+            android:textColor="@color/white"
+            android:drawablePadding="10dp"
+            android:textSize="40dp"
+            android:text="Mis listas"
+            android:drawableStart="@drawable/icono_mis_listas"
+            android:layout_gravity="start"
+            android:gravity="start"
+            android:onClick="onListasButtonClick"
+
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/supermercados"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/primario"
+            android:textColor="@color/white"
+            android:drawablePadding="10dp"
+            android:textSize="30dp"
+            android:text="Juego de precios"
+            android:drawableStart="@drawable/icono_buscar_supermercado"
+            android:gravity="start"
+            android:paddingBottom="15dp"
+            android:onClick="onJuegoButtonClick"
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/comparador"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/primario"
+            android:textColor="@color/white"
+            android:drawablePadding="10dp"
+            android:textSize="35dp"
+            android:text="Comparar precios"
+            android:drawableStart="@drawable/icono_comparar_precios"
+            android:gravity="start"
+            android:onClick="onCompararButtonClick"/>
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
