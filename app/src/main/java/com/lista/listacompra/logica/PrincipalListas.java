@@ -130,6 +130,7 @@ public class PrincipalListas extends AppCompatActivity {
                                 Intent intent = new Intent(PrincipalListas.this, ListaEspecifica.class);
                                 intent.putExtra("nombreLista", lista.getNombre());
                                 intent.putExtra("supermercado", lista.getSupermercado());
+                                intent.putExtra("fecha", lista.getFecha());
                                 startActivity(intent);
                             }
                             break;

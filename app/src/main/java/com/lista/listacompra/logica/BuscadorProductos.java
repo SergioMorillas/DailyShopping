@@ -48,6 +48,7 @@ public class BuscadorProductos extends AppCompatActivity {
     private ListaCompra miLista;
     private Gestor gestor;
     private ProgressBar progressBar;
+    private long fecha;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,12 +60,13 @@ public class BuscadorProductos extends AppCompatActivity {
 
         supermercado = b.getString("supermercado");
         lista = b.getString("nombreLista");
+        fecha = b.getLong("fecha");
         superM = new SupermercadosFactoria();
         gestor = new Gestor(getApplicationContext());
         nombreAplicacion.setText("Buscador de " + supermercado);
         progressBar = findViewById(R.id.loadingProgressBar);
         new Thread(() -> {
-            miLista = gestor.getListaPorNombre(lista);
+            miLista = gestor.getListaPorNombre(lista, supermercado, fecha);
         }).start();
 
         buscar.setOnClickListener(new View.OnClickListener() {

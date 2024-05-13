@@ -50,6 +50,7 @@ public class ListaEspecifica extends AppCompatActivity {
     private TextView nombreAplicacion;
     private Gestor gestor;
     private ListaCompra productos;
+    private long fecha;
 
     private final Handler mHandler = new Handler(Looper.getMainLooper());
 
@@ -81,6 +82,7 @@ public class ListaEspecifica extends AppCompatActivity {
         setContentView(R.layout.lista_especifica);
         nombreLista = this.getIntent().getStringExtra("nombreLista");
         supermercadoNombre = this.getIntent().getStringExtra("supermercado");
+        fecha = this.getIntent().getLongExtra("fecha", -1); // En caso de que no tenga fecha (imposible) por defecto tiene el -1;
         layout = findViewById(R.id.layout);
         buttonAdd = findViewById(R.id.buttonAdd);
         nombreAplicacion = findViewById(R.id.nombreAplicacion);
@@ -92,6 +94,7 @@ public class ListaEspecifica extends AppCompatActivity {
                 Intent i = new Intent(ListaEspecifica.this, BuscadorProductos.class);
                 b.putString("supermercado", supermercadoNombre);
                 b.putString("nombreLista", nombreLista);
+                b.putLong("fecha", fecha);
                 i.putExtras(b);
                 startActivity(i);
             }
@@ -99,7 +102,7 @@ public class ListaEspecifica extends AppCompatActivity {
 
         Thread t = new Thread(() -> {
             gestor = new Gestor(getApplicationContext());
-            productos = gestor.getListaPorNombre(nombreLista);
+            productos = gestor.getListaPorNombre(nombreLista, supermercadoNombre, fecha);
             mHandler.post(() -> actualizarVista());
         });
         t.start();
@@ -148,9 +151,14 @@ public class ListaEspecifica extends AppCompatActivity {
         nombre.setText(p.getName());
         crearPrecios(fila, p, precio);
 
-        if (p.getPricePerKilo() == -1) precioKilo.setText("No aplica");
-        else precioKilo.setText(p.getPricePerKilo() + "€/kilo");
+        if (p.getPricePerKilo() == -1) precioKilo.setText( "No aplica" );
+        else precioKilo.setText( p.getPricePerKilo() + "€/kilo" );
 
+        fila.setPadding(
+                fila.getPaddingLeft(),
+                10,
+                fila.getPaddingRight(),
+                fila.getPaddingBottom());
         fila.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -204,8 +212,6 @@ public class ListaEspecifica extends AppCompatActivity {
         layout.addView(fila);
     }
 
-
-
     private void onClickRestaCantidad(TextView precio, Producto p, LinearLayout fila) {
         if (p.getAmount()==1){
             productos.getProductos().remove(p);
@@ -231,13 +237,6 @@ public class ListaEspecifica extends AppCompatActivity {
         actualizarVista();
 
     }
-
-
-
-
-
-
-
 
     /**
      * @brief Muestra un diálogo de menú.

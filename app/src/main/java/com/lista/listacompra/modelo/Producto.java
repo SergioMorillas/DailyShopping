@@ -26,14 +26,15 @@ public class Producto implements Comparable<Producto> {
         this.amount = producto.getAmount();
         this.isMarked = producto.isMarked();
         gestorDB = new GestorBD(context);
-    }    public Producto(ProductoBD producto) {
+    }
+    public Producto(ProductoBD producto) {
         this.image = producto.getImage();
         this.name = producto.getName();
         this.price=producto.getPrice();
         this.pricePerKilo = producto.getPricePerKilo();
         this.mass = producto.getMass();
         this.amount = producto.getAmount();
-        this.isMarked = isMarked;
+        this.isMarked = producto.isMarked();
     }
     public Producto(Context context){
 

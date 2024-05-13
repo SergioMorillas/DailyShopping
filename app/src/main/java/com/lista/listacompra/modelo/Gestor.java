@@ -1,6 +1,8 @@
 package com.lista.listacompra.modelo;
 
 import android.content.Context;
+import android.net.wifi.WifiManager;
+import android.util.Log;
 
 import com.lista.listacompra.accesoDatos.GestorBD;
 import com.lista.listacompra.accesoDatos.baseDatos.ListaCompraBD;
@@ -16,8 +18,8 @@ public class Gestor {
         this.gestorBD = new GestorBD(context);
     }
 
-    public ListaCompra getListaPorNombre(String nombre) {
-        return new ListaCompra(gestorBD.getListaCompra(nombre));
+    public ListaCompra getListaPorNombre(String nombre, String supermercado, long fecha) {
+        return new ListaCompra(gestorBD.getListaCompra(nombre, supermercado, fecha));
     }
 
     public void insertaLista(ListaCompra l) {

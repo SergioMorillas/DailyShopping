@@ -1,6 +1,7 @@
 package com.lista.listacompra.accesoDatos;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.lista.listacompra.accesoDatos.baseDatos.AppDatabase;
 import com.lista.listacompra.accesoDatos.baseDatos.ListaCompraBD;
@@ -18,8 +19,9 @@ public class GestorBD {
         database = AppDatabase.getDatabase(this.contexto);
     }
 
-    public ListaCompraBD getListaCompra(String nombre) {
-        return database.listaCompraDao().getListaCompraByName(nombre);
+    public ListaCompraBD getListaCompra(String nombre, String supermercado, long fecha) {
+        ListaCompraBD lista = database.listaCompraDao().getListaCompraByName(nombre, supermercado, fecha);
+        return lista;
     }
     public void insertaLista(ListaCompra l){
         database.listaCompraDao().insertListaCompra(new ListaCompraBD(l));
@@ -55,6 +57,7 @@ public class GestorBD {
                 }
             });
         } catch (Exception ex) {
+            Log.e("Excepcion", "Ha habido una excepcion" + ex.getMessage());
             throw ex;
         }
 

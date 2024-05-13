@@ -46,6 +46,7 @@ public class ProductoBD{
         this.pricePerKilo = precioKilo;
         this.mass = peso;
         this.amount = amount;
+        this.isMarked = isMarked;
     }
     public ProductoBD(Producto p) {
         this.image = p.getImage();
@@ -54,6 +55,7 @@ public class ProductoBD{
         this.pricePerKilo = p.getPricePerKilo();
         this.mass = p.getMass();
         this.amount = p.getAmount();
+        this.isMarked = p.isMarked();
     }
 
     public ProductoBD(String id, String imagen, String nombre, double precio) {

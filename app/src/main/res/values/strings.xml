@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">DailyShopping</string>
+    <string name="te_has_quedado_cerca">"¡Bien! Te has quedado muy cerca, el precio era "</string>
+    <string name="precio_acertado">Has acertado el precio exacto</string>
 </resources>
