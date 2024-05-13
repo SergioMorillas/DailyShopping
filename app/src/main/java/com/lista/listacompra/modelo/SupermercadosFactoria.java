@@ -30,8 +30,10 @@ public class SupermercadosFactoria {
 
         if(supermercado!=null){
             productos=supermercado.search(nombre);
-            for (ProductoBD p :productos ) {
-                productosAux.add(new Producto(p));
+            if (productos!=null){
+                for (ProductoBD p :productos ) {
+                    productosAux.add(new Producto(p));
+                }
             }
         }
         return productosAux;

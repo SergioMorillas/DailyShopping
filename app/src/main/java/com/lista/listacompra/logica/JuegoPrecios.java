@@ -13,11 +13,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.window.OnBackInvokedDispatcher;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.OnBackPressedDispatcher;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.javafaker.Faker;
@@ -121,12 +119,12 @@ public class JuegoPrecios extends AppCompatActivity {
             } else if (acierto == 2) {
                 Toast.makeText(JuegoPrecios.this, "Has acertado el precio exacto, el precio era " + p.getPrice() + "€", Toast.LENGTH_LONG).show();
                 cuadroFinal.setTextColor(Color.rgb(187, 165, 61)); //Dorado
-                imagenPrimerIntento.setImageResource(R.drawable.icono_estrella_ganar);
+                imagenPrimerIntento.setImageResource(R.drawable.icono_estrella_ganar_exacto);
                 cuadroFinal.setText("Has acertado el precio exacto");
             } else {
                 Toast.makeText(JuegoPrecios.this, "¡Bien! Te has quedado muy cerca, el precio era " + p.getPrice() + "€", Toast.LENGTH_LONG).show();
                 cuadroFinal.setTextColor(Color.rgb(192, 192, 192)); //Plateado
-                imagenPrimerIntento.setImageResource(R.drawable.icono_estrella_ganar);
+                imagenPrimerIntento.setImageResource(R.drawable.icono_estrella_ganar_tolerancia);
                 cuadroFinal.setText("¡Bien! Te has quedado muy cerca, el precio era " + p.getPrice() + "€");
             }
             if (acierto == 0 || acierto == 1) {
@@ -159,12 +157,12 @@ public class JuegoPrecios extends AppCompatActivity {
             } else if (acierto == 2) {
                 Toast.makeText(JuegoPrecios.this, "Has acertado el precio exacto, el precio era " + p.getPrice() + "€", Toast.LENGTH_LONG).show();
                 cuadroFinal.setTextColor(Color.rgb(187, 165, 61)); //Dorado
-                imagenSegundoIntento.setImageResource(R.drawable.icono_estrella_ganar);
+                imagenSegundoIntento.setImageResource(R.drawable.icono_estrella_ganar_exacto);
                 cuadroFinal.setText(R.string.precio_acertado);
             } else {
                 Toast.makeText(JuegoPrecios.this, "¡Bien! Te has quedado muy cerca, el precio era " + p.getPrice() + "€", Toast.LENGTH_LONG).show();
                 cuadroFinal.setTextColor(Color.rgb(192, 192, 192)); //Plateado
-                imagenSegundoIntento.setImageResource(R.drawable.icono_estrella_ganar);
+                imagenSegundoIntento.setImageResource(R.drawable.icono_estrella_ganar_tolerancia);
                 cuadroFinal.setText(getString(R.string.te_has_quedado_cerca) + p.getPrice() + "€");
             }
             segundoIntento.setEnabled(false);

@@ -147,10 +147,11 @@ public class CreadorListas extends AppCompatActivity {
                     mHandler.post(() -> Toast.makeText(CreadorListas.this,
                             "Ya existe una lista con esos datos",
                             Toast.LENGTH_LONG).show());
-                    Toast.makeText(getApplicationContext(), listaCompra1 + "",Toast.LENGTH_LONG ).show();
                 } catch (NullPointerException npe) {
                     gestor.insertaLista(listaCompra);
-                    Toast.makeText(getApplicationContext(), "La lista se ha creado correctamente", Toast.LENGTH_LONG).show();
+                    mHandler.post(() -> Toast.makeText(getApplicationContext(),
+                            "La lista se ha creado correctamente",
+                            Toast.LENGTH_LONG).show());
                 }
             });
             t.start();

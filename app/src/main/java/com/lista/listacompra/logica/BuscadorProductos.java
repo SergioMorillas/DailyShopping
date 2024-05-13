@@ -81,7 +81,7 @@ public class BuscadorProductos extends AppCompatActivity {
 
     private void buscarProductos(String s) {
         progressBar.setVisibility(View.VISIBLE);
-
+        progressBar.setProgress(1);
         if (layout.getChildCount() > 0) layout.removeAllViews();
         String producto = (texto.getText() != null) ? texto.getText().toString() : "";
         if (!producto.isBlank()) {
@@ -96,6 +96,7 @@ public class BuscadorProductos extends AppCompatActivity {
                         mHandler.post(() -> añadirObjeto(p, superM)); // Añade el objeto en el hilo principal
                     }
                 } else {
+                    mHandler.post(() -> añadirObjetoVacio(new Producto()));
                     mHandler.post(() -> Toast.makeText(BuscadorProductos.this, "No se han encontrado productos con ese nombre", Toast.LENGTH_LONG).show());
                 }
                 mHandler.post(() -> progressBar.setVisibility(View.GONE));
@@ -107,7 +108,18 @@ public class BuscadorProductos extends AppCompatActivity {
 
 
     }
+    private void añadirObjetoVacio(Producto p) {
+        LinearLayout fila = (LinearLayout) getLayoutInflater().inflate(R.layout.productos_comparador, null);
+        TextView nombre = fila.findViewById(R.id.nombreProducto);
+        ImageView imagen = fila.findViewById(R.id.imagenProducto);
+        TextView supermercado = fila.findViewById(R.id.supermercadoProducto);
+        nombre.setText("Producto no encontrado");
+        supermercado.setText("");
 
+        imagen.setImageResource(R.drawable.imagen_no_encontrada);
+        layout.addView(fila);
+
+    }
     private void añadirObjeto(Producto p, SupermercadosFactoria s) {
         LinearLayout fila = (LinearLayout) getLayoutInflater().inflate(R.layout.productos_comparador, null);
         TextView supermercado = fila.findViewById(R.id.supermercadoProducto);
@@ -143,6 +155,7 @@ public class BuscadorProductos extends AppCompatActivity {
                 Intent intent = new Intent(BuscadorProductos.this, ListaEspecifica.class);
                 intent.putExtra("nombreLista", miLista.getNombre());
                 intent.putExtra("supermercado", miLista.getSupermercado());
+                intent.putExtra("fecha", miLista.getFecha());
                 startActivity(intent);
             }
         });
