@@ -18,7 +18,11 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.window.OnBackInvokedDispatcher;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.lista.listacompra.R;
@@ -40,7 +44,6 @@ public class PrincipalListasBusqueda extends AppCompatActivity {
     private Gestor gestor;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +62,16 @@ public class PrincipalListasBusqueda extends AppCompatActivity {
                 showViewMenu();
             }
         });
+        OnBackPressedDispatcher onBackPressedDispatcher = getOnBackPressedDispatcher();
+        onBackPressedDispatcher.addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Intent intent = new Intent(PrincipalListasBusqueda.this, PrincipalListas.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
     }
 
     /**
@@ -121,6 +134,7 @@ public class PrincipalListasBusqueda extends AppCompatActivity {
                                 intent.putExtra("nombreLista", lista.getNombre());
                                 intent.putExtra("supermercado", lista.getSupermercado());
                                 startActivity(intent);
+                                finish();
                             }
                             break;
                     }
@@ -204,6 +218,7 @@ public class PrincipalListasBusqueda extends AppCompatActivity {
     private void navigateToListasCreador() {
         Intent intent = new Intent(this, CreadorListas.class);
         startActivity(intent);
+        finish();
     }
 
     /**
@@ -221,11 +236,13 @@ public class PrincipalListasBusqueda extends AppCompatActivity {
     public void onCompararButtonClick(View view) {
         Intent i = new Intent(this, ComparadorProductos.class);
         startActivity(i);
+        finish();
     }
 
     public void onListasButtonClick(View view) {
         Intent i = new Intent(this, PrincipalListasBusqueda.class);
         startActivity(i);
+        finish();
     }
     public void onSideBarClick(View view){
         showMenuDialog();
@@ -233,6 +250,7 @@ public class PrincipalListasBusqueda extends AppCompatActivity {
     public void onJuegoButtonClick(View view) {
         Intent i = new Intent(this, JuegoPrecios.class);
         startActivity(i);
+        finish();
     }
 
 }

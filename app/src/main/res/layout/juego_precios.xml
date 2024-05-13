@@ -16,20 +16,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/menu"
-        android:layout_width="64dp"
-        android:layout_height="56dp"
-        android:background="@color/primario"
-        android:onClick="onSideBarClick"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
-        app:layout_constraintEnd_toStartOf="@+id/nombreAplicacion"
-        app:layout_constraintHorizontal_bias="0.472"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/menu"
-        />
-
     <TextView
         android:id="@+id/nombreAplicacion"
         android:layout_width="wrap_content"
@@ -57,7 +43,7 @@
 
     <TextView
         android:id="@+id/nombreSupermercado"
-        android:layout_width="170dp"
+        android:layout_width="wrap_content"
         android:layout_height="33dp"
         android:text="Supermercado"
         android:textSize="25dp"
@@ -94,12 +80,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:ems="10"
-        android:inputType="text"
+        android:hint="Formato: 1.2"
+        android:inputType="numberDecimal"
         app:layout_constraintEnd_toStartOf="@+id/imagenPrimerIntento"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/producto"
-        android:hint="1.3"/>
+        app:layout_constraintTop_toBottomOf="@+id/producto" />
 
     <EditText
         android:id="@+id/segundoIntento"
@@ -108,27 +94,38 @@
         android:layout_marginTop="10dp"
         android:ems="10"
         android:enabled="false"
-        android:inputType="text"
+        android:hint="Formato: 1.2"
+        android:inputType="numberDecimal"
         app:layout_constraintEnd_toStartOf="@+id/imagenSegundoIntento"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/primerIntento"
-        android:hint="1.3"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/primerIntento" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/comprobar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/botones_creacion"
-        android:text="Probar"
+        android:text="Comprobar"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/nuevo_intento"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/segundoIntento" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/nuevo_intento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/botones_creacion"
+        android:text="Nuevo intento"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/segundoIntento"
-        app:layout_constraintVertical_bias="0.7" />
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/comprobar"
+        app:layout_constraintTop_toBottomOf="@+id/segundoIntento" />
 
     <TextView
         android:id="@+id/cuadroFinal"
@@ -138,6 +135,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/segundoIntento" />
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/menu"
+        android:layout_width="64dp"
+        android:layout_height="56dp"
+        android:background="@color/primario"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        app:layout_constraintEnd_toStartOf="@+id/nombreAplicacion"
+        app:layout_constraintHorizontal_bias="0.472"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/menu"
+        android:onClick="onSideBarClick"
+        />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

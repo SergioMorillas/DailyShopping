@@ -13,9 +13,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.window.OnBackInvokedDispatcher;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.lista.listacompra.R;
@@ -42,7 +47,8 @@ public class BuscadorProductos extends AppCompatActivity {
     private SupermercadosFactoria superM;
     private ListaCompra miLista;
     private Gestor gestor;
-
+    private ProgressBar progressBar;
+    private long fecha;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,12 +60,13 @@ public class BuscadorProductos extends AppCompatActivity {
 
         supermercado = b.getString("supermercado");
         lista = b.getString("nombreLista");
+        fecha = b.getLong("fecha");
         superM = new SupermercadosFactoria();
         gestor = new Gestor(getApplicationContext());
         nombreAplicacion.setText("Buscador de " + supermercado);
-
+        progressBar = findViewById(R.id.loadingProgressBar);
         new Thread(() -> {
-            miLista = gestor.getListaPorNombre(lista);
+            miLista = gestor.getListaPorNombre(lista, supermercado, fecha);
         }).start();
 
         buscar.setOnClickListener(new View.OnClickListener() {
@@ -73,12 +80,14 @@ public class BuscadorProductos extends AppCompatActivity {
     }
 
     private void buscarProductos(String s) {
+        progressBar.setVisibility(View.VISIBLE);
+        progressBar.setProgress(1);
         if (layout.getChildCount() > 0) layout.removeAllViews();
         String producto = (texto.getText() != null) ? texto.getText().toString() : "";
         if (!producto.isBlank()) {
             new Thread(() -> {
                 superM.crearSupermercado(SupermercadosDisponibles.valueOf(s));
-               Set<Producto> set = superM.busqueda(producto);
+                Set<Producto> set = superM.busqueda(producto);
                 ArrayList<Producto> aux = new ArrayList<>(set);
                 Collections.sort(aux);
                 if (aux.size() != 0) {
@@ -87,16 +96,30 @@ public class BuscadorProductos extends AppCompatActivity {
                         mHandler.post(() -> añadirObjeto(p, superM)); // Añade el objeto en el hilo principal
                     }
                 } else {
+                    mHandler.post(() -> añadirObjetoVacio(new Producto()));
                     mHandler.post(() -> Toast.makeText(BuscadorProductos.this, "No se han encontrado productos con ese nombre", Toast.LENGTH_LONG).show());
                 }
+                mHandler.post(() -> progressBar.setVisibility(View.GONE));
             }).start();
         } else {
             Toast.makeText(BuscadorProductos.this, "Debes introducir un producto a buscar", Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.GONE);
         }
 
 
     }
+    private void añadirObjetoVacio(Producto p) {
+        LinearLayout fila = (LinearLayout) getLayoutInflater().inflate(R.layout.productos_comparador, null);
+        TextView nombre = fila.findViewById(R.id.nombreProducto);
+        ImageView imagen = fila.findViewById(R.id.imagenProducto);
+        TextView supermercado = fila.findViewById(R.id.supermercadoProducto);
+        nombre.setText("Producto no encontrado");
+        supermercado.setText("");
 
+        imagen.setImageResource(R.drawable.imagen_no_encontrada);
+        layout.addView(fila);
+
+    }
     private void añadirObjeto(Producto p, SupermercadosFactoria s) {
         LinearLayout fila = (LinearLayout) getLayoutInflater().inflate(R.layout.productos_comparador, null);
         TextView supermercado = fila.findViewById(R.id.supermercadoProducto);
@@ -132,6 +155,7 @@ public class BuscadorProductos extends AppCompatActivity {
                 Intent intent = new Intent(BuscadorProductos.this, ListaEspecifica.class);
                 intent.putExtra("nombreLista", miLista.getNombre());
                 intent.putExtra("supermercado", miLista.getSupermercado());
+                intent.putExtra("fecha", miLista.getFecha());
                 startActivity(intent);
             }
         });

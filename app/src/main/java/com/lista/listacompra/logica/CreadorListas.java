@@ -2,7 +2,11 @@ package com.lista.listacompra.logica;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -12,8 +16,12 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.window.OnBackInvokedDispatcher;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -36,16 +44,28 @@ public class CreadorListas extends AppCompatActivity {
     private Spinner supermarket;
     private Button accept, cancel;
     private Gestor gestor;
-    long fechaSeleccionada;
+    private long fechaSeleccionada;
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fechaSeleccionada = new Date().getTime();
+        setFechaActual();
         setContentView(R.layout.listas_creador);
         gestor = new Gestor(getApplicationContext());
         initializeVariables();
         setupListeners();
+        OnBackPressedDispatcher onBackPressedDispatcher = getOnBackPressedDispatcher();
+        onBackPressedDispatcher.addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Intent intent = new Intent(CreadorListas.this, PrincipalListas.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
     }
 
     /**
@@ -81,13 +101,30 @@ public class CreadorListas extends AppCompatActivity {
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                Calendar c = Calendar.getInstance();
-                c.set(Calendar.YEAR, year);
-                c.set(Calendar.MONTH, month);
-                c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                fechaSeleccionada = c.getTimeInMillis();
+                // Seteamos horas minutos y segundos a 0, para que la
+                // fecha sea solo el dia y bajarle la precision
+                setFecha(year, month, dayOfMonth);
             }
+
         });
+    }
+    private void setFechaActual() {
+        Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+        setFecha(year, month, dayOfMonth);
+    }
+    private void setFecha(int year, int month, int dayOfMonth) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        fechaSeleccionada = c.getTimeInMillis();
     }
 
     /**
@@ -104,8 +141,18 @@ public class CreadorListas extends AppCompatActivity {
             ListaCompra listaCompra = new ListaCompra(lName, selectedDate, lSupermarket, new HashSet());
 
             Thread t = new Thread(() -> {
-
-                gestor.insertaLista(listaCompra);
+                try {
+                    // Si el get lista devuelve null significa que no existe, por lo tanto podemos crearlo
+                    ListaCompra listaCompra1 = gestor.getListaPorNombre(lName, lSupermarket, selectedDate);
+                    mHandler.post(() -> Toast.makeText(CreadorListas.this,
+                            "Ya existe una lista con esos datos",
+                            Toast.LENGTH_LONG).show());
+                } catch (NullPointerException npe) {
+                    gestor.insertaLista(listaCompra);
+                    mHandler.post(() -> Toast.makeText(getApplicationContext(),
+                            "La lista se ha creado correctamente",
+                            Toast.LENGTH_LONG).show());
+                }
             });
             t.start();
             try {
@@ -115,7 +162,6 @@ public class CreadorListas extends AppCompatActivity {
 
             name.setText("");
             navigateToListasPrincipal();
-            Toast.makeText(getApplicationContext(), "La lista se ha creado correctamente", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -137,6 +183,10 @@ public class CreadorListas extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, data);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            spinner.setBackgroundColor(Color.WHITE);
+        }
     }
 
     /**
@@ -161,17 +211,21 @@ public class CreadorListas extends AppCompatActivity {
 
         menuDialog.show();
     }
-    public void onSideBarClick(View view){
+
+    public void onSideBarClick(View view) {
         showMenuDialog();
     }
+
     public void onCompararButtonClick(View view) {
         Intent i = new Intent(this, ComparadorProductos.class);
         startActivity(i);
     }
+
     public void onListasButtonClick(View view) {
         Intent i = new Intent(this, PrincipalListas.class);
         startActivity(i);
     }
+
     public void onJuegoButtonClick(View view) {
         Intent i = new Intent(this, JuegoPrecios.class);
         startActivity(i);

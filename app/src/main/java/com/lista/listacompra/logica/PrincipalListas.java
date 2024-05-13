@@ -19,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.lista.listacompra.R;
@@ -57,6 +59,13 @@ public class PrincipalListas extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showViewMenu();
+            }
+        });
+        OnBackPressedDispatcher onBackPressedDispatcher = getOnBackPressedDispatcher();
+        onBackPressedDispatcher.addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finishAffinity();
             }
         });
     }
@@ -100,6 +109,7 @@ public class PrincipalListas extends AppCompatActivity {
 
             fila.setOnTouchListener(new View.OnTouchListener() {
                 private float empiezaY;
+
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     switch (event.getAction()) {
@@ -110,7 +120,7 @@ public class PrincipalListas extends AppCompatActivity {
                         case MotionEvent.ACTION_UP:
                             float finY = event.getY();
 
-                            float decimoVista =  v.getHeight() / 10;
+                            float decimoVista = v.getHeight() / 10;
                             float movimientoY = Math.abs(finY - empiezaY);
 
                             if (movimientoY > decimoVista) {
@@ -120,6 +130,7 @@ public class PrincipalListas extends AppCompatActivity {
                                 Intent intent = new Intent(PrincipalListas.this, ListaEspecifica.class);
                                 intent.putExtra("nombreLista", lista.getNombre());
                                 intent.putExtra("supermercado", lista.getSupermercado());
+                                intent.putExtra("fecha", lista.getFecha());
                                 startActivity(intent);
                             }
                             break;
@@ -144,17 +155,14 @@ public class PrincipalListas extends AppCompatActivity {
     }
 
     private void borrarLista(ListaCompra lista, LinearLayout fila, View linea) {
-        new Thread(()->{
-            gestor.borrarLista(lista.getNombre(),
-                    lista.getSupermercado(),
-                    lista.getFecha());
+        new Thread(() -> {
+            gestor.borrarLista(lista.getNombre(), lista.getSupermercado(), lista.getFecha());
             mHandler.post(() -> {
                 layout.removeView(fila);
                 layout.removeView(linea);
             });
         }).start();
     }
-
 
 
     private void showViewMenu() {
@@ -164,6 +172,13 @@ public class PrincipalListas extends AppCompatActivity {
         menuDialog.show();
         EditText editTextSearch = menuDialog.findViewById(R.id.editTextSearch);
         Button btnAceptar = menuDialog.findViewById(R.id.btnAceptar);
+        Button btnCancelar = menuDialog.findViewById(R.id.btnCancelar);
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                menuDialog.dismiss();
+            }
+        });
         btnAceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -191,9 +206,9 @@ public class PrincipalListas extends AppCompatActivity {
      */
     private void addSeparatorLine(View linea) {
 
-        linea.setBackgroundColor(Color.BLACK);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 8);
-        params.setMargins(0, 0, 0, 8);
+        linea.setBackgroundColor(Color.LTGRAY);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 4);
+        params.setMargins(0, 5, 0, 5);
         linea.setLayoutParams(params);
         layout.addView(linea);
     }
@@ -207,10 +222,12 @@ public class PrincipalListas extends AppCompatActivity {
         Intent i = new Intent(this, PrincipalListas.class);
         startActivity(i);
     }
+
     public void onJuegoButtonClick(View view) {
         Intent i = new Intent(this, JuegoPrecios.class);
         startActivity(i);
     }
+
     /**
      * @brief Muestra un diálogo de menú.
      */
@@ -233,7 +250,8 @@ public class PrincipalListas extends AppCompatActivity {
 
         menuDialog.show();
     }
-    public void onSideBarClick(View view){
+
+    public void onSideBarClick(View view) {
         showMenuDialog();
     }
 }

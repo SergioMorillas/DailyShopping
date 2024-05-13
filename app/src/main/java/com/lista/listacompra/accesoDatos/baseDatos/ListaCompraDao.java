@@ -17,8 +17,8 @@ public interface ListaCompraDao {
     @Query("SELECT * FROM listas_compra WHERE id = :id")
     ListaCompraBD getListaCompraById(int id);
 
-    @Query("SELECT * FROM listas_compra WHERE nombre = :name")
-    ListaCompraBD getListaCompraByName(String name);
+    @Query("SELECT * FROM listas_compra WHERE nombre = :nombre and supermercado = :supermercado and fecha = :fecha ")
+    ListaCompraBD getListaCompraByName(String nombre, String supermercado, long fecha);
     @Query("SELECT * FROM listas_compra")
     List<ListaCompraBD> getAllListasCompraList();
 

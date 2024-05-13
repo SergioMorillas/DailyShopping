@@ -3,6 +3,7 @@ package com.lista.listacompra.logica;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -20,6 +21,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -47,6 +50,7 @@ public class ListaEspecifica extends AppCompatActivity {
     private TextView nombreAplicacion;
     private Gestor gestor;
     private ListaCompra productos;
+    private long fecha;
 
     private final Handler mHandler = new Handler(Looper.getMainLooper());
 
@@ -78,6 +82,7 @@ public class ListaEspecifica extends AppCompatActivity {
         setContentView(R.layout.lista_especifica);
         nombreLista = this.getIntent().getStringExtra("nombreLista");
         supermercadoNombre = this.getIntent().getStringExtra("supermercado");
+        fecha = this.getIntent().getLongExtra("fecha", -1); // En caso de que no tenga fecha (imposible) por defecto tiene el -1;
         layout = findViewById(R.id.layout);
         buttonAdd = findViewById(R.id.buttonAdd);
         nombreAplicacion = findViewById(R.id.nombreAplicacion);
@@ -89,6 +94,7 @@ public class ListaEspecifica extends AppCompatActivity {
                 Intent i = new Intent(ListaEspecifica.this, BuscadorProductos.class);
                 b.putString("supermercado", supermercadoNombre);
                 b.putString("nombreLista", nombreLista);
+                b.putLong("fecha", fecha);
                 i.putExtras(b);
                 startActivity(i);
             }
@@ -96,7 +102,7 @@ public class ListaEspecifica extends AppCompatActivity {
 
         Thread t = new Thread(() -> {
             gestor = new Gestor(getApplicationContext());
-            productos = gestor.getListaPorNombre(nombreLista);
+            productos = gestor.getListaPorNombre(nombreLista, supermercadoNombre, fecha);
             mHandler.post(() -> actualizarVista());
         });
         t.start();
@@ -105,7 +111,17 @@ public class ListaEspecifica extends AppCompatActivity {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-
+        OnBackPressedDispatcher onBackPressedDispatcher = getOnBackPressedDispatcher();
+        onBackPressedDispatcher.addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                new Thread(() -> {
+                    gestor.actualizarListaProductos(productos);
+                    Intent intent = new Intent(ListaEspecifica.this, PrincipalListas.class);
+                    startActivity(intent);
+                }).start();
+            }
+        });
         nombreAplicacion.setText("Lista: " + nombreLista);
     }
 
@@ -126,6 +142,7 @@ public class ListaEspecifica extends AppCompatActivity {
 
     @SuppressLint("ClickableViewAccessibility")
     private void addProduct(Producto p) {
+        View linea = new View(this);
         LinearLayout fila = (LinearLayout) getLayoutInflater().inflate(R.layout.productos_lista_individual, null);
         TextView nombre = fila.findViewById(R.id.nombreProducto);
         TextView precio = fila.findViewById(R.id.precioProducto);
@@ -134,9 +151,14 @@ public class ListaEspecifica extends AppCompatActivity {
         nombre.setText(p.getName());
         crearPrecios(fila, p, precio);
 
-        if (p.getPricePerKilo() == -1) precioKilo.setText("No aplica");
-        else precioKilo.setText(p.getPricePerKilo() + "€/kilo");
+        if (p.getPricePerKilo() == -1) precioKilo.setText( "No aplica" );
+        else precioKilo.setText( p.getPricePerKilo() + "€/kilo" );
 
+        fila.setPadding(
+                fila.getPaddingLeft(),
+                10,
+                fila.getPaddingRight(),
+                fila.getPaddingBottom());
         fila.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -148,6 +170,7 @@ public class ListaEspecifica extends AppCompatActivity {
         });
         Picasso.get().load(p.getImage()).into(imagen);
         layout.addView(fila);
+        addSeparatorLine(linea);
     }
 
     private void crearPrecios(LinearLayout fila, Producto p, TextView precio) {
@@ -189,18 +212,12 @@ public class ListaEspecifica extends AppCompatActivity {
         layout.addView(fila);
     }
 
-
-
     private void onClickRestaCantidad(TextView precio, Producto p, LinearLayout fila) {
         if (p.getAmount()==1){
             productos.getProductos().remove(p);
             layout.removeView(fila);
         }
         p.setAmount(p.getAmount() - 1);
-        new Thread(() -> {
-            gestor.actualizarListaProductos(productos);
-        }).start();
-
         DecimalFormat df = new DecimalFormat("#.##");
         double precioReal;
         precioReal = p.getAmount() * p.getPrice();
@@ -211,9 +228,6 @@ public class ListaEspecifica extends AppCompatActivity {
 
     private void onClickSumaCantidad(TextView precio, Producto p) {
         p.setAmount(p.getAmount() + 1);
-        new Thread(() -> {
-            gestor.actualizarListaProductos(productos);
-        }).start();
 
         DecimalFormat df = new DecimalFormat("#.##");
         double precioReal;
@@ -223,13 +237,6 @@ public class ListaEspecifica extends AppCompatActivity {
         actualizarVista();
 
     }
-
-
-
-
-
-
-
 
     /**
      * @brief Muestra un diálogo de menú.
@@ -270,6 +277,12 @@ public class ListaEspecifica extends AppCompatActivity {
         Intent i = new Intent(this, JuegoPrecios.class);
         startActivity(i);
     }
-
+    private void addSeparatorLine(View linea) {
+        linea.setBackgroundColor(Color.LTGRAY);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 4);
+        params.setMargins(0, 5, 0, 5);
+        linea.setLayoutParams(params);
+        layout.addView(linea);
+    }
 }
 

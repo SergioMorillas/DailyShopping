@@ -16,6 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.lista.listacompra.R;
@@ -50,6 +52,15 @@ public class ComparadorProductos extends AppCompatActivity {
                 buscar.setClickable(true);
             }
         });
+        OnBackPressedDispatcher onBackPressedDispatcher = getOnBackPressedDispatcher();
+        onBackPressedDispatcher.addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Intent intent = new Intent(ComparadorProductos.this, PrincipalListas.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
     }
 
@@ -62,9 +73,9 @@ public class ComparadorProductos extends AppCompatActivity {
                     superM.crearSupermercado(nombre);
                     if (superM.getNombre() != null) {
                         Set<Producto> set = superM.busqueda(producto);
-                        ArrayList<Producto> aux = new ArrayList<>(set);
-                        Collections.sort(aux);
-                        if (set.size() != 0) {
+                        if (set != null && !set.isEmpty()) {
+                            ArrayList<Producto> aux = new ArrayList<>(set);
+                            Collections.sort(aux);
                             Producto p = aux.get(0);
                             mHandler.post(() -> añadirObjeto(p, nombre.name())); // Añade el objeto en el hilo principal
                         } else {
@@ -73,7 +84,6 @@ public class ComparadorProductos extends AppCompatActivity {
                     }
                 }
             }).start();
-
         } else {
             Toast.makeText(ComparadorProductos.this, "Debes introducir un producto a buscar", Toast.LENGTH_SHORT).show();
         }

@@ -59,6 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:gravity="bottom"
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatButton
@@ -68,8 +69,8 @@
                 android:layout_weight="1"
                 android:background="@drawable/boton_redondo"
                 android:text="-"
-                android:textSize="30dp"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white"
+                android:textSize="30dp" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/sumaCantidad"
@@ -78,8 +79,8 @@
                 android:layout_weight="1"
                 android:background="@drawable/boton_redondo"
                 android:text="+"
-                android:textSize="30dp"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="30dp" />
         </LinearLayout>
 
         <TextView
