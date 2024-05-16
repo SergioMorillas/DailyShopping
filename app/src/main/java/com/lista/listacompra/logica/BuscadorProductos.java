@@ -2,6 +2,7 @@ package com.lista.listacompra.logica;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -92,8 +93,12 @@ public class BuscadorProductos extends AppCompatActivity {
                 Collections.sort(aux);
                 if (aux.size() != 0) {
                     for (int i = 0; i < (aux.size() - 1); i++) {
+                        View linea = new View(this);
                         Producto p = aux.get(i);
-                        mHandler.post(() -> añadirObjeto(p, superM)); // Añade el objeto en el hilo principal
+                        mHandler.post(() -> {
+                            añadirObjeto(p, superM);
+                            addSeparatorLine(linea);
+                        }); // Añade el objeto en el hilo principal
                     }
                 } else {
                     mHandler.post(() -> añadirObjetoVacio(new Producto()));
@@ -208,5 +213,12 @@ public class BuscadorProductos extends AppCompatActivity {
     public void onJuegoButtonClick(View view) {
         Intent i = new Intent(this, JuegoPrecios.class);
         startActivity(i);
+    }
+    private void addSeparatorLine(View linea) {
+        linea.setBackgroundColor(Color.LTGRAY);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 4);
+        params.setMargins(0, 5, 0, 5);
+        linea.setLayoutParams(params);
+        layout.addView(linea);
     }
 }

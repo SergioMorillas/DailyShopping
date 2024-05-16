@@ -33,6 +33,7 @@ import com.lista.listacompra.modelo.SupermercadosDisponibles;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 
 /**
  * Actividad para crear nuevas listas de compra.
@@ -51,6 +52,12 @@ public class CreadorListas extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Locale locale = new Locale("es");
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.setLocale(locale);
+        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+
         setFechaActual();
         setContentView(R.layout.listas_creador);
         gestor = new Gestor(getApplicationContext());
@@ -126,6 +133,17 @@ public class CreadorListas extends AppCompatActivity {
         c.set(Calendar.MILLISECOND, 0);
         fechaSeleccionada = c.getTimeInMillis();
     }
+    private long getFechaActual() {
+        Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        return c.getTimeInMillis();
+    }
 
     /**
      * Crea una nueva lista de compra.
@@ -137,6 +155,10 @@ public class CreadorListas extends AppCompatActivity {
 
         if (lName.isBlank()) {
             Toast.makeText(CreadorListas.this, "El nombre no puede estar vacío", Toast.LENGTH_LONG).show();
+        } else if (fechaSeleccionada<getFechaActual()) { // Si la fecha es anterior al día de hoy falla
+            Toast.makeText(CreadorListas.this, "La fecha no puede ser anterior al día de hoy", Toast.LENGTH_LONG).show();
+            calendar.setDate(getFechaActual());
+            fechaSeleccionada=getFechaActual();
         } else {
             ListaCompra listaCompra = new ListaCompra(lName, selectedDate, lSupermarket, new HashSet());
 
