@@ -97,6 +97,9 @@ public class ListaEspecifica extends AppCompatActivity {
                 b.putLong("fecha", fecha);
                 i.putExtras(b);
                 startActivity(i);
+                new Thread(() -> {
+                    gestor.actualizarListaProductos(productos);
+                }).start();
             }
         });
 
