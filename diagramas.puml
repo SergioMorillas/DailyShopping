@@ -1,0 +1,389 @@
+@startuml
+class com.lista.listacompra.logica.ComparadorProductos {
+- Button buscar
+- Handler mHandler
+- SupermercadosFactoria superM
+- LinearLayout layout
+- EditText texto
+# void onCreate(Bundle)
+- void buscarProductos()
+- void añadirObjetoVacio(Producto)
+- void añadirObjeto(Producto,String)
+- void initializeViews()
+- void showMenuDialog()
++ void onSideBarClick(View)
++ void onCompararButtonClick(View)
++ void onListasButtonClick(View)
++ void onJuegoButtonClick(View)
+}
+
+
+class com.lista.listacompra.modelo.Producto {
+- String image
+- String name
+- double price
+- double pricePerKilo
+- double mass
+- int amount
+- boolean isMarked
+- GestorBD gestorDB
++ String getImage()
++ String getName()
++ double getPrice()
++ double getPricePerKilo()
++ double getMass()
++ int getAmount()
++ void setAmount(int)
++ boolean isMarked()
++ void setMarked(boolean)
++ boolean equals(Object)
++ int hashCode()
++ String toString()
++ int compareTo(Producto)
+}
+
+
+class com.lista.listacompra.accesoDatos.baseDatos.ConvertidorProducto {
+- {static} ObjectMapper objectMapper
++ {static} Set<ProductoBD> fromJson(String)
++ {static} String toJson(Set<ProductoBD>)
+}
+
+
+class com.lista.listacompra.accesoDatos.baseDatos.ListaCompraBD {
+- int id
+- String nombre
+- long fecha
+- String supermercado
+- Set<ProductoBD> productos
++ int getId()
++ void setId(int)
++ String getNombre()
++ void setNombre(String)
++ long getFecha()
++ void setFecha(long)
++ String getSupermercado()
++ void setSupermercado(String)
++ Set<ProductoBD> getProductos()
++ void setProductos(Set<ProductoBD>)
+}
+
+
+class com.lista.listacompra.logica.BuscadorProductos {
+- Button buscar
+- LinearLayout layout
+- EditText texto
+- String supermercado
+- TextView nombreAplicacion
+- Handler mHandler
+- SupermercadosFactoria superM
+- ListaCompra miLista
+- Gestor gestor
+- ProgressBar progressBar
+- long fecha
+# void onCreate(Bundle)
+- void buscarProductos(String)
+- void añadirObjetoVacio(Producto)
+- void añadirObjeto(Producto,SupermercadosFactoria)
+- void initializeViews()
+- void showMenuDialog()
++ void onSideBarClick(View)
++ void onCompararButtonClick(View)
++ void onListasButtonClick(View)
++ void onJuegoButtonClick(View)
+- void addSeparatorLine(View)
+}
+
+
+class com.lista.listacompra.accesoDatos.baseDatos.ProductoBD {
+- String id
+- String image
+- String name
+- double price
+- double pricePerKilo
+- double mass
+- int amount
+- boolean isMarked
++ String getId()
++ void setId(String)
++ String getImage()
++ void setImage(String)
++ String getName()
++ void setName(String)
++ double getPrice()
++ void setPrice(double)
++ double getPricePerKilo()
++ void setPricePerKilo(double)
++ double getMass()
++ void setMass(double)
++ int getAmount()
++ void setAmount(int)
++ boolean isMarked()
++ void setMarked(boolean)
++ boolean equals(Object)
++ int hashCode()
++ String toString()
+}
+
+
+class com.lista.listacompra.logica.PrincipalListasBusqueda {
+- LinearLayout layout
+- Button buttonAdd
+- ImageButton buscar
+- Gestor gestor
+- Handler mHandler
+# void onCreate(Bundle)
+- void initializeViews()
+- void setupListeners()
+- void insertarListasEnVistas(Set<ListaCompra>)
+- {static} void anadeVista(ListaCompra,TextView,TextView,TextView)
+- void borrarLista(ListaCompra,LinearLayout,View)
+- void showMenuDialog()
+- void showViewMenu()
+- void navigateToListasCreador()
+- void addSeparatorLine(View)
++ void onCompararButtonClick(View)
++ void onListasButtonClick(View)
++ void onSideBarClick(View)
++ void onJuegoButtonClick(View)
+}
+
+
+class com.lista.listacompra.accesoDatos.apiSupermercados.Dia {
++ Set<ProductoBD> search(String)
+- {static} Set<ProductoBD> returnProduct(String)
+- {static} ProductoBD creteProduct(JsonNode)
+}
+
+class com.lista.listacompra.logica.PrincipalListas {
+- LinearLayout layout
+- Button buttonAdd
+- ImageButton buscar
+- Gestor gestor
+- Handler mHandler
+# void onCreate(Bundle)
+- void initializeViews()
+- void setupListeners()
+- void insertarListasEnVistas(Set<ListaCompra>)
+- {static} void anadeVista(ListaCompra,TextView,TextView,TextView)
+- void borrarLista(ListaCompra,LinearLayout,View)
+- void showViewMenu()
+- void navigateToListasCreador()
+- void addSeparatorLine(View)
++ void onCompararButtonClick(View)
++ void onListasButtonClick(View)
++ void onJuegoButtonClick(View)
+- void showMenuDialog()
++ void onSideBarClick(View)
+}
+
+
+enum com.lista.listacompra.modelo.SupermercadosDisponibles {
++  Mercadona
++  Dia
++  Alcampo
+- Class<? extends Supermercado> clazz
++ Class<? extends Supermercado> getClazz()
++ {static} String[] getStringValues()
+}
+
+
+class com.lista.listacompra.accesoDatos.baseDatos.ListaProductoJoin {
++ int listaCompraId
++ String productoId
+}
+
+interface com.lista.listacompra.accesoDatos.baseDatos.ListaCompraDao {
+~ void insertListaCompra(ListaCompraBD)
+~ ListaCompraBD getListaCompraById(int)
+~ ListaCompraBD getListaCompraByName(String,String,long)
+~ List<ListaCompraBD> getAllListasCompraList()
+~ Set<ListaCompraBD> getAllListasCompra()
+~ void insertListaCompras(Set<ListaCompraBD>)
+~ void insertListaCompras(ListaCompraBD)
+~ void deleteListaCompra(int)
+~ void deleteListaCompra(String,String,long)
+}
+
+class com.lista.listacompra.logica.CreadorListas {
+- EditText name
+- CalendarView calendar
+- Spinner supermarket
+- Button accept
+- Gestor gestor
+- long fechaSeleccionada
+- Handler mHandler
+# void onCreate(Bundle)
+- void initializeVariables()
+- void setupListeners()
+- void setFechaActual()
+- void setFecha(int,int,int)
+- long getFechaActual()
+- void createNewList()
+- void navigateToListasPrincipal()
++ void initializeSpinner(Spinner,String[])
+- void showMenuDialog()
++ void onSideBarClick(View)
++ void onCompararButtonClick(View)
++ void onListasButtonClick(View)
++ void onJuegoButtonClick(View)
+}
+
+
+interface com.lista.listacompra.accesoDatos.apiSupermercados.Supermercado {
++ {static} String MERCADONA_API_URL
++ {static} String ALCAMPO_API_URL
++ {static} String DIA_API_URL
++ {abstract}Set<ProductoBD> search(String)
+~ boolean exist(String)
+}
+
+
+class com.lista.listacompra.accesoDatos.apiSupermercados.Mercadona {
++ Set<ProductoBD> search(String)
+- {static} ProductoBD createProduct(JsonNode)
+- {static} Set<ProductoBD> returnProducts(String)
+}
+
+class com.lista.listacompra.modelo.ListaCompra {
+- String nombre
+- long fecha
+- String supermercado
+- Set<Producto> productos
+- GestorBD gestorBD
++ String getNombre()
++ long getFecha()
++ String getSupermercado()
++ Set<Producto> getProductos()
++ boolean addProducto(Producto)
++ void setGestorDB(GestorBD)
++ boolean equals(Object)
++ int hashCode()
++ String toString()
++ String getPrecioTotal()
++ String getPrecioMarcado()
++ String getPrecioSinMarcar()
+}
+
+
+class com.lista.listacompra.accesoDatos.apiSupermercados.Alcampo {
++ Set<ProductoBD> search(String)
+- {static} Set<ProductoBD> returnProduct(String)
+- {static} ProductoBD creteProduct(JsonNode)
+}
+
+class com.lista.listacompra.logica.JuegoPrecios {
+- {static} double TOLERANCIA
+- Faker faker
+- double precio
+- EditText primerIntento
+- ImageView imagenProducto
+- TextView nombreSupermercado
+- Button comprobar
+# void onCreate(Bundle)
+- void instancias()
+- void primerIntento(Producto)
+- void segundoIntento(Producto)
+- Producto productoAleatorio(SupermercadosFactoria)
+- SupermercadosFactoria supermercadoAleatorio()
++ int comprobarPrecioUsuario(double)
+- void showMenuDialog()
++ void onSideBarClick(View)
++ void onCompararButtonClick(View)
++ void onListasButtonClick(View)
++ void onJuegoButtonClick(View)
+}
+
+
+class com.lista.listacompra.modelo.SupermercadosFactoria {
+~ String nombre
+~ Supermercado supermercado
++ void crearSupermercado(SupermercadosDisponibles)
++ String getNombre()
++ Set<Producto> busqueda(String)
++ boolean existe(String)
+}
+
+
+class com.lista.listacompra.logica.ListaEspecifica {
+- LinearLayout layout
+- Button buttonAdd
+- String nombreLista
+- String supermercadoNombre
+- TextView nombreAplicacion
+- Gestor gestor
+- ListaCompra productos
+- long fecha
+- Handler mHandler
+# void onStop()
+# void onCreate(Bundle)
+- void actualizarVista()
+- void addProduct(Producto)
+- void crearPrecios(LinearLayout,Producto,TextView)
+- void addCentroEspecifico(ListaCompra)
+- void onClickRestaCantidad(TextView,Producto,LinearLayout)
+- void onClickSumaCantidad(TextView,Producto)
+- void showMenuDialog()
++ void onSideBarClick(View)
++ void onCompararButtonClick(View)
++ void onListasButtonClick(View)
++ void onJuegoButtonClick(View)
+- void addSeparatorLine(View)
+}
+
+
+class com.lista.listacompra.accesoDatos.GestorBD {
+~ Context contexto
+~ AppDatabase database
++ ListaCompraBD getListaCompra(String,String,long)
++ void insertaLista(ListaCompra)
++ Set<ListaCompraBD> getTodasListas()
++ Set<ListaCompraBD> getTodasListasNombre(String)
++ void borrarLista(String,String,long)
++ void actualizarLista(ListaCompra)
+}
+
+
+abstract class com.lista.listacompra.accesoDatos.baseDatos.AppDatabase {
+- {static} AppDatabase INSTANCE
++ {abstract}ListaCompraDao listaCompraDao()
++ {abstract}ProductoDao productoDao()
++ {static} AppDatabase getDatabase(Context)
+}
+
+
+interface com.lista.listacompra.accesoDatos.baseDatos.ProductoDao {
+~ void insertProducto(ProductoBD)
+~ LiveData<ProductoBD> getProductoById(String)
+~ LiveData<List<ProductoBD>> getAllProductos()
+~ void insertProductos(List<ProductoBD>)
+~ void insertProductos(ProductoBD)
+~ void deleteProducto(String)
+}
+
+class com.lista.listacompra.modelo.Gestor {
+- GestorBD gestorBD
++ ListaCompra getListaPorNombre(String,String,long)
++ void insertaLista(ListaCompra)
++ Set<ListaCompra> getTodaslistas()
++ Set<ListaCompra> getBusquedaListasNombre(String)
++ void borrarLista(String,String,long)
++ void actualizarListaProductos(ListaCompra)
+}
+
+
+
+
+androidx.appcompat.app.AppCompatActivity <|-- com.lista.listacompra.logica.ComparadorProductos
+com.lista.listacompra.modelo.Comparable <|.. com.lista.listacompra.modelo.Producto
+androidx.appcompat.app.AppCompatActivity <|-- com.lista.listacompra.logica.BuscadorProductos
+androidx.appcompat.app.AppCompatActivity <|-- com.lista.listacompra.logica.PrincipalListasBusqueda
+com.lista.listacompra.accesoDatos.apiSupermercados.Supermercado <|.. com.lista.listacompra.accesoDatos.apiSupermercados.Dia
+androidx.appcompat.app.AppCompatActivity <|-- com.lista.listacompra.logica.PrincipalListas
+androidx.appcompat.app.AppCompatActivity <|-- com.lista.listacompra.logica.CreadorListas
+com.lista.listacompra.accesoDatos.apiSupermercados.Supermercado <|.. com.lista.listacompra.accesoDatos.apiSupermercados.Mercadona
+com.lista.listacompra.accesoDatos.apiSupermercados.Supermercado <|.. com.lista.listacompra.accesoDatos.apiSupermercados.Alcampo
+androidx.appcompat.app.AppCompatActivity <|-- com.lista.listacompra.logica.JuegoPrecios
+androidx.appcompat.app.AppCompatActivity <|-- com.lista.listacompra.logica.ListaEspecifica
+androidx.room.RoomDatabase <|-- com.lista.listacompra.accesoDatos.baseDatos.AppDatabase
+@enduml

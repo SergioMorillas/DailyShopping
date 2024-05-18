@@ -18,11 +18,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.window.OnBackInvokedDispatcher;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.OnBackPressedDispatcher;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.lista.listacompra.R;
@@ -113,6 +111,7 @@ public class PrincipalListasBusqueda extends AppCompatActivity {
 
             fila.setOnTouchListener(new View.OnTouchListener() {
                 private float empiezaY;
+
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     switch (event.getAction()) {
@@ -123,7 +122,7 @@ public class PrincipalListasBusqueda extends AppCompatActivity {
                         case MotionEvent.ACTION_UP:
                             float finY = event.getY();
 
-                            float decimoVista =  v.getHeight() / 10;
+                            float decimoVista = v.getHeight() / 10;
                             float movimientoY = Math.abs(finY - empiezaY);
 
                             if (movimientoY > decimoVista) {
@@ -158,7 +157,7 @@ public class PrincipalListasBusqueda extends AppCompatActivity {
     }
 
     private void borrarLista(ListaCompra lista, LinearLayout fila, View linea) {
-        new Thread(()->{
+        new Thread(() -> {
             gestor.borrarLista(lista.getNombre(),
                     lista.getSupermercado(),
                     lista.getFecha());
@@ -244,9 +243,11 @@ public class PrincipalListasBusqueda extends AppCompatActivity {
         startActivity(i);
         finish();
     }
-    public void onSideBarClick(View view){
+
+    public void onSideBarClick(View view) {
         showMenuDialog();
     }
+
     public void onJuegoButtonClick(View view) {
         Intent i = new Intent(this, JuegoPrecios.class);
         startActivity(i);

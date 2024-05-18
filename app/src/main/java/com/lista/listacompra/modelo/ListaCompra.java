@@ -8,11 +8,7 @@ import com.lista.listacompra.accesoDatos.baseDatos.ListaCompraBD;
 import com.lista.listacompra.accesoDatos.baseDatos.ProductoBD;
 
 import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
