@@ -2,6 +2,7 @@ package com.lista.listacompra.logica;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -28,9 +29,11 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
+/**
+ * Esta clase representa la actividad de comparación de productos.
+ */
 public class ComparadorProductos extends AppCompatActivity {
     private Button buscar;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
@@ -64,12 +67,16 @@ public class ComparadorProductos extends AppCompatActivity {
 
     }
 
+    /**
+     * Busca productos en los supermercados disponibles y los muestra en la interfaz.
+     */
     private void buscarProductos() {
         if (layout.getChildCount() > 0) layout.removeAllViews();
         String producto = (texto.getText() != null) ? texto.getText().toString() : "";
         if (!producto.isBlank()) {
             new Thread(() -> {
                 for (SupermercadosDisponibles nombre : SupermercadosDisponibles.values()) {
+                    View linea = new View(this);
                     superM.crearSupermercado(nombre);
                     if (superM.getNombre() != null) {
                         Set<Producto> set = superM.busqueda(producto);
@@ -77,10 +84,11 @@ public class ComparadorProductos extends AppCompatActivity {
                             ArrayList<Producto> aux = new ArrayList<>(set);
                             Collections.sort(aux);
                             Producto p = aux.get(0);
-                            mHandler.post(() -> añadirObjeto(p, nombre.name())); // Añade el objeto en el hilo principal
+                            mHandler.post(() -> anadirObjeto(p, nombre.name())); // Añade el objeto en el hilo principal
                         } else {
-                            mHandler.post(() -> añadirObjetoVacio(new Producto()));
+                            mHandler.post(() -> anadirObjetoVacio(new Producto()));
                         }
+                        addSeparatorLine(linea);
                     }
                 }
             }).start();
@@ -89,18 +97,12 @@ public class ComparadorProductos extends AppCompatActivity {
         }
     }
 
-    private void añadirObjetoVacio(Producto p) {
-        LinearLayout fila = (LinearLayout) getLayoutInflater().inflate(R.layout.productos_comparador, null);
-        TextView nombre = fila.findViewById(R.id.nombreProducto);
-        ImageView imagen = fila.findViewById(R.id.imagenProducto);
-
-        nombre.setText(p.getName());
-        imagen.setImageResource(R.drawable.imagen_no_encontrada);
-        layout.addView(fila);
-
-    }
-
-    private void añadirObjeto(Producto p, String s) {
+    /**
+     * Añade un objeto Producto a la interfaz.
+     * @param p Producto a añadir.
+     * @param s Nombre del supermercado del producto.
+     */
+    private void anadirObjeto(Producto p, String s) {
         LinearLayout fila = (LinearLayout) getLayoutInflater().inflate(R.layout.productos_comparador, null);
         TextView supermercado = fila.findViewById(R.id.supermercadoProducto);
         TextView nombre = fila.findViewById(R.id.nombreProducto);
@@ -122,13 +124,32 @@ public class ComparadorProductos extends AppCompatActivity {
 
     }
 
+    /**
+     * Añade un objeto Producto vacío a la interfaz.
+     * @param p Producto vacío a añadir.
+     */
+    private void anadirObjetoVacio(Producto p) {
+        LinearLayout fila = (LinearLayout) getLayoutInflater().inflate(R.layout.productos_comparador, null);
+        TextView nombre = fila.findViewById(R.id.nombreProducto);
+        ImageView imagen = fila.findViewById(R.id.imagenProducto);
+
+        nombre.setText(p.getName());
+        imagen.setImageResource(R.drawable.imagen_no_encontrada);
+        layout.addView(fila);
+
+    }
+
+    /**
+     * Inicializa las vistas de la actividad.
+     */
     private void initializeViews() {
         layout = findViewById(R.id.layout);
         buscar = findViewById(R.id.btnBuscar);
         texto = findViewById(R.id.txtBuscador);
     }
+
     /**
-     * @brief Muestra un diálogo de menú.
+     * Muestra un diálogo de menú.
      */
     private void showMenuDialog() {
         Dialog menuDialog = new Dialog(this, android.R.style.Theme);
@@ -149,20 +170,52 @@ public class ComparadorProductos extends AppCompatActivity {
 
         menuDialog.show();
     }
+
+    /**
+     * Maneja el clic en el botón de la barra lateral.
+     * @param view Vista del botón.
+     */
     public void onSideBarClick(View view){
         showMenuDialog();
     }
+
+    /**
+     * Maneja el clic en el botón de comparar productos.
+     * @param view Vista del botón.
+     */
     public void onCompararButtonClick(View view) {
         Intent i = new Intent(this, ComparadorProductos.class);
         startActivity(i);
     }
 
+    /**
+     * Maneja el clic en el botón de listas.
+     * @param view Vista del botón.
+     */
     public void onListasButtonClick(View view) {
         Intent i = new Intent(this, PrincipalListas.class);
         startActivity(i);
     }
+
+    /**
+     * Maneja el clic en el botón de juego.
+     * @param view Vista del botón.
+     */
     public void onJuegoButtonClick(View view) {
         Intent i = new Intent(this, JuegoPrecios.class);
         startActivity(i);
+    }
+
+    /**
+     * Agrega una línea separadora a la vista.
+     *
+     * @param linea La línea a agregar.
+     */
+    private void addSeparatorLine(View linea) {
+        linea.setBackgroundColor(Color.LTGRAY);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 4);
+        params.setMargins(0, 5, 0, 5);
+        linea.setLayoutParams(params);
+        layout.addView(linea);
     }
 }

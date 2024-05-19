@@ -11,6 +11,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Alcampo implements Supermercado {
+    /**
+     * Metodo heredado de la interfáz supermercado, busca un producto especifico en el API del mercadona
+     * @param producto String que contiene el nombre del producto a buscar
+     * @return Devuelve un set de {@link ProductoBD} con los que haya encontrado
+     */
     @Override
     public Set<ProductoBD> search(String producto) {
         Set<ProductoBD> products = new HashSet<>();
@@ -30,12 +35,16 @@ public class Alcampo implements Supermercado {
         }
         return products;
     }
-
+    /**
+     * Metodo que recibe una String con la busqueda de un supermercado y devuelve un set de {@link ProductoBD}
+     * @param json el JSON con todos los productos del supermercado según el nombre
+     * @return Un set de {@link ProductoBD}
+     */
     private static Set<ProductoBD> returnProduct(String json) {
         Set<ProductoBD> products = new HashSet<>();
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(json.toString());
+            JsonNode jsonNode = objectMapper.readTree(json);
             JsonNode productNode = jsonNode
                     .path("entities")
                     .path("product");
@@ -48,7 +57,11 @@ public class Alcampo implements Supermercado {
         }
         return products;
     }
-
+    /**
+     * Metodo que en base a cada nodo del JSON devuelto por la busqueda de un prodcuto crea un {@link ProductoBD}
+     * @param nodo El nodo JSON ya preparado con los datos de un producto
+     * @return El objeto ProductoBD
+     */
     private static ProductoBD creteProduct(JsonNode nodo) {
         String id = nodo.path("productId").asText();
         Double price = nodo

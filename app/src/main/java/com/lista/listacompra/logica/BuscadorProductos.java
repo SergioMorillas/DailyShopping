@@ -18,7 +18,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.lista.listacompra.R;
 import com.lista.listacompra.modelo.Gestor;
 import com.lista.listacompra.modelo.ListaCompra;
@@ -26,11 +25,13 @@ import com.lista.listacompra.modelo.Producto;
 import com.lista.listacompra.modelo.SupermercadosDisponibles;
 import com.lista.listacompra.modelo.SupermercadosFactoria;
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Set;
 
+/**
+ * Actividad que permite buscar productos en un supermercado.
+ */
 public class BuscadorProductos extends AppCompatActivity {
     private Button buscar;
     private LinearLayout layout;
@@ -47,7 +48,6 @@ public class BuscadorProductos extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.buscador_productos);
         initializeViews();
         Bundle b = getIntent().getExtras();
@@ -73,6 +73,11 @@ public class BuscadorProductos extends AppCompatActivity {
         });
     }
 
+    /**
+     * Inicia la búsqueda de productos en el supermercado.
+     *
+     * @param s El nombre del supermercado.
+     */
     private void buscarProductos(String s) {
         progressBar.setVisibility(View.VISIBLE);
         progressBar.setProgress(1);
@@ -89,12 +94,12 @@ public class BuscadorProductos extends AppCompatActivity {
                         View linea = new View(this);
                         Producto p = aux.get(i);
                         mHandler.post(() -> {
-                            añadirObjeto(p, superM);
+                            anadirObjeto(p, superM);
                             addSeparatorLine(linea);
                         }); // Añade el objeto en el hilo principal
                     }
                 } else {
-                    mHandler.post(() -> añadirObjetoVacio(new Producto()));
+                    mHandler.post(() -> anadirObjetoVacio(new Producto()));
                     mHandler.post(() -> Toast.makeText(BuscadorProductos.this, "No se han encontrado productos con ese nombre", Toast.LENGTH_LONG).show());
                 }
                 mHandler.post(() -> progressBar.setVisibility(View.GONE));
@@ -103,22 +108,15 @@ public class BuscadorProductos extends AppCompatActivity {
             Toast.makeText(BuscadorProductos.this, "Debes introducir un producto a buscar", Toast.LENGTH_SHORT).show();
             progressBar.setVisibility(View.GONE);
         }
-
-
     }
-    private void añadirObjetoVacio(Producto p) {
-        LinearLayout fila = (LinearLayout) getLayoutInflater().inflate(R.layout.productos_comparador, null);
-        TextView nombre = fila.findViewById(R.id.nombreProducto);
-        ImageView imagen = fila.findViewById(R.id.imagenProducto);
-        TextView supermercado = fila.findViewById(R.id.supermercadoProducto);
-        nombre.setText("Producto no encontrado");
-        supermercado.setText("");
 
-        imagen.setImageResource(R.drawable.imagen_no_encontrada);
-        layout.addView(fila);
-
-    }
-    private void añadirObjeto(Producto p, SupermercadosFactoria s) {
+    /**
+     * Añade un objeto de producto a la vista.
+     *
+     * @param p El producto a añadir.
+     * @param s El supermercado.
+     */
+    private void anadirObjeto(Producto p, SupermercadosFactoria s) {
         LinearLayout fila = (LinearLayout) getLayoutInflater().inflate(R.layout.productos_comparador, null);
         TextView supermercado = fila.findViewById(R.id.supermercadoProducto);
         TextView nombre = fila.findViewById(R.id.nombreProducto);
@@ -126,15 +124,11 @@ public class BuscadorProductos extends AppCompatActivity {
         TextView precioKilo = fila.findViewById(R.id.precioPorKilo);
         ImageView imagen = fila.findViewById(R.id.imagenProducto);
 
-
         supermercado.setText(s.getNombre());
         nombre.setText(p.getName());
-
         precio.setText((String.format("%s€", p.getPrice())));
-
         if (p.getPricePerKilo() == -1) precioKilo.setText("No aplica");
         else precioKilo.setText(p.getPricePerKilo() + "€/kilo");
-
         Picasso.get().load(p.getImage()).into(imagen);
 
         fila.setOnClickListener(new View.OnClickListener() {
@@ -158,19 +152,38 @@ public class BuscadorProductos extends AppCompatActivity {
             }
         });
         layout.addView(fila);
-
     }
 
+    /**
+     * Añade un objeto de producto vacío a la vista cuando no se encuentra ningún producto.
+     *
+     * @param p El producto vacío.
+     */
+    private void anadirObjetoVacio(Producto p) {
+        LinearLayout fila = (LinearLayout) getLayoutInflater().inflate(R.layout.productos_comparador, null);
+        TextView nombre = fila.findViewById(R.id.nombreProducto);
+        ImageView imagen = fila.findViewById(R.id.imagenProducto);
+        TextView supermercado = fila.findViewById(R.id.supermercadoProducto);
 
+        nombre.setText("Producto no encontrado");
+        supermercado.setText("");
+        imagen.setImageResource(R.drawable.imagen_no_encontrada);
 
+        layout.addView(fila);
+    }
+
+    /**
+     * Inicializa las vistas de la actividad.
+     */
     private void initializeViews() {
         layout = findViewById(R.id.layout);
         buscar = findViewById(R.id.btnBuscar);
         texto = findViewById(R.id.txtBuscador);
         nombreAplicacion = findViewById(R.id.nombreAplicacion);
     }
+
     /**
-     * @brief Muestra un diálogo de menú.
+     * Muestra un diálogo de menú.
      */
     private void showMenuDialog() {
         Dialog menuDialog = new Dialog(this, android.R.style.Theme);
@@ -191,22 +204,51 @@ public class BuscadorProductos extends AppCompatActivity {
 
         menuDialog.show();
     }
-    public void onSideBarClick(View view){
+
+    /**
+     * Maneja el clic en el botón de la barra lateral.
+     *
+     * @param view La vista que ha recibido el clic.
+     */
+    public void onSideBarClick(View view) {
         showMenuDialog();
     }
+
+    /**
+     * Maneja el clic en el botón de comparar productos.
+     *
+     * @param view La vista que ha recibido el clic.
+     */
     public void onCompararButtonClick(View view) {
         Intent i = new Intent(this, ComparadorProductos.class);
         startActivity(i);
     }
 
+    /**
+     * Maneja el clic en el botón de listas.
+     *
+     * @param view La vista que ha recibido el clic.
+     */
     public void onListasButtonClick(View view) {
         Intent i = new Intent(this, PrincipalListas.class);
         startActivity(i);
     }
+
+    /**
+     * Maneja el clic en el botón de juego de precios.
+     *
+     * @param view La vista que ha recibido el clic.
+     */
     public void onJuegoButtonClick(View view) {
         Intent i = new Intent(this, JuegoPrecios.class);
         startActivity(i);
     }
+
+    /**
+     * Agrega una línea separadora entre elementos.
+     *
+     * @param linea La vista de la línea separadora.
+     */
     private void addSeparatorLine(View linea) {
         linea.setBackgroundColor(Color.LTGRAY);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 4);

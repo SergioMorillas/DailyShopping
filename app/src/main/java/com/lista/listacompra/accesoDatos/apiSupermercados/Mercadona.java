@@ -15,7 +15,11 @@ import java.util.Set;
 import javax.net.ssl.HttpsURLConnection;
 
 public class Mercadona implements Supermercado {
-
+    /**
+     * Metodo heredado de la interfáz supermercado, busca un producto especifico en el API del mercadona
+     * @param producto String que contiene el nombre del producto a buscar
+     * @return Devuelve un set de {@link ProductoBD} con los que haya encontrado
+     */
     @Override
     public Set<ProductoBD> search(String producto) {
         try {
@@ -46,6 +50,35 @@ public class Mercadona implements Supermercado {
         }
     }
 
+    /**
+     * Metodo que recibe una String con la busqueda de un supermercado y devuelve un set de {@link ProductoBD}
+     * @param json el JSON con todos los productos del supermercado según el nombre
+     * @return Un set de {@link ProductoBD}
+     */
+    private static Set<ProductoBD> returnProducts(String json) {
+        Set<ProductoBD> products = new HashSet<>();
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(json);
+
+            JsonNode hitsNode = root.get("hits");
+
+            for (JsonNode node :
+                    hitsNode) {
+                products.add(createProduct(node));
+            }
+        } catch (Exception e) {
+            System.err.println("Error en la conversion del JSON a mapa: " + e.getMessage());
+        }
+        return products;
+    }
+
+    /**
+     * Metodo que en base a cada nodo del JSON devuelto por la busqueda de un prodcuto crea un {@link ProductoBD}
+     * @param nodo El nodo JSON ya preparado con los datos de un producto
+     * @return El objeto ProductoBD
+     */
     private static ProductoBD createProduct(JsonNode nodo) {
 
         String id = nodo
@@ -65,24 +98,5 @@ public class Mercadona implements Supermercado {
                 .path("thumbnail").asText();
         return new ProductoBD(id, image, name, price, pricePerKilo, mass,1, false);
 
-    }
-
-    private static Set<ProductoBD> returnProducts(String json) {
-        Set<ProductoBD> products = new HashSet<>();
-
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode root = mapper.readTree(json);
-
-            JsonNode hitsNode = root.get("hits");
-
-            for (JsonNode node :
-                    hitsNode) {
-                products.add(createProduct(node));
-            }
-        } catch (Exception e) {
-            System.err.println("Error en la conversion del JSON a mapa: " + e.getMessage());
-        }
-        return products;
     }
 }

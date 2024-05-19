@@ -32,16 +32,22 @@ import java.util.Date;
 import java.util.Set;
 
 /**
- * Actividad principal que muestra todas las listas de compras existentes.
+ * Esta clase representa la actividad principal de la aplicación,
+ * la cual muestra todas las listas de compras existentes.
  */
 public class PrincipalListasBusqueda extends AppCompatActivity {
 
+    // Variables de clase
     private LinearLayout layout;
     private Button buttonAdd;
     private ImageButton buscar;
     private Gestor gestor;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
 
+    /**
+     * Método que se llama cuando la actividad es creada.
+     * @param savedInstanceState Datos de estado guardados de la actividad.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,8 +78,10 @@ public class PrincipalListasBusqueda extends AppCompatActivity {
 
     }
 
+    // Métodos auxiliares
+
     /**
-     * @brief Inicializa las vistas de la actividad.
+     * Inicializa las vistas de la actividad.
      */
     private void initializeViews() {
         layout = findViewById(R.id.linearLayout);
@@ -81,7 +89,7 @@ public class PrincipalListasBusqueda extends AppCompatActivity {
     }
 
     /**
-     * @brief Configura los listeners para los botones de la actividad.
+     * Configura los listeners para los botones de la actividad.
      */
     private void setupListeners() {
         buttonAdd.setOnClickListener(new View.OnClickListener() {
@@ -92,10 +100,9 @@ public class PrincipalListasBusqueda extends AppCompatActivity {
         });
     }
 
-
     /**
+     * Inserta las listas de compras en las vistas de la actividad.
      * @param listas Lista de compras a insertar.
-     * @brief Inserta las listas de compras en las vistas de la actividad.
      */
     @SuppressLint("ClickableViewAccessibility")
     private void insertarListasEnVistas(Set<ListaCompra> listas) {
@@ -147,6 +154,13 @@ public class PrincipalListasBusqueda extends AppCompatActivity {
         }
     }
 
+    /**
+     * Añade la información de una lista de compra a las vistas correspondientes.
+     * @param lista La lista de compra a mostrar.
+     * @param nombreListaTextView TextView donde se mostrará el nombre de la lista.
+     * @param supermercadoTextView TextView donde se mostrará el nombre del supermercado.
+     * @param fechaTextView TextView donde se mostrará la fecha de la lista.
+     */
     private static void anadeVista(ListaCompra lista, TextView nombreListaTextView, TextView supermercadoTextView, TextView fechaTextView) {
         Date fecha = new Date(lista.getFecha());
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
@@ -156,6 +170,12 @@ public class PrincipalListasBusqueda extends AppCompatActivity {
         fechaTextView.setText(df.format(fecha));
     }
 
+    /**
+     * Borra una lista de compra de la base de datos y de las vistas.
+     * @param lista La lista de compra a borrar.
+     * @param fila La fila de la lista en la vista.
+     * @param linea La línea separadora asociada a la fila.
+     */
     private void borrarLista(ListaCompra lista, LinearLayout fila, View linea) {
         new Thread(() -> {
             gestor.borrarLista(lista.getNombre(),
@@ -169,7 +189,7 @@ public class PrincipalListasBusqueda extends AppCompatActivity {
     }
 
     /**
-     * @brief Muestra un diálogo de menú.
+     * Muestra un diálogo de menú.
      */
     private void showMenuDialog() {
         Dialog menuDialog = new Dialog(this, android.R.style.Theme);
@@ -212,16 +232,18 @@ public class PrincipalListasBusqueda extends AppCompatActivity {
     }
 
     /**
-     * @brief Navega a la actividad CreadorListas.
+     * Navega a la actividad CreadorListas.
      */
-    private void navigateToListasCreador() {
+    private void navigateToListasCreador()
+    {
         Intent intent = new Intent(this, CreadorListas.class);
         startActivity(intent);
         finish();
     }
 
     /**
-     * @brief Añade una línea separadora a la disposición lineal.
+     * Añade una línea separadora a la disposición lineal.
+     * @param linea La vista de la línea separadora.
      */
     private void addSeparatorLine(View linea) {
 
@@ -232,22 +254,38 @@ public class PrincipalListasBusqueda extends AppCompatActivity {
         layout.addView(linea);
     }
 
+    /**
+     * Método llamado cuando se hace clic en el botón "Comparar".
+     * @param view La vista del botón.
+     */
     public void onCompararButtonClick(View view) {
         Intent i = new Intent(this, ComparadorProductos.class);
         startActivity(i);
         finish();
     }
 
+    /**
+     * Método llamado cuando se hace clic en el botón "Listas".
+     * @param view La vista del botón.
+     */
     public void onListasButtonClick(View view) {
         Intent i = new Intent(this, PrincipalListasBusqueda.class);
         startActivity(i);
         finish();
     }
 
+    /**
+     * Método llamado cuando se hace clic en el botón de la barra lateral.
+     * @param view La vista del botón.
+     */
     public void onSideBarClick(View view) {
         showMenuDialog();
     }
 
+    /**
+     * Método llamado cuando se hace clic en el botón "Juego".
+     * @param view La vista del botón.
+     */
     public void onJuegoButtonClick(View view) {
         Intent i = new Intent(this, JuegoPrecios.class);
         startActivity(i);

@@ -27,7 +27,6 @@ import com.lista.listacompra.R;
 import com.lista.listacompra.modelo.Gestor;
 import com.lista.listacompra.modelo.ListaCompra;
 
-import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
@@ -71,7 +70,7 @@ public class PrincipalListas extends AppCompatActivity {
     }
 
     /**
-     * @brief Inicializa las vistas de la actividad.
+     * Inicializa las vistas de la actividad.
      */
     private void initializeViews() {
         layout = findViewById(R.id.linearLayout);
@@ -79,7 +78,7 @@ public class PrincipalListas extends AppCompatActivity {
     }
 
     /**
-     * @brief Configura los listeners para los botones de la actividad.
+     * Configura los listeners para los botones de la actividad.
      */
     private void setupListeners() {
         buttonAdd.setOnClickListener(new View.OnClickListener() {
@@ -92,8 +91,9 @@ public class PrincipalListas extends AppCompatActivity {
 
 
     /**
+     * Inserta las listas de compras en las vistas de la actividad.
+     *
      * @param listas Lista de compras a insertar.
-     * @brief Inserta las listas de compras en las vistas de la actividad.
      */
     @SuppressLint("ClickableViewAccessibility")
     private void insertarListasEnVistas(Set<ListaCompra> listas) {
@@ -145,6 +145,14 @@ public class PrincipalListas extends AppCompatActivity {
         }
     }
 
+    /**
+     * Configura la vista de la lista de compra.
+     *
+     * @param lista                Lista de compra.
+     * @param nombreListaTextView  TextView para el nombre de la lista.
+     * @param supermercadoTextView TextView para el supermercado.
+     * @param fechaTextView        TextView para la fecha.
+     */
     private static void anadeVista(ListaCompra lista, TextView nombreListaTextView, TextView supermercadoTextView, TextView fechaTextView) {
         Date fecha = new Date(lista.getFecha());
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
@@ -154,6 +162,13 @@ public class PrincipalListas extends AppCompatActivity {
         fechaTextView.setText(df.format(fecha));
     }
 
+    /**
+     * Borra una lista de compra.
+     *
+     * @param lista Lista de compra a borrar.
+     * @param fila  Fila correspondiente a la lista.
+     * @param linea Línea correspondiente a la lista.
+     */
     private void borrarLista(ListaCompra lista, LinearLayout fila, View linea) {
         new Thread(() -> {
             gestor.borrarLista(lista.getNombre(), lista.getSupermercado(), lista.getFecha());
@@ -164,7 +179,9 @@ public class PrincipalListas extends AppCompatActivity {
         }).start();
     }
 
-
+    /**
+     * Muestra un diálogo para la búsqueda.
+     */
     private void showViewMenu() {
         Dialog menuDialog = new Dialog(this);
         menuDialog.requestWindowFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
@@ -194,7 +211,7 @@ public class PrincipalListas extends AppCompatActivity {
     }
 
     /**
-     * @brief Navega a la actividad CreadorListas.
+     * Navega a la actividad CreadorListas.
      */
     private void navigateToListasCreador() {
         Intent intent = new Intent(this, CreadorListas.class);
@@ -202,7 +219,7 @@ public class PrincipalListas extends AppCompatActivity {
     }
 
     /**
-     * @brief Añade una línea separadora a la disposición lineal.
+     * Añade una línea separadora a la disposición lineal.
      */
     private void addSeparatorLine(View linea) {
 
@@ -213,23 +230,38 @@ public class PrincipalListas extends AppCompatActivity {
         layout.addView(linea);
     }
 
+    /**
+     * Acción al hacer clic en el botón de comparar productos.
+     *
+     * @param view La vista.
+     */
     public void onCompararButtonClick(View view) {
         Intent i = new Intent(this, ComparadorProductos.class);
         startActivity(i);
     }
 
+    /**
+     * Acción al hacer clic en el botón de listas.
+     *
+     * @param view La vista.
+     */
     public void onListasButtonClick(View view) {
         Intent i = new Intent(this, PrincipalListas.class);
         startActivity(i);
     }
 
+    /**
+     * Acción al hacer clic en el botón de juego de precios.
+     *
+     * @param view La vista.
+     */
     public void onJuegoButtonClick(View view) {
         Intent i = new Intent(this, JuegoPrecios.class);
         startActivity(i);
     }
 
     /**
-     * @brief Muestra un diálogo de menú.
+     * Muestra un diálogo de menú.
      */
     private void showMenuDialog() {
         Dialog menuDialog = new Dialog(this, android.R.style.Theme);
@@ -251,6 +283,11 @@ public class PrincipalListas extends AppCompatActivity {
         menuDialog.show();
     }
 
+    /**
+     * Acción al hacer clic en la barra lateral.
+     *
+     * @param view La vista.
+     */
     public void onSideBarClick(View view) {
         showMenuDialog();
     }

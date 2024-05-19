@@ -31,8 +31,8 @@
 
     <ImageView
         android:id="@+id/producto"
-        android:layout_width="285dp"
-        android:layout_height="287dp"
+        android:layout_width="296dp"
+        android:layout_height="300dp"
         android:layout_marginTop="60dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -74,6 +74,16 @@
         app:layout_constraintTop_toBottomOf="@+id/imagenPrimerIntento"
         app:srcCompat="@drawable/ic_launcher_foreground" />
 
+    <ImageView
+        android:id="@+id/imagenTercerIntento"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/segundoIntento"
+        app:layout_constraintTop_toBottomOf="@+id/imagenSegundoIntento"
+        app:srcCompat="@drawable/ic_launcher_foreground" />
+
     <EditText
         android:id="@+id/primerIntento"
         android:layout_width="wrap_content"
@@ -101,6 +111,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/primerIntento" />
 
+    <EditText
+        android:id="@+id/tercerIntento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:ems="10"
+        android:enabled="false"
+        android:hint="Formato: 1.2"
+        android:inputType="numberDecimal"
+        app:layout_constraintEnd_toStartOf="@+id/imagenSegundoIntento"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/segundoIntento" />
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/comprobar"
         android:layout_width="wrap_content"
@@ -112,7 +135,8 @@
         app:layout_constraintEnd_toStartOf="@+id/nuevo_intento"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/segundoIntento" />
+        app:layout_constraintTop_toBottomOf="@+id/segundoIntento"
+        app:layout_constraintVertical_bias="0.86" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/nuevo_intento"
@@ -125,7 +149,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/comprobar"
-        app:layout_constraintTop_toBottomOf="@+id/segundoIntento" />
+        app:layout_constraintTop_toBottomOf="@+id/segundoIntento"
+        app:layout_constraintVertical_bias="0.852" />
 
     <TextView
         android:id="@+id/cuadroFinal"
@@ -134,21 +159,20 @@
         app:layout_constraintBottom_toTopOf="@+id/comprobar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/segundoIntento" />
+        app:layout_constraintTop_toBottomOf="@+id/tercerIntento" />
+
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/menu"
         android:layout_width="64dp"
         android:layout_height="56dp"
         android:background="@color/primario"
+        android:onClick="onSideBarClick"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar"
         app:layout_constraintEnd_toStartOf="@+id/nombreAplicacion"
         app:layout_constraintHorizontal_bias="0.472"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/menu"
-        android:onClick="onSideBarClick"
-        />
-
+        app:srcCompat="@drawable/menu" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

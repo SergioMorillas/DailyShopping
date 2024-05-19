@@ -25,18 +25,23 @@ import com.lista.listacompra.modelo.SupermercadosDisponibles;
 import com.lista.listacompra.modelo.SupermercadosFactoria;
 import com.squareup.picasso.Picasso;
 
-import java.util.concurrent.*;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
-
+/**
+ * Actividad que representa el juego de adivinar el precio de un producto.
+ */
 public class JuegoPrecios extends AppCompatActivity {
     private static final double TOLERANCIA = 0.25; // Tolerancia de un 25%
     private Faker faker;
     private double precio;
-    private EditText primerIntento, segundoIntento;
-    private ImageView imagenProducto, imagenPrimerIntento, imagenSegundoIntento, menu;
+    private EditText primerIntento, segundoIntento, tercerIntento;
+    private ImageView imagenProducto, imagenPrimerIntento, imagenSegundoIntento, imagenTercerIntento, menu;
     private TextView nombreSupermercado, cuadroFinal;
     private Button comprobar, nuevoIntento;
 
@@ -66,8 +71,9 @@ public class JuegoPrecios extends AppCompatActivity {
                 String stringPrecioIntento;
                 double precioIntento;
                 //Si es el primer intento
-                if (!segundoIntento.isEnabled()) primerIntento(p);
-                else segundoIntento(p);
+                if (primerIntento.isEnabled()) primerIntento(p);
+                else if (!tercerIntento.isEnabled()) segundoIntento(p);
+                else tercerIntento(p);
             }
         });
         menu.setOnClickListener(new View.OnClickListener() {
@@ -88,12 +94,17 @@ public class JuegoPrecios extends AppCompatActivity {
 
     }
 
+    /**
+     * Inicializa las instancias de las vistas.
+     */
     private void instancias() {
         primerIntento = findViewById(R.id.primerIntento);
         segundoIntento = findViewById(R.id.segundoIntento);
+        tercerIntento = findViewById(R.id.tercerIntento);
         imagenProducto = findViewById(R.id.producto);
         imagenPrimerIntento = findViewById(R.id.imagenPrimerIntento);
         imagenSegundoIntento = findViewById(R.id.imagenSegundoIntento);
+        imagenTercerIntento = findViewById(R.id.imagenTercerIntento);
         nombreSupermercado = findViewById(R.id.nombreSupermercado);
         cuadroFinal = findViewById(R.id.cuadroFinal);
         comprobar = findViewById(R.id.comprobar);
@@ -101,6 +112,11 @@ public class JuegoPrecios extends AppCompatActivity {
         menu = findViewById(R.id.menu);
     }
 
+    /**
+     * Lógica del primer intento del usuario para adivinar el precio.
+     *
+     * @param p Producto aleatorio generado para el juego.
+     */
     private void primerIntento(Producto p) {
         double precioIntento;
         String stringPrecioIntento;
@@ -129,6 +145,8 @@ public class JuegoPrecios extends AppCompatActivity {
             }
             if (acierto == 0 || acierto == 1) {
                 segundoIntento.setEnabled(true);
+            } else {
+                comprobar.setEnabled(false);
             }
             primerIntento.setEnabled(false);
         } catch (NumberFormatException ex) {
@@ -136,34 +154,41 @@ public class JuegoPrecios extends AppCompatActivity {
         }
     }
 
+    /**
+     * Lógica del primer intento del usuario para adivinar el precio.
+     *
+     * @param p Producto aleatorio generado para el juego.
+     */
     private void segundoIntento(Producto p) {
-        String stringPrecioIntento;
         double precioIntento;
+        String stringPrecioIntento;
         try {
             stringPrecioIntento = segundoIntento.getText().toString();
+            stringPrecioIntento = stringPrecioIntento.replaceAll(",", ".");
             precioIntento = Double.parseDouble(stringPrecioIntento);
+
             int acierto = comprobarPrecioUsuario(precioIntento);
-            cuadroFinal.setVisibility(View.VISIBLE);
             if (acierto == 0) {
-                Toast.makeText(JuegoPrecios.this, "Te has quedado corto, el precio era " + p.getPrice() + "€", Toast.LENGTH_LONG).show();
-                cuadroFinal.setTextColor(Color.rgb(194, 24, 7)); //Rojo
+                Toast.makeText(JuegoPrecios.this, "El precio real es mas alto", Toast.LENGTH_LONG).show();
                 imagenSegundoIntento.setImageResource(R.drawable.icono_flecha_arriba);
-                cuadroFinal.setText(String.format("Te has quedado corto, el precio era %s€", p.getPrice()));
             } else if (acierto == 1) {
-                Toast.makeText(JuegoPrecios.this, "Te has pasado, el precio era " + p.getPrice() + "€", Toast.LENGTH_LONG).show();
-                cuadroFinal.setTextColor(Color.rgb(194, 24, 7)); //Rojo
+                Toast.makeText(JuegoPrecios.this, "El precio real es mas bajo", Toast.LENGTH_LONG).show();
                 imagenSegundoIntento.setImageResource(R.drawable.icono_flecha_abajo);
-                cuadroFinal.setText(String.format("Te has pasado, el precio era %s€", p.getPrice()));
             } else if (acierto == 2) {
                 Toast.makeText(JuegoPrecios.this, "Has acertado el precio exacto, el precio era " + p.getPrice() + "€", Toast.LENGTH_LONG).show();
                 cuadroFinal.setTextColor(Color.rgb(187, 165, 61)); //Dorado
                 imagenSegundoIntento.setImageResource(R.drawable.icono_estrella_ganar_exacto);
-                cuadroFinal.setText(R.string.precio_acertado);
+                cuadroFinal.setText("Has acertado el precio exacto");
             } else {
                 Toast.makeText(JuegoPrecios.this, "¡Bien! Te has quedado muy cerca, el precio era " + p.getPrice() + "€", Toast.LENGTH_LONG).show();
                 cuadroFinal.setTextColor(Color.rgb(192, 192, 192)); //Plateado
                 imagenSegundoIntento.setImageResource(R.drawable.icono_estrella_ganar_tolerancia);
-                cuadroFinal.setText(getString(R.string.te_has_quedado_cerca) + p.getPrice() + "€");
+                cuadroFinal.setText("¡Bien! Te has quedado muy cerca, el precio era " + p.getPrice() + "€");
+            }
+            if (acierto == 0 || acierto == 1) {
+                tercerIntento.setEnabled(true);
+            } else {
+                comprobar.setEnabled(false);
             }
             segundoIntento.setEnabled(false);
         } catch (NumberFormatException ex) {
@@ -171,7 +196,54 @@ public class JuegoPrecios extends AppCompatActivity {
         }
     }
 
+    /**
+     * Lógica del segundo intento del usuario para adivinar el precio.
+     *
+     * @param p Producto aleatorio generado para el juego.
+     */
+    private void tercerIntento(Producto p) {
+        String stringPrecioIntento;
+        double precioIntento;
+        try {
+            stringPrecioIntento = tercerIntento.getText().toString();
+            precioIntento = Double.parseDouble(stringPrecioIntento);
+            int acierto = comprobarPrecioUsuario(precioIntento);
+            cuadroFinal.setVisibility(View.VISIBLE);
+            if (acierto == 0) {
+                Toast.makeText(JuegoPrecios.this, "Te has quedado corto, el precio era " + p.getPrice() + "€", Toast.LENGTH_LONG).show();
+                cuadroFinal.setTextColor(Color.rgb(194, 24, 7)); //Rojo
+                imagenTercerIntento.setImageResource(R.drawable.icono_flecha_arriba);
+                cuadroFinal.setText(String.format("Te has quedado corto, el precio era %s€", p.getPrice()));
+            } else if (acierto == 1) {
+                Toast.makeText(JuegoPrecios.this, "Te has pasado, el precio era " + p.getPrice() + "€", Toast.LENGTH_LONG).show();
+                cuadroFinal.setTextColor(Color.rgb(
+                        194, 24, 7)); //Rojo
+                imagenTercerIntento.setImageResource(R.drawable.icono_flecha_abajo);
+                cuadroFinal.setText(String.format("Te has pasado, el precio era %s€", p.getPrice()));
+            } else if (acierto == 2) {
+                Toast.makeText(JuegoPrecios.this, "Has acertado el precio exacto, el precio era " + p.getPrice() + "€", Toast.LENGTH_LONG).show();
+                cuadroFinal.setTextColor(Color.rgb(187, 165, 61)); //Dorado
+                imagenTercerIntento.setImageResource(R.drawable.icono_estrella_ganar_exacto);
+                cuadroFinal.setText(R.string.precio_acertado);
+            } else {
+                Toast.makeText(JuegoPrecios.this, "¡Bien! Te has quedado muy cerca, el precio era " + p.getPrice() + "€", Toast.LENGTH_LONG).show();
+                cuadroFinal.setTextColor(Color.rgb(192, 192, 192)); //Plateado
+                imagenTercerIntento.setImageResource(R.drawable.icono_estrella_ganar_tolerancia);
+                cuadroFinal.setText(getString(R.string.te_has_quedado_cerca) + p.getPrice() + "€");
+            }
+            tercerIntento.setEnabled(false);
+            comprobar.setEnabled(false);
+        } catch (NumberFormatException ex) {
+            Toast.makeText(JuegoPrecios.this, "El valor introducido no es un numero", Toast.LENGTH_LONG).show();
+        }
+    }
 
+    /**
+     * Genera un producto aleatorio.
+     *
+     * @param superM Supermercado del que se generará el producto.
+     * @return Producto aleatorio generado.
+     */
     private Producto productoAleatorio(SupermercadosFactoria superM) {
         ExecutorService executor = Executors.newFixedThreadPool(10);
         List<Future<Producto>> futures = new ArrayList<>();
@@ -211,6 +283,11 @@ public class JuegoPrecios extends AppCompatActivity {
     }
 
 
+    /**
+     * Selecciona un supermercado aleatorio.
+     *
+     * @return Supermercado seleccionado aleatoriamente.
+     */
     private SupermercadosFactoria supermercadoAleatorio() {
         SupermercadosFactoria superM = new SupermercadosFactoria();
         int longitud = SupermercadosDisponibles.getStringValues().length;
@@ -221,17 +298,10 @@ public class JuegoPrecios extends AppCompatActivity {
     }
 
     /**
-     * @param precioUsuario Precio introducido por el usuario
-     * @return <ul>
-     * <li>0. En caso de que el valor introducido por el usuario sea mas bajo que el precio
-     * real mas su tolerancia</li>
-     * <li>1. En caso de que el valor introducido por el usuario sea mas alto que el precio
-     * real mas su tolerancia</li>
-     * <li>2. En caso de que el valor introducido por el usuario sea igual que el precio
-     * real</li>
-     * <li>3. En caso de que el valor introducido por el usuario se encuentre entre la
-     * tolerancia del precio real</li>
-     * </ul>
+     * Comprueba si el precio introducido por el usuario está dentro de la tolerancia.
+     *
+     * @param precioUsuario Precio introducido por el usuario.
+     * @return 0 si el precio es más bajo, 1 si es más alto, 2 si es exacto, 3 si está dentro de la tolerancia.
      */
     public int comprobarPrecioUsuario(double precioUsuario) {
         double limiteSuperior = precio * (1 + TOLERANCIA), limiteInferior = precio * (1 - TOLERANCIA);
@@ -248,7 +318,7 @@ public class JuegoPrecios extends AppCompatActivity {
 
 
     /**
-     * @brief Muestra un diálogo de menú.
+     * Muestra un diálogo de menú.
      */
     private void showMenuDialog() {
         Dialog menuDialog = new Dialog(this, android.R.style.Theme);
@@ -270,20 +340,32 @@ public class JuegoPrecios extends AppCompatActivity {
         menuDialog.show();
     }
 
+    /**
+     * Método para el manejo del clic en la barra lateral.
+     */
     public void onSideBarClick(View view) {
         showMenuDialog();
     }
 
+    /**
+     * Método para el manejo del clic en el botón de comparar productos.
+     */
     public void onCompararButtonClick(View view) {
         Intent i = new Intent(this, ComparadorProductos.class);
         startActivity(i);
     }
 
+    /**
+     * Método para el manejo del clic en el botón de listas.
+     */
     public void onListasButtonClick(View view) {
         Intent i = new Intent(this, PrincipalListas.class);
         startActivity(i);
     }
 
+    /**
+     * Método para el manejo del clic en el botón de juego.
+     */
     public void onJuegoButtonClick(View view) {
         Intent i = new Intent(this, JuegoPrecios.class);
         startActivity(i);

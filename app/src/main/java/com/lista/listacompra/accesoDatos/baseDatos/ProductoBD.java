@@ -4,40 +4,80 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverters;
 
 import com.lista.listacompra.modelo.Producto;
 
 import java.util.Objects;
+
+/**
+ * Entidad que representa un producto en la base de datos.
+ * Esta clase se utiliza para almacenar información sobre productos en la tabla "productos".
+ */
 @Entity(tableName = "productos")
-public class ProductoBD{
+public class ProductoBD {
+
+    /**
+     * Identificador único del producto.
+     */
     @PrimaryKey
     @ColumnInfo(name="id")
     @NonNull
     private String id;
 
+    /**
+     * URL de la imagen del producto.
+     */
     @ColumnInfo(name = "image")
     private String image;
 
+    /**
+     * Nombre del producto.
+     */
     @ColumnInfo(name = "name")
     private String name;
 
+    /**
+     * Precio del producto.
+     */
     @ColumnInfo(name = "price")
     private double price;
 
+    /**
+     * Precio por kilo del producto.
+     */
     @ColumnInfo(name = "price_per_kilo")
     private double pricePerKilo;
 
+    /**
+     * Peso del producto.
+     */
     @ColumnInfo(name = "mass")
     private double mass;
 
+    /**
+     * Cantidad del producto.
+     */
     @ColumnInfo(name = "amount")
     private int amount;
 
+    /**
+     * Indica si el producto está marcado.
+     */
     @ColumnInfo(name = "marked")
     private boolean isMarked;
 
-
+    /**
+     * Constructor completo para crear un producto con todos sus atributos.
+     *
+     * @param id Identificador único del producto.
+     * @param imagen URL de la imagen del producto.
+     * @param nombre Nombre del producto.
+     * @param precio Precio del producto.
+     * @param precioKilo Precio por kilo del producto.
+     * @param peso Peso del producto.
+     * @param amount Cantidad del producto.
+     * @param isMarked Indica si el producto está marcado.
+     */
     public ProductoBD(String id, String imagen, String nombre, double precio, double precioKilo, double peso, int amount, boolean isMarked) {
         this.id = id;
         this.image = imagen;
@@ -48,6 +88,12 @@ public class ProductoBD{
         this.amount = amount;
         this.isMarked = isMarked;
     }
+
+    /**
+     * Constructor que crea un producto a partir de una instancia de {@link Producto}.
+     *
+     * @param p Instancia de {@link Producto}.
+     */
     public ProductoBD(Producto p) {
         this.image = p.getImage();
         this.name = p.getName();
@@ -58,6 +104,14 @@ public class ProductoBD{
         this.isMarked = p.isMarked();
     }
 
+    /**
+     * Constructor simplificado para crear un producto con atributos básicos.
+     *
+     * @param id Identificador único del producto.
+     * @param imagen URL de la imagen del producto.
+     * @param nombre Nombre del producto.
+     * @param precio Precio del producto.
+     */
     public ProductoBD(String id, String imagen, String nombre, double precio) {
         this.id = id;
         this.image = imagen;
@@ -65,14 +119,23 @@ public class ProductoBD{
         this.price = precio;
         this.pricePerKilo = -1; // -1 Significa que no aplica para ese producto
         this.mass = -1;
-        this.isMarked=false;
-        this.amount=1;
+        this.isMarked = false;
+        this.amount = 1;
     }
 
+    /**
+     * Constructor que crea un producto con solo un identificador.
+     *
+     * @param id Identificador único del producto.
+     */
     public ProductoBD(String id) {
         this.id = id;
     }
-    public ProductoBD(){
+
+    /**
+     * Constructor por defecto que crea un producto con un mensaje de no encontrado.
+     */
+    public ProductoBD() {
         this.name = "ProductoBD no encontrado";
     }
 
@@ -145,7 +208,9 @@ public class ProductoBD{
         if (this == o) return true;
         if (!(o instanceof ProductoBD)) return false;
         ProductoBD producto = (ProductoBD) o;
-        return getPrice() == producto.getPrice() && getMass() == producto.getMass() && Objects.equals(getName(), producto.getName());
+        return Double.compare(producto.getPrice(), getPrice()) == 0 &&
+                Double.compare(producto.getMass(), getMass()) == 0 &&
+                Objects.equals(getName(), producto.getName());
     }
 
     @Override
@@ -162,7 +227,8 @@ public class ProductoBD{
                 ", price=" + price + "\n\t" +
                 ", pricePerKilo=" + pricePerKilo + "\n\t" +
                 ", mass=" + mass + "\n\t" +
+                ", amount=" + amount + "\n\t" +
+                ", isMarked=" + isMarked + "\n\t" +
                 '}';
     }
-
 }

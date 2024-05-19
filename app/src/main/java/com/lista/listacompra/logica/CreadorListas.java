@@ -16,9 +16,7 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.window.OnBackInvokedDispatcher;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.OnBackPressedDispatcher;
@@ -31,7 +29,6 @@ import com.lista.listacompra.modelo.ListaCompra;
 import com.lista.listacompra.modelo.SupermercadosDisponibles;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
 
@@ -52,24 +49,25 @@ public class CreadorListas extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Establecer configuración local en español
         Locale locale = new Locale("es");
         Locale.setDefault(locale);
         Configuration config = new Configuration();
         config.setLocale(locale);
         getResources().updateConfiguration(config, getResources().getDisplayMetrics());
 
+        // Configurar la fecha actual y establecer la vista
         setFechaActual();
         setContentView(R.layout.listas_creador);
         gestor = new Gestor(getApplicationContext());
         initializeVariables();
         setupListeners();
+        // Configurar el botón de retroceso
         OnBackPressedDispatcher onBackPressedDispatcher = getOnBackPressedDispatcher();
         onBackPressedDispatcher.addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                Intent intent = new Intent(CreadorListas.this, PrincipalListas.class);
-                startActivity(intent);
-                finish();
+                navigateToListasPrincipal();
             }
         });
 
@@ -115,6 +113,9 @@ public class CreadorListas extends AppCompatActivity {
 
         });
     }
+
+    // Métodos auxiliares para trabajar con fechas
+
     private void setFechaActual() {
         Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
@@ -122,6 +123,7 @@ public class CreadorListas extends AppCompatActivity {
         int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
         setFecha(year, month, dayOfMonth);
     }
+
     private void setFecha(int year, int month, int dayOfMonth) {
         Calendar c = Calendar.getInstance();
         c.set(Calendar.YEAR, year);
@@ -133,6 +135,7 @@ public class CreadorListas extends AppCompatActivity {
         c.set(Calendar.MILLISECOND, 0);
         fechaSeleccionada = c.getTimeInMillis();
     }
+
     private long getFechaActual() {
         Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
@@ -155,10 +158,10 @@ public class CreadorListas extends AppCompatActivity {
 
         if (lName.isBlank()) {
             Toast.makeText(CreadorListas.this, "El nombre no puede estar vacío", Toast.LENGTH_LONG).show();
-        } else if (fechaSeleccionada<getFechaActual()) { // Si la fecha es anterior al día de hoy falla
+        } else if (fechaSeleccionada < getFechaActual()) { // Si la fecha es anterior al día de hoy falla
             Toast.makeText(CreadorListas.this, "La fecha no puede ser anterior al día de hoy", Toast.LENGTH_LONG).show();
             calendar.setDate(getFechaActual());
-            fechaSeleccionada=getFechaActual();
+            fechaSeleccionada = getFechaActual();
         } else {
             ListaCompra listaCompra = new ListaCompra(lName, selectedDate, lSupermarket, new HashSet());
 
@@ -212,7 +215,7 @@ public class CreadorListas extends AppCompatActivity {
     }
 
     /**
-     * @brief Muestra un diálogo de menú.
+     * Muestra un diálogo de menú.
      */
     private void showMenuDialog() {
         Dialog menuDialog = new Dialog(this, android.R.style.Theme);
@@ -234,22 +237,39 @@ public class CreadorListas extends AppCompatActivity {
         menuDialog.show();
     }
 
+    /**
+     * Maneja el clic en la barra lateral para mostrar el menú.
+     * @param view La vista del botón de la barra lateral.
+     */
     public void onSideBarClick(View view) {
         showMenuDialog();
     }
 
+    /**
+     * Maneja el clic en el botón de comparar productos.
+     * @param view La vista del botón de comparar productos.
+     */
     public void onCompararButtonClick(View view) {
         Intent i = new Intent(this, ComparadorProductos.class);
         startActivity(i);
     }
 
+    /**
+     * Maneja el clic en el botón de listas.
+     * @param view La vista del botón de listas.
+     */
     public void onListasButtonClick(View view) {
         Intent i = new Intent(this, PrincipalListas.class);
         startActivity(i);
     }
 
+    /**
+     * Maneja el clic en el botón de juego.
+     * @param view La vista del botón de juego.
+     */
     public void onJuegoButtonClick(View view) {
         Intent i = new Intent(this, JuegoPrecios.class);
         startActivity(i);
     }
 }
+

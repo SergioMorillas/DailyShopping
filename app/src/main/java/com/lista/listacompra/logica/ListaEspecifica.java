@@ -7,23 +7,17 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.OnBackPressedDispatcher;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.lista.listacompra.R;
@@ -33,10 +27,6 @@ import com.lista.listacompra.modelo.Producto;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.HashSet;
-import java.util.Set;
-
 
 /**
  * Actividad principal que muestra todas las listas de compras existentes.
@@ -55,10 +45,8 @@ public class ListaEspecifica extends AppCompatActivity {
     private final Handler mHandler = new Handler(Looper.getMainLooper());
 
     /**
-     * Metodo heredado de AppCompat, sirve para ejecutar una acción al parar la acción actual,
-     * por ejemplo al cambiar de pantalla o al cerrar la aplicación.
-     * Actualiza la lista de productos para asegurar que los productos mantienen la cantidad y el
-     * marcado
+     * Método heredado de AppCompatActivity, se llama cuando la actividad se está deteniendo.
+     * Actualiza la lista de productos para asegurar que los productos mantienen la cantidad y el marcado.
      */
     @Override
     protected void onStop() {
@@ -69,12 +57,13 @@ public class ListaEspecifica extends AppCompatActivity {
     }
 
     /**
-     * @param savedInstanceState If the activity is being re-initialized after
-     *                           previously being shut down then this Bundle contains the data it most
-     *                           recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
-     *                           Aquí instanciamos los items de la vista para poder acceder a ellos, leemos los valores pasados como
-     *                           parametro a la vista, como con el supermercado y el nombre de la lista, y creamos los metodos
-     *                           onClick de la vista
+     * Método llamado al crear la actividad.
+     *
+     * @param savedInstanceState Si la actividad está siendo reinicializada después de haber sido detenida,
+     *                           este Bundle contiene los datos que más recientemente ha suministrado en {@link #onSaveInstanceState}.
+     *                           De lo contrario, es nulo.
+     *                           Instancia los elementos de la vista, lee los valores pasados como parámetros a la vista
+     *                           (como el supermercado y el nombre de la lista), y crea los métodos onClick de la vista.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +71,7 @@ public class ListaEspecifica extends AppCompatActivity {
         setContentView(R.layout.lista_especifica);
         nombreLista = this.getIntent().getStringExtra("nombreLista");
         supermercadoNombre = this.getIntent().getStringExtra("supermercado");
-        fecha = this.getIntent().getLongExtra("fecha", -1); // En caso de que no tenga fecha (imposible) por defecto tiene el -1;
+        fecha = this.getIntent().getLongExtra("fecha", -1); // Si no hay fecha (imposible), por defecto es -1.
         layout = findViewById(R.id.layout);
         buttonAdd = findViewById(R.id.buttonAdd);
         nombreAplicacion = findViewById(R.id.nombreAplicacion);
@@ -128,6 +117,9 @@ public class ListaEspecifica extends AppCompatActivity {
         nombreAplicacion.setText("Lista: " + nombreLista);
     }
 
+    /**
+     * Actualiza la vista de la lista de productos.
+     */
     private void actualizarVista() {
         if (layout.getChildCount() > 0) layout.removeAllViews();
         for (Producto p : productos.getProductos()) {
@@ -143,6 +135,11 @@ public class ListaEspecifica extends AppCompatActivity {
         }
     }
 
+    /**
+     * Método para agregar un producto a la vista.
+     *
+     * @param p El producto a agregar.
+     */
     @SuppressLint("ClickableViewAccessibility")
     private void addProduct(Producto p) {
         View linea = new View(this);
@@ -154,8 +151,8 @@ public class ListaEspecifica extends AppCompatActivity {
         nombre.setText(p.getName());
         crearPrecios(fila, p, precio);
 
-        if (p.getPricePerKilo() == -1) precioKilo.setText( "No aplica" );
-        else precioKilo.setText( p.getPricePerKilo() + "€/kilo" );
+        if (p.getPricePerKilo() == -1) precioKilo.setText("No aplica");
+        else precioKilo.setText(p.getPricePerKilo() + "€/kilo");
 
         fila.setPadding(
                 fila.getPaddingLeft(),
@@ -165,7 +162,7 @@ public class ListaEspecifica extends AppCompatActivity {
         fila.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                p.setMarked(!p.isMarked()); // Hacemos una puerta not sobre si esta marcado
+                p.setMarked(!p.isMarked()); // Toggle el marcado del producto.
                 productos.getProductos().remove(p);
                 productos.getProductos().add(p);
                 actualizarVista();
@@ -176,6 +173,13 @@ public class ListaEspecifica extends AppCompatActivity {
         addSeparatorLine(linea);
     }
 
+    /**
+     * Crea la vista de precios para un producto.
+     *
+     * @param fila   La fila en la que se encuentra el producto.
+     * @param p      El producto.
+     * @param precio El TextView donde se mostrará el precio.
+     */
     private void crearPrecios(LinearLayout fila, Producto p, TextView precio) {
         DecimalFormat df = new DecimalFormat("#.##");
         double precioReal;
@@ -184,7 +188,7 @@ public class ListaEspecifica extends AppCompatActivity {
         Button botonResta = fila.findViewById(R.id.restaCantidad);
 
         precioReal = p.getAmount() * p.getPrice();
-        String precioMostrar = p.getAmount() + "X" + p.getPrice() + "€=" + df.format(precioReal) +"€";
+        String precioMostrar = p.getAmount() + "X" + p.getPrice() + "€=" + df.format(precioReal) + "€";
 
         precio.setText(precioMostrar);
 
@@ -200,23 +204,36 @@ public class ListaEspecifica extends AppCompatActivity {
                 onClickRestaCantidad(precio, p, fila);
             }
         });
-
     }
 
+    /**
+     * Agrega la vista del centro específico a la lista de productos.
+     *
+     * @param productos La lista de productos.
+     */
     private void addCentroEspecifico(ListaCompra productos) {
         LinearLayout fila = (LinearLayout) getLayoutInflater().inflate(R.layout.centro_especifico, null);
         TextView marcado = fila.findViewById(R.id.tvMarcado);
         TextView sinMarcar = fila.findViewById(R.id.tvSinMarcar);
         TextView total = fila.findViewById(R.id.tvTotal);
+        TextView media = fila.findViewById(R.id.tvMedia);
 
+        media.setText(String.format("%s€", productos.getPrecioPromedio()));
         marcado.setText(String.format("%s€", productos.getPrecioMarcado()));
         sinMarcar.setText(String.format("%s€", productos.getPrecioSinMarcar()));
         total.setText(String.format("%s€", productos.getPrecioTotal()));
         layout.addView(fila);
     }
 
+    /**
+     * Acción cuando se hace clic en el botón de restar cantidad.
+     *
+     * @param precio El TextView donde se muestra el precio.
+     * @param p      El producto.
+     * @param fila   La fila del producto.
+     */
     private void onClickRestaCantidad(TextView precio, Producto p, LinearLayout fila) {
-        if (p.getAmount()==1){
+        if (p.getAmount() == 1) {
             productos.getProductos().remove(p);
             layout.removeView(fila);
         }
@@ -224,25 +241,31 @@ public class ListaEspecifica extends AppCompatActivity {
         DecimalFormat df = new DecimalFormat("#.##");
         double precioReal;
         precioReal = p.getAmount() * p.getPrice();
-        String precioMostrar = p.getAmount() + "X" + p.getPrice() + "€=" + df.format(precioReal) +"€";
+        String precioMostrar = p.getAmount() + "X" + p.getPrice() + "€=" + df.format(precioReal) + "€";
         precio.setText(precioMostrar);
         actualizarVista();
     }
 
+    /**
+     * Acción cuando se hace clic en el botón de sumar cantidad.
+     *
+     * @param precio El TextView donde se muestra el precio.
+     * @param p      El producto.
+     */
     private void onClickSumaCantidad(TextView precio, Producto p) {
         p.setAmount(p.getAmount() + 1);
 
         DecimalFormat df = new DecimalFormat("#.##");
         double precioReal;
         precioReal = p.getAmount() * p.getPrice();
-        String precioMostrar = p.getAmount() + "X" + p.getPrice() + "€=" + df.format(precioReal) +"€";
+        String precioMostrar = p.getAmount() + "X" + p.getPrice() + "€=" + df.format(precioReal) + "€";
         precio.setText(precioMostrar);
         actualizarVista();
 
     }
 
     /**
-     * @brief Muestra un diálogo de menú.
+     * Muestra un diálogo de menú.
      */
     private void showMenuDialog() {
         Dialog menuDialog = new Dialog(this, android.R.style.Theme);
@@ -264,22 +287,50 @@ public class ListaEspecifica extends AppCompatActivity {
         menuDialog.show();
     }
 
+    /**
+     * Acción al hacer clic en la barra lateral.
+     *
+     * @param view La vista.
+     */
     public void onSideBarClick(View view) {
         showMenuDialog();
     }
+
+    /**
+     * Acción al hacer clic en el botón de comparar productos.
+     *
+     * @param view La vista.
+     */
     public void onCompararButtonClick(View view) {
         Intent i = new Intent(this, ComparadorProductos.class);
         startActivity(i);
     }
 
+    /**
+     * Acción al hacer clic en el botón de listas.
+     *
+     * @param view La vista.
+     */
     public void onListasButtonClick(View view) {
         Intent i = new Intent(this, PrincipalListas.class);
         startActivity(i);
     }
+
+    /**
+     * Acción al hacer clic en el botón de juego de precios.
+     *
+     * @param view La vista.
+     */
     public void onJuegoButtonClick(View view) {
         Intent i = new Intent(this, JuegoPrecios.class);
         startActivity(i);
     }
+
+    /**
+     * Agrega una línea separadora a la vista.
+     *
+     * @param linea La línea a agregar.
+     */
     private void addSeparatorLine(View linea) {
         linea.setBackgroundColor(Color.LTGRAY);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 4);
@@ -288,4 +339,3 @@ public class ListaEspecifica extends AppCompatActivity {
         layout.addView(linea);
     }
 }
-
