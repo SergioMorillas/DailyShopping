@@ -154,6 +154,31 @@ public class ListaEspecifica extends AppCompatActivity {
         if (p.getPricePerKilo() == -1) precioKilo.setText("No aplica");
         else precioKilo.setText(p.getPricePerKilo() + "€/kilo");
 
+        imagen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialog menuDialog = new Dialog(ListaEspecifica.this);
+                menuDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                menuDialog.setContentView(R.layout.imagen_lista);
+
+                ImageView image = menuDialog.findViewById(R.id.IVimage);
+                String url = p.getImage();
+                WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+                Window window = menuDialog.getWindow();
+                if (window != null) {
+                    Picasso.get().load(url).into(image);
+                    layoutParams.copyFrom(window.getAttributes());
+                    int size = (int) (getResources().getDisplayMetrics().widthPixels * 0.75);
+                    layoutParams.width = size;
+                    layoutParams.height = size;
+                    window.setAttributes(layoutParams);
+                }
+
+                menuDialog.show();
+
+            }
+        });
+
         fila.setPadding(
                 fila.getPaddingLeft(),
                 10,
@@ -261,7 +286,6 @@ public class ListaEspecifica extends AppCompatActivity {
         String precioMostrar = p.getAmount() + "X" + p.getPrice() + "€=" + df.format(precioReal) + "€";
         precio.setText(precioMostrar);
         actualizarVista();
-
     }
 
     /**

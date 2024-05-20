@@ -7,7 +7,9 @@ import com.lista.listacompra.accesoDatos.baseDatos.ListaCompraBD;
 import com.lista.listacompra.accesoDatos.baseDatos.ProductoBD;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
@@ -202,7 +204,7 @@ public class ListaCompra {
      * @return El precio total de todos los productos en la lista de compras.
      */
     public String getPrecioTotal() {
-        DecimalFormat df = new DecimalFormat("#.##");
+        DecimalFormat df = new DecimalFormat("#.##", new DecimalFormatSymbols(Locale.ENGLISH));
         double suma = 0;
         for (Producto p : productos) {
             suma += p.getPrice() * p.getAmount();
@@ -216,7 +218,7 @@ public class ListaCompra {
      * @return El precio total de los productos marcados en la lista de compras.
      */
     public String getPrecioMarcado() {
-        DecimalFormat df = new DecimalFormat("#.##");
+        DecimalFormat df = new DecimalFormat("#.##", new DecimalFormatSymbols(Locale.ENGLISH));
         double suma = 0;
         for (Producto p : productos) {
             if (p.isMarked()) suma += p.getPrice() * p.getAmount();
@@ -231,7 +233,7 @@ public class ListaCompra {
      */
     public String getPrecioSinMarcar() {
         double suma = 0;
-        DecimalFormat df = new DecimalFormat("#.##");
+        DecimalFormat df = new DecimalFormat("#.##", new DecimalFormatSymbols(Locale.ENGLISH));
         for (Producto p : productos) {
             if (!p.isMarked()) suma += p.getPrice() * p.getAmount();
         }
@@ -244,7 +246,7 @@ public class ListaCompra {
      */
     public String getPrecioPromedio() {
         double precio = 0;
-        DecimalFormat df = new DecimalFormat("#.##");
+        DecimalFormat df = new DecimalFormat("#.##", new DecimalFormatSymbols(Locale.ENGLISH));
         if (!(this.getProductos().size() == 0))
             precio = Double.parseDouble(getPrecioTotal())/(double)(this.getProductos().size());
         return df.format(precio);

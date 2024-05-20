@@ -86,9 +86,9 @@ public class ComparadorProductos extends AppCompatActivity {
                             Producto p = aux.get(0);
                             mHandler.post(() -> anadirObjeto(p, nombre.name())); // Añade el objeto en el hilo principal
                         } else {
-                            mHandler.post(() -> anadirObjetoVacio(new Producto()));
+                            mHandler.post(() -> anadirObjetoVacio(nombre.name()));
                         }
-                        addSeparatorLine(linea);
+                        mHandler.post(() -> addSeparatorLine(linea));
                     }
                 }
             }).start();
@@ -99,6 +99,7 @@ public class ComparadorProductos extends AppCompatActivity {
 
     /**
      * Añade un objeto Producto a la interfaz.
+     *
      * @param p Producto a añadir.
      * @param s Nombre del supermercado del producto.
      */
@@ -126,15 +127,19 @@ public class ComparadorProductos extends AppCompatActivity {
 
     /**
      * Añade un objeto Producto vacío a la interfaz.
-     * @param p Producto vacío a añadir.
+     *
+     * @param nombreSupermercado Producto vacío a añadir.
      */
-    private void anadirObjetoVacio(Producto p) {
+    private void anadirObjetoVacio(String nombreSupermercado) {
         LinearLayout fila = (LinearLayout) getLayoutInflater().inflate(R.layout.productos_comparador, null);
         TextView nombre = fila.findViewById(R.id.nombreProducto);
         ImageView imagen = fila.findViewById(R.id.imagenProducto);
+        TextView supermercado = fila.findViewById(R.id.supermercadoProducto);
 
-        nombre.setText(p.getName());
+        nombre.setText("No se han encontrado productos");
+        supermercado.setText(nombreSupermercado);
         imagen.setImageResource(R.drawable.imagen_no_encontrada);
+        fila.setPadding(0, 10, 0, 10);
         layout.addView(fila);
 
     }
@@ -173,14 +178,16 @@ public class ComparadorProductos extends AppCompatActivity {
 
     /**
      * Maneja el clic en el botón de la barra lateral.
+     *
      * @param view Vista del botón.
      */
-    public void onSideBarClick(View view){
+    public void onSideBarClick(View view) {
         showMenuDialog();
     }
 
     /**
      * Maneja el clic en el botón de comparar productos.
+     *
      * @param view Vista del botón.
      */
     public void onCompararButtonClick(View view) {
@@ -190,6 +197,7 @@ public class ComparadorProductos extends AppCompatActivity {
 
     /**
      * Maneja el clic en el botón de listas.
+     *
      * @param view Vista del botón.
      */
     public void onListasButtonClick(View view) {
@@ -199,6 +207,7 @@ public class ComparadorProductos extends AppCompatActivity {
 
     /**
      * Maneja el clic en el botón de juego.
+     *
      * @param view Vista del botón.
      */
     public void onJuegoButtonClick(View view) {

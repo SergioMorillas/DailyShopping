@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Media"
-            android:textSize="18dp" />
+            android:textSize="16dp" />
 
         <TextView
             android:id="@+id/tvMedia"
@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Sin marcar"
-            android:textSize="18sp" />
+            android:textSize="16dp" />
 
         <TextView
             android:id="@+id/tvSinMarcar"
@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             android:text="Marcado"
             android:gravity="center"
-            android:textSize="18dp" />
+            android:textSize="16dp" />
 
         <TextView
             android:id="@+id/tvMarcado"
@@ -92,7 +92,7 @@
             android:layout_height="wrap_content"
             android:text="Precio total"
             android:gravity="center"
-            android:textSize="18sp" />
+            android:textSize="16dp" />
 
         <TextView
             android:id="@+id/tvTotal"
