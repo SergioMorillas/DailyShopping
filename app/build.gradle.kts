@@ -4,12 +4,12 @@ plugins {
 
 android {
     namespace = "com.lista.listacompra"
-    compileSdk = 34
+    compileSdk = 31
 
     defaultConfig {
         applicationId = "com.lista.listacompra"
-        minSdk = 33
-        targetSdk = 33
+        minSdk = 23
+        targetSdk = 31
         versionCode = 1
         versionName = "1.0"
 
