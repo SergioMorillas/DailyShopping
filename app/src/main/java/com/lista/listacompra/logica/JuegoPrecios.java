@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -11,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +47,8 @@ public class JuegoPrecios extends AppCompatActivity {
     private ImageView imagenProducto, imagenPrimerIntento, imagenSegundoIntento, imagenTercerIntento, menu;
     private TextView nombreSupermercado, cuadroFinal;
     private Button comprobar, nuevoIntento;
+    private ProgressBar loadingCircle;
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +56,31 @@ public class JuegoPrecios extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         faker = new Faker();
         instancias();
-        SupermercadosFactoria superM = supermercadoAleatorio();
-        Producto p = productoAleatorio(superM);
+        new Thread (()->{
+            SupermercadosFactoria superM = supermercadoAleatorio();
+            Producto p = productoAleatorio(superM);
 
-        precio = p.getPrice();
-        cuadroFinal.setVisibility(View.VISIBLE);
-        nombreSupermercado.setText(superM.getNombre());
-        Picasso.get().load(p.getImage()).into(imagenProducto);
+            mHandler.post(() -> {
+
+                precio = p.getPrice();
+
+                cuadroFinal.setVisibility(View.VISIBLE);
+                nombreSupermercado.setText(superM.getNombre());
+                Picasso.get().load(p.getImage()).into(imagenProducto);
+                comprobar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String stringPrecioIntento;
+                        double precioIntento;
+                        //Si es el primer intento
+                        if (primerIntento.isEnabled()) primerIntento(p);
+                        else if (!tercerIntento.isEnabled()) segundoIntento(p);
+                        else tercerIntento(p);
+                    }
+                });
+            });
+
+        }).start();
         nuevoIntento.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,17 +88,7 @@ public class JuegoPrecios extends AppCompatActivity {
                 startActivity(i);
             }
         });
-        comprobar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String stringPrecioIntento;
-                double precioIntento;
-                //Si es el primer intento
-                if (primerIntento.isEnabled()) primerIntento(p);
-                else if (!tercerIntento.isEnabled()) segundoIntento(p);
-                else tercerIntento(p);
-            }
-        });
+
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,6 +123,7 @@ public class JuegoPrecios extends AppCompatActivity {
         comprobar = findViewById(R.id.comprobar);
         nuevoIntento = findViewById(R.id.nuevo_intento);
         menu = findViewById(R.id.menu);
+        loadingCircle = findViewById(R.id.loadingCircle);
     }
 
     /**
@@ -245,6 +259,7 @@ public class JuegoPrecios extends AppCompatActivity {
      * @return Producto aleatorio generado.
      */
     private Producto productoAleatorio(SupermercadosFactoria superM) {
+        mHandler.post(()->{loadingCircle.setVisibility(View.VISIBLE);});
         ExecutorService executor = Executors.newFixedThreadPool(10);
         List<Future<Producto>> futures = new ArrayList<>();
 
@@ -278,6 +293,8 @@ public class JuegoPrecios extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+        mHandler.post(()->{loadingCircle.setVisibility(View.GONE);});
+
 
         return p;
     }

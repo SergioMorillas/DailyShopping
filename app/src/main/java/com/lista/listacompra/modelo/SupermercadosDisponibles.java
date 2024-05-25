@@ -14,7 +14,7 @@ public enum SupermercadosDisponibles {
     Mercadona(Mercadona.class),
     Dia(Dia.class),
     Alcampo(Alcampo.class),
-    Carrefour(Carrefour.class),
+    //Carrefour(Carrefour.class),
     BM(BM.class);
 
     /**
