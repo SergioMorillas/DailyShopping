@@ -1,11 +1,10 @@
-package com.lista.listacompra.modelo;
+package com.lista.listacompra.controlador;
 
-import com.lista.listacompra.accesoDatos.apiSupermercados.BM;
-import com.lista.listacompra.accesoDatos.apiSupermercados.Carrefour;
-import com.lista.listacompra.accesoDatos.apiSupermercados.Supermercado;
-import com.lista.listacompra.accesoDatos.apiSupermercados.Mercadona;
-import com.lista.listacompra.accesoDatos.apiSupermercados.Dia;
-import com.lista.listacompra.accesoDatos.apiSupermercados.Alcampo;
+import com.lista.listacompra.modelo.apiSupermercados.BM;
+import com.lista.listacompra.modelo.apiSupermercados.Supermercado;
+import com.lista.listacompra.modelo.apiSupermercados.Mercadona;
+import com.lista.listacompra.modelo.apiSupermercados.Dia;
+import com.lista.listacompra.modelo.apiSupermercados.Alcampo;
 
 /**
  * Enumeración que contiene todos los supermercados disponibles en la aplicación.

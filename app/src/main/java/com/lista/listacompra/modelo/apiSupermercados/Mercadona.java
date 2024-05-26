@@ -1,8 +1,8 @@
-package com.lista.listacompra.accesoDatos.apiSupermercados;
+package com.lista.listacompra.modelo.apiSupermercados;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lista.listacompra.accesoDatos.baseDatos.ProductoBD;
+import com.lista.listacompra.modelo.baseDatos.ProductoBD;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

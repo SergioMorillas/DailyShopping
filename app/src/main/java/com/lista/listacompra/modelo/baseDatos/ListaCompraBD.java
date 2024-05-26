@@ -1,4 +1,4 @@
-package com.lista.listacompra.accesoDatos.baseDatos;
+package com.lista.listacompra.modelo.baseDatos;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
@@ -7,8 +7,8 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
-import com.lista.listacompra.modelo.ListaCompra;
-import com.lista.listacompra.modelo.Producto;
+import com.lista.listacompra.controlador.ListaCompra;
+import com.lista.listacompra.controlador.Producto;
 
 import java.util.HashSet;
 import java.util.Set;

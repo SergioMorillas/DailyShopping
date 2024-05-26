@@ -1,8 +1,8 @@
-package com.lista.listacompra.accesoDatos.apiSupermercados;
+package com.lista.listacompra.modelo.apiSupermercados;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lista.listacompra.accesoDatos.baseDatos.ProductoBD;
+import com.lista.listacompra.modelo.baseDatos.ProductoBD;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -10,7 +10,7 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BM implements Supermercado {
+public class Alcampo implements Supermercado {
     /**
      * Metodo heredado de la interfáz supermercado, busca un producto especifico en el API del mercadona
      * @param producto String que contiene el nombre del producto a buscar
@@ -20,7 +20,7 @@ public class BM implements Supermercado {
     public Set<ProductoBD> search(String producto) {
         Set<ProductoBD> products = new HashSet<>();
         try {
-            URL url = new URL(BM_API_URL + producto);
+            URL url = new URL(ALCAMPO_API_URL + producto);
 
             try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
                 StringBuilder stringBuilder = new StringBuilder();
@@ -46,8 +46,8 @@ public class BM implements Supermercado {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(json);
             JsonNode productNode = jsonNode
-                    .path("catalog")
-                    .path("products");
+                    .path("entities")
+                    .path("product");
 
             for (JsonNode node : productNode) //Iteramos por todos los nodos y rellenamos el arraylist
                 products.add(creteProduct(node));
@@ -63,30 +63,26 @@ public class BM implements Supermercado {
      * @return El objeto ProductoBD
      */
     private static ProductoBD creteProduct(JsonNode nodo) {
-        String id = nodo.path("ean").asText();
-        JsonNode productNode = nodo
-                .path("priceData")
-                .path("prices");
+        String id = nodo.path("productId").asText();
         Double price = nodo
-                .path("priceData")
-                .path("prices")
-                .get(0)
-                .path("value")
-                .path("centAmount").asDouble();
-
-//        Double pricePerKilo = calcularPrecioKilo(nodo);
+                .path("price")
+                .path("current")
+                .path("amount").asDouble();
+        Double pricePerKilo = nodo
+                .path("price")
+                .path("unit")
+                .path("current")
+                .path("amount").asDouble();
         String name = nodo
-                .path("productData")
                 .path("name").asText();
-//        Double mass = nodo
-//                .path("average_weight").asDouble();
+        Double mass = nodo
+                .path("size")
+                .path("value").asDouble();
         String image = nodo
-                .path("productData")
-                .path("imageURL").asText();
+                .path("image")
+                .path("src").asText();
 
-        ProductoBD p = new ProductoBD(id, image, name, price);
+        ProductoBD p = new ProductoBD(id, image, name, price, pricePerKilo, mass, 1, false);
         return p;
     }
-
-
 }

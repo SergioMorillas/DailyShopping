@@ -1,4 +1,4 @@
-package com.lista.listacompra.accesoDatos.baseDatos;
+package com.lista.listacompra.modelo.baseDatos;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;

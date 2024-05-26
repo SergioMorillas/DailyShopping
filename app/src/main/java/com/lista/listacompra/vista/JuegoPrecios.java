@@ -1,4 +1,4 @@
-package com.lista.listacompra.logica;
+package com.lista.listacompra.vista;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -23,9 +23,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.javafaker.Faker;
 import com.lista.listacompra.R;
-import com.lista.listacompra.modelo.Producto;
-import com.lista.listacompra.modelo.SupermercadosDisponibles;
-import com.lista.listacompra.modelo.SupermercadosFactoria;
+import com.lista.listacompra.controlador.Producto;
+import com.lista.listacompra.controlador.SupermercadosDisponibles;
+import com.lista.listacompra.controlador.SupermercadosFactoria;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

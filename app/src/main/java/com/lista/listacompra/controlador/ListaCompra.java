@@ -1,10 +1,10 @@
-package com.lista.listacompra.modelo;
+package com.lista.listacompra.controlador;
 
 import android.content.Context;
 
-import com.lista.listacompra.accesoDatos.GestorBD;
-import com.lista.listacompra.accesoDatos.baseDatos.ListaCompraBD;
-import com.lista.listacompra.accesoDatos.baseDatos.ProductoBD;
+import com.lista.listacompra.modelo.GestorBD;
+import com.lista.listacompra.modelo.baseDatos.ListaCompraBD;
+import com.lista.listacompra.modelo.baseDatos.ProductoBD;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;

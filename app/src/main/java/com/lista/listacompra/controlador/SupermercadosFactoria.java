@@ -1,7 +1,7 @@
-package com.lista.listacompra.modelo;
+package com.lista.listacompra.controlador;
 
-import com.lista.listacompra.accesoDatos.apiSupermercados.Supermercado;
-import com.lista.listacompra.accesoDatos.baseDatos.ProductoBD;
+import com.lista.listacompra.modelo.apiSupermercados.Supermercado;
+import com.lista.listacompra.modelo.baseDatos.ProductoBD;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

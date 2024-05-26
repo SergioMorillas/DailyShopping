@@ -1,4 +1,4 @@
-package com.lista.listacompra.logica;
+package com.lista.listacompra.vista;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -24,8 +24,8 @@ import androidx.activity.OnBackPressedDispatcher;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.lista.listacompra.R;
-import com.lista.listacompra.modelo.Gestor;
-import com.lista.listacompra.modelo.ListaCompra;
+import com.lista.listacompra.controlador.Gestor;
+import com.lista.listacompra.controlador.ListaCompra;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

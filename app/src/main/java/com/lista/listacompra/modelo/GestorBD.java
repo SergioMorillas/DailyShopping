@@ -1,11 +1,11 @@
-package com.lista.listacompra.accesoDatos;
+package com.lista.listacompra.modelo;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.lista.listacompra.accesoDatos.baseDatos.AppDatabase;
-import com.lista.listacompra.accesoDatos.baseDatos.ListaCompraBD;
-import com.lista.listacompra.modelo.ListaCompra;
+import com.lista.listacompra.modelo.baseDatos.AppDatabase;
+import com.lista.listacompra.modelo.baseDatos.ListaCompraBD;
+import com.lista.listacompra.controlador.ListaCompra;
 
 import java.util.HashSet;
 import java.util.Set;

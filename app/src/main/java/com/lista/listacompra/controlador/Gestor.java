@@ -1,9 +1,9 @@
-package com.lista.listacompra.modelo;
+package com.lista.listacompra.controlador;
 
 import android.content.Context;
 
-import com.lista.listacompra.accesoDatos.GestorBD;
-import com.lista.listacompra.accesoDatos.baseDatos.ListaCompraBD;
+import com.lista.listacompra.modelo.GestorBD;
+import com.lista.listacompra.modelo.baseDatos.ListaCompraBD;
 
 import java.util.HashSet;
 import java.util.Set;

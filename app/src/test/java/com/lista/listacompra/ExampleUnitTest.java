@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-import com.lista.listacompra.accesoDatos.apiSupermercados.Mercadona;
+import com.lista.listacompra.modelo.apiSupermercados.Mercadona;
 
 /**
  * Example local unit test, which will execute on the development machine (host).

@@ -1,4 +1,4 @@
-package com.lista.listacompra.logica;
+package com.lista.listacompra.vista;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -24,9 +24,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.lista.listacompra.R;
-import com.lista.listacompra.modelo.Gestor;
-import com.lista.listacompra.modelo.ListaCompra;
-import com.lista.listacompra.modelo.SupermercadosDisponibles;
+import com.lista.listacompra.controlador.Gestor;
+import com.lista.listacompra.controlador.ListaCompra;
+import com.lista.listacompra.controlador.SupermercadosDisponibles;
 
 import java.util.Calendar;
 import java.util.HashSet;

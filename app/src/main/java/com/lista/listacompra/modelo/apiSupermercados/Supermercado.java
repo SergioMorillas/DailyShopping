@@ -1,8 +1,7 @@
-package com.lista.listacompra.accesoDatos.apiSupermercados;
+package com.lista.listacompra.modelo.apiSupermercados;
 
-import com.lista.listacompra.accesoDatos.baseDatos.ProductoBD;
+import com.lista.listacompra.modelo.baseDatos.ProductoBD;
 
-import java.util.ArrayList;
 import java.util.Set;
 
 public interface Supermercado {
