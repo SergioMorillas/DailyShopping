@@ -243,13 +243,12 @@ public class PrincipalListasBusqueda extends AppCompatActivity {
 
     /**
      * Añade una línea separadora a la disposición lineal.
-     * @param linea La vista de la línea separadora.
      */
     private void addSeparatorLine(View linea) {
 
-        linea.setBackgroundColor(Color.BLACK);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 8);
-        params.setMargins(0, 0, 0, 8);
+        linea.setBackgroundColor(Color.LTGRAY);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 4);
+        params.setMargins(0, 5, 0, 5);
         linea.setLayoutParams(params);
         layout.addView(linea);
     }

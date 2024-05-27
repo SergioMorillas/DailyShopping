@@ -22,15 +22,15 @@
             android:id="@+id/listas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/primario"
-            android:textColor="@color/white"
-            android:drawablePadding="10dp"
-            android:textSize="40dp"
-            android:text="Mis listas"
-            android:drawableStart="@drawable/icono_mis_listas"
             android:layout_gravity="start"
-            android:gravity="start"
+            android:background="@color/primario"
+            android:drawableStart="@drawable/icono_mis_listas"
+            android:drawablePadding="10dp"
+            android:gravity="center|start"
             android:onClick="onListasButtonClick"
+            android:text="Mis listas"
+            android:textColor="@color/white"
+            android:textSize="28dp"
 
             />
 
@@ -39,28 +39,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/primario"
-            android:textColor="@color/white"
-            android:drawablePadding="10dp"
-            android:textSize="30dp"
-            android:text="Juego de precios"
             android:drawableStart="@drawable/icono_buscar_supermercado"
-            android:gravity="start"
-            android:paddingBottom="15dp"
+            android:drawablePadding="10dp"
+            android:gravity="center|start"
             android:onClick="onJuegoButtonClick"
-            />
+            android:paddingBottom="15dp"
+            android:text="Juego de precios"
+            android:textColor="@color/white"
+            android:textSize="28dp" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/comparador"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/primario"
-            android:textColor="@color/white"
-            android:drawablePadding="10dp"
-            android:textSize="35dp"
-            android:text="Comparar precios"
             android:drawableStart="@drawable/icono_comparar_precios"
+            android:drawablePadding="10dp"
             android:gravity="start"
-            android:onClick="onCompararButtonClick"/>
+            android:onClick="onCompararButtonClick"
+            android:text="Comparar precios"
+            android:textColor="@color/white"
+            android:textSize="28dp" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

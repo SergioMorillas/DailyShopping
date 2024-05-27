@@ -12,7 +12,6 @@ import com.lista.listacompra.modelo.apiSupermercados.Mercadona;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class ExampleUnitTest {
-    Mercadona m = new Mercadona();
     @Test
     public void addition_isCorrect() {
         assertEquals(4, 2 + 2);

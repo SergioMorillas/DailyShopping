@@ -11,7 +11,7 @@ import androidx.room.TypeConverters;
  * Base de datos de la aplicación que gestiona las entidades {@link ListaCompraBD},
  * {@link ProductoBD} y {@link ListaProductoJoin}.
  */
-@Database(entities = {ListaCompraBD.class, ProductoBD.class, ListaProductoJoin.class}, version = 2)
+@Database(entities = {ListaCompraBD.class, ProductoBD.class}, version = 2)
 @TypeConverters({ ConvertidorProducto.class })
 public abstract class AppDatabase extends RoomDatabase {
     /**
