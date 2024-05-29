@@ -12,7 +12,7 @@ import androidx.room.TypeConverters;
  * {@link ProductoBD} y {@link ListaProductoJoin}.
  */
 @Database(entities = {ListaCompraBD.class, ProductoBD.class}, version = 2)
-@TypeConverters({ ConvertidorProducto.class })
+@TypeConverters({ ConversorProducto.class })
 public abstract class AppDatabase extends RoomDatabase {
     /**
      * Obtiene el DAO para la entidad {@link ListaCompraBD}.
@@ -48,10 +48,12 @@ public abstract class AppDatabase extends RoomDatabase {
                                     context,
                                     AppDatabase.class,
                                     "app_database")
+                            .fallbackToDestructiveMigration() // Si no se puede migrar la actualización recreamos la base de datos
                             .build();
                 }
             }
         }
         return INSTANCE;
     }
+
 }

@@ -19,7 +19,7 @@ import java.util.Set;
 @Entity(
         tableName = "listas_compra",
         indices = {@Index(value = {"nombre", "fecha", "supermercado"}, unique = true)})
-@TypeConverters({ConvertidorProducto.class})
+@TypeConverters({ConversorProducto.class})
 public class ListaCompraBD {
     /**
      * Identificador único de la lista de compra.

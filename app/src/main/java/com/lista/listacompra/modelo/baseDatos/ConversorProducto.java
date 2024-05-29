@@ -13,7 +13,7 @@ import java.util.Set;
  * Convertidor para la entidad {@link ProductoBD} que convierte entre
  * JSON y un conjunto de objetos {@link ProductoBD}.
  */
-public class ConvertidorProducto {
+public class ConversorProducto {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
